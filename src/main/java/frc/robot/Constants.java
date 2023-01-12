@@ -35,8 +35,20 @@ public final class Constants {
     public static double shortPoleDepth=22.75*.0254;
     public static double shortPoleHeight=24.125*.0254;
     public static double AA=1.0; //the maximum error we will allow to differentiate between rows
-    public static Grid g1= new Grid(1, normytagdepth, 0, normyTagHeight, tallPoleDepth, shortPoleDepth, normyPoleWidthOff, tallPoleHeight, shortPoleHeight,false);
+    public static Grid g1= new Grid(1, normytagdepth, 0, normyTagHeight, true,tallPoleDepth, shortPoleDepth, normyPoleWidthOff, tallPoleHeight, shortPoleHeight,false);
     public static Grid[] grids = {g1};
+    //FRC coordinate system. Origin is somewhere in the blue (literally blue alliance human player side) (inches)
+    public static FieldTag at1=new FieldTag(1, 610.77, 42.19, 18.22,true);
+    public static FieldTag at2=new FieldTag(2, 610.77, 108.19, 18.22,true);
+    public static FieldTag at3=new FieldTag(3, 610.77, 174.19, 18.22,true);
+    public static FieldTag at4=new FieldTag(4, 636.96, 265.74, 27.38,false);
+    public static FieldTag at5=new FieldTag(5, 14.25, 265.74, 27.38,true);
+    public static FieldTag at6=new FieldTag(6, 40.45, 174.19, 18.22,true);
+    public static FieldTag at7=new FieldTag(7, 40.45, 108.19, 18.22,true);
+    public static FieldTag at8=new FieldTag(8, 40.45, 42.19, 18.22,false);
+    public static FieldTag[] tags={at1,at2,at3,at4,at5,at6,at7,at8};
+
+
     //run of the mill distance algorithm
     public static double distAlg(FieldTag which, double pitch){return (which.z-mountHeight)/Math.tan(Math.PI*(pitch+mountAngle)/180);}
 

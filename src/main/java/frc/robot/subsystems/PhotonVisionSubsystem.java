@@ -12,6 +12,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import frc.robot.Constants;
 import frc.robot.Constants.PhotonVisionConstants;
 import frc.robot.constantsHelpers.FieldTag;
 import frc.robot.constantsHelpers.Grid;
@@ -21,6 +22,8 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   public PhotonCamera camera;
   public PhotonPipelineResult result;
   public List<PhotonTrackedTarget> listOfTargets;
+  public boolean hasTargets;
+  public double x,y;
   
   /** Creates a new PhotonVisionSubsystem. */
   public PhotonVisionSubsystem(String CameraName) {
@@ -33,6 +36,8 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     result = camera.getLatestResult();
     listOfTargets=result.getTargets();
+    hasTargets=result.hasTargets();
+    if (hasTargets) this.updatePosition();
   }
 
   public void setPipelineIndex(int i){
@@ -63,6 +68,22 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
 
   //all these methods below are dependent on the apriltag pipeline being used
+  public void updatePosition(){
+    for (PhotonTrackedTarget i: listOfTargets){
+      double sumX=0.0;
+      double sumY=0.0;
+      for(FieldTag j: Constants.PhotonVisionConstants.tags){
+        if(i.getFiducialId()==j.id){
+          double distance=PhotonVisionConstants.distAlg(j, i.getPitch());
+          sumX+=this.ATx(j,distance,i.getPitch());
+          sumY+=this.ATy(j,distance,i.getPitch());
+        }
+      }
+      this.x=sumX/(double)listOfTargets.size();
+      this.y=sumY/(double)listOfTargets.size();
+    }
+  }
+
   //find matching targetting data
   public PhotonTrackedTarget getTargetData(FieldTag which){
     for(PhotonTrackedTarget i:listOfTargets){
@@ -103,4 +124,6 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     double yTwo = getTargetData(two).getYaw();
     return (yOne-yTwo) - Math.acos( Math.PI/180 * (Math.pow( ATy(one, distOne, yOne)-ATy(two,distTwo, yTwo),2) - Math.pow(distOne,2) - Math.pow(distTwo,2))/(2*distOne*distTwo) );
   }
+
+  
 }
