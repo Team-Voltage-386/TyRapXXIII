@@ -3,14 +3,17 @@
 package frc.robot.constantsHelpers;
 
 public class FieldTag {
-    public static double x,y,z;
+    public static double x,y,z,yaw;
     public static int id;
+    public static boolean isGrid;
     
-    public FieldTag(int cid,double cx, double cy, double cz){
-        id=cid;
-        x=cx;
-        y=cy;
-        z=cz;
+    public FieldTag(int ID,double X, double Y, double Z, boolean IsGrid, double Yaw){
+        id=ID;
+        x=X;
+        y=Y;
+        z=Z;
+        isGrid=IsGrid;
+        yaw=Yaw;
     }
 
 }

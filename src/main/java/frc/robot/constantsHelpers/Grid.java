@@ -6,18 +6,18 @@ public class Grid {
     public RRTarget[] rrTargets=new RRTarget[4];//tictactags
     public boolean community;
 
-    public Grid(int cAID,double cAX,double cAY,double cAZ,boolean IsGrid,double cPXt,double cPXs,double cPY,double cPZt,double cPZs,boolean Community){
+    public Grid(int ID,double TagX,double TagY,double TagZ,boolean IsGrid,double TallPoleRelativeX,double ShortPoleRelativeX,double TallPoleRelativeY,double TallPoleRelativeZ,double ShortPoleRelativeZ,boolean Community,double orientation){
         community=Community;
-        fieldTag=new FieldTag(cAID, cAX, cAY, cAZ,IsGrid);
+        fieldTag=new FieldTag(ID, TagX, TagY, TagZ,IsGrid,orientation);
         for(int i=0; i<4;i++){
             double q=Math.atan((i*Math.PI/2)+Math.PI/4);
-            double x=0.0; double y=cPY; double z=0.0;
+            double x=0.0; double y=TallPoleRelativeY; double z=0.0;
             if(Math.sin(q)>0){
-                x=cPXt;
-                z=cPZt;
+                x=TallPoleRelativeX;
+                z=TallPoleRelativeZ;
             } else {
-                x=cPXs;
-                z=cPZs;
+                x=ShortPoleRelativeX;
+                z=ShortPoleRelativeZ;
             }
             if(Math.cos(q)<0){
                 y*=-1;
