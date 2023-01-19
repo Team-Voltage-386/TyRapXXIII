@@ -17,6 +17,9 @@ import frc.robot.Constants.PhotonVisionConstants;
 import frc.robot.constantsHelpers.FieldTag;
 import frc.robot.constantsHelpers.Grid;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.GenericPublisher;
 
 public class PhotonVisionSubsystem extends SubsystemBase {
   public PhotonCamera camera;
@@ -37,7 +40,10 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     result = camera.getLatestResult();
     listOfTargets=result.getTargets();
     hasTargets=result.hasTargets();
-    if (hasTargets) this.updatePosition();
+    if (hasTargets) {
+      this.updatePosition();
+    }
+    updateWidgets();
   }
 
   public void setPipelineIndex(int i){
@@ -128,6 +134,10 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     double yTwo = getTargetData(two).getYaw();
     return (yOne-yTwo) - Math.acos( Math.PI/180 * (Math.pow( ATy(one, distOne, yOne)-ATy(two,distTwo, yTwo),2) - Math.pow(distOne,2) - Math.pow(distTwo,2))/(2*distOne*distTwo) );
   }
-
+  private final ShuffleboardTab maintab=Shuffleboard.getTab("Main");
+  private final GenericPublisher mainBestTarget=maintab.add("besttarget","").getEntry();
   
+  private void updateWidgets(){
+    mainBestTarget.setString(result.getBestTarget().toString());
+  }
 }
