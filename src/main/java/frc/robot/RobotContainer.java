@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-  private final PhotonVisionSubsystem pvs = new PhotonVisionSubsystem("Camera");
+  private final PhotonVisionSubsystem pvs = new PhotonVisionSubsystem("LL");
   
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 

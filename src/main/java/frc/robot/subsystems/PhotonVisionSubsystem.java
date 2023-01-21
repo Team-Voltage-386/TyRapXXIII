@@ -12,6 +12,8 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
+
 import frc.robot.Constants;
 import frc.robot.Constants.PhotonVisionConstants;
 import frc.robot.constantsHelpers.FieldTag;
@@ -27,21 +29,31 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   public List<PhotonTrackedTarget> listOfTargets;
   public boolean hasTargets;
   public double x,y;//inches
+
+  // //later use seperate method to access ypr (this is for testing only)
+  // PigeonIMU _pigeon = new PigeonIMU(10);
+  // PigeonIMU.GeneralStatus genstatus= new PigeonIMU.GeneralStatus();
+  double[] ypr = new double[3];
   
   /** Creates a new PhotonVisionSubsystem. */
   public PhotonVisionSubsystem(String CameraName) {
     camera = new PhotonCamera(CameraName);
     camera.setPipelineIndex(0);
+    camera.setDriverMode(false);
   }
 
   @Override
   public void periodic() {
+    // _pigeon.getGeneralStatus(genstatus);
+    // _pigeon.getYawPitchRoll(ypr);
+
     // This method will be called once per scheduler run
     result = camera.getLatestResult();
     listOfTargets=result.getTargets();
     hasTargets=result.hasTargets();
     if (hasTargets) {
-      this.updatePosition();
+      // this.updatePosition();
+      // this.ATr(this.getFieldData( result.getBestTarget()));
     }
     updateWidgets();
   }
@@ -82,8 +94,8 @@ public class PhotonVisionSubsystem extends SubsystemBase {
       for(FieldTag j: Constants.PhotonVisionConstants.tags){
         if(i.getFiducialId()==j.id){
           double distance=PhotonVisionConstants.distAlg(j, i.getPitch());
-          sumX+=this.ATx(j,distance,i.getPitch());
-          sumY+=this.ATy(j,distance,i.getPitch());
+          sumX+=this.ATx(j,distance,ypr[0]);
+          sumY+=this.ATy(j,distance,ypr[0]);
         }
       }
       this.x=sumX/(double)listOfTargets.size();
@@ -134,10 +146,24 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     double yTwo = getTargetData(two).getYaw();
     return (yOne-yTwo) - Math.acos( Math.PI/180 * (Math.pow( ATy(one, distOne, yOne)-ATy(two,distTwo, yTwo),2) - Math.pow(distOne,2) - Math.pow(distTwo,2))/(2*distOne*distTwo) );
   }
+
+  //shuffleboard stuff
   private final ShuffleboardTab maintab=Shuffleboard.getTab("Main");
   private final GenericPublisher mainBestTarget=maintab.add("besttarget","").getEntry();
-  
+  private final GenericPublisher mainBestYaw=maintab.add("yaw","").getEntry();
+private final GenericPublisher mainBestPitch=maintab.add("pitch","").getEntry();
+  private final GenericPublisher mainX=maintab.add("x",0.0).getEntry();
+  private final GenericPublisher mainY=maintab.add("y",0.0).getEntry();
+  private final GenericPublisher mainHas=maintab.add("hasTargets",false).getEntry();
   private void updateWidgets(){
-    mainBestTarget.setString(result.getBestTarget().toString());
+    mainHas.setBoolean(hasTargets);
+    if(hasTargets){
+      mainBestTarget.setString(result.getBestTarget().toString());
+    
+    mainBestYaw.setDouble(result.getBestTarget().getYaw());
+    mainBestPitch.setDouble(result.getBestTarget().getPitch());
+    }
+    mainX.setDouble(x);
+    mainY.setDouble(y);
   }
 }
