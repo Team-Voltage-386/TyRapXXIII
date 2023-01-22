@@ -11,8 +11,8 @@ public class SwerveModule {
     public final CANSparkMax steerMotor;
     public final CANSparkMax driveMotor;
     public final CANCoder encoder;
-    private final PID steerPID;
-    private final PID drivePID;
+    public final PID steerPID;
+    public final PID drivePID;
     public final double x;
     public final double y;
     public final double encoderOffs;
@@ -24,7 +24,8 @@ public class SwerveModule {
 
     public int driveMult = 1;
 
-    public SwerveModule (int STEERMOTOR, int DRIVEMOTOR, double driveConversion, double[] steerPIDValue, double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS) {
+    public SwerveModule(int STEERMOTOR, int DRIVEMOTOR, double driveConversion, double[] steerPIDValue,
+            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS) {
         steerMotor = new CANSparkMax(STEERMOTOR, MotorType.kBrushless);
         driveMotor = new CANSparkMax(DRIVEMOTOR, MotorType.kBrushless);
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);
@@ -37,16 +38,48 @@ public class SwerveModule {
 
         x = X;
         y = Y;
-        
+
         encoderOffs = ENCOFFS;
     }
 
-
-    public double getEcnoderPosition() {
+    public double getEncoderPosition() {
         return encoder.getAbsolutePosition() - encoderOffs;
     }
+
     public void calcPosition(double offX, double offY) {
-        distFromCenter = Math.sqrt(Math.pow(x + offX, 2)+Math.pow(y + offY, 2));
+        distFromCenter = Math.sqrt(Math.pow(x + offX, 2) + Math.pow(y + offY, 2));
         angleFromCenter = Math.toDegrees(Math.atan2(y + offY, x + offX));
     }
+
+    private double getSwerveHeadingError() {
+        double res = targetSteer - getEncoderPosition();
+        while (res < -180)
+            res += 360;
+        while (res > 180)
+            res -= 360;
+        if (Math.abs(res) > 90) {
+            driveMult = -1;
+            if (res > 0)
+                res -= 180;
+            else
+                res += 180;
+        } else {
+            driveMult = 1;
+        }
+        return res;
+    }
+
+    public void drive() {
+        steerMotor.set(steerPID.calc(getSwerveHeadingError()));
+
+        driveMotor.set(drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
+    }
+
+    public void reset() {
+        steerPID.reset();
+        drivePID.reset();
+        steerMotor.set(0);
+        driveMotor.set(0);
+    }
+
 }

@@ -25,8 +25,9 @@ public class PID {
 
     public double calc(double pv) {
         long time = System.currentTimeMillis();
-        double timeStep = (time - lastTime)/1000;
-        if (timeStep > 0.5) timeStep = 0;
+        double timeStep = (time - lastTime) / 1000;
+        if (timeStep > 0.5)
+            timeStep = 0;
         integralAcc += pv * timeStep;
         lastTime = time;
         double result = (pv * p) + (integralAcc * i) - (((pv - lastPV) * timeStep) * d);
