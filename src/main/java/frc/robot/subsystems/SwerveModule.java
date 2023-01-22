@@ -40,6 +40,8 @@ public class SwerveModule {
         y = Y;
 
         encoderOffs = ENCOFFS;
+
+        this.calcPosition(0, 0);
     }
 
     public double getEncoderPosition() {

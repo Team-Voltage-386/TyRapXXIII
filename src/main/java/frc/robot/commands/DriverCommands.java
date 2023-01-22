@@ -24,7 +24,7 @@ public class DriverCommands extends CommandBase {
     public void execute() {
         driveTrain.xDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
         driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
-        driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal);
+        driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
 
         if (kDriver.getRawButtonPressed(kLeftBumper))
             driveTrain.setOffset(-0.65, 0);
