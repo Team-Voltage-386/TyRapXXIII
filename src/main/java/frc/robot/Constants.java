@@ -3,10 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
