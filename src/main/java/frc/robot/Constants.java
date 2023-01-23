@@ -41,7 +41,10 @@ public final class Constants {
     public static final int kLeftJoystickPressed = 9;
     public static final int kRightJoystickPressed = 10;
   }
-
+  public static final class Limelightconstants{
+    public static final int apriltagpipelineindex = 0;
+    public static final int retroreflectivepipelineindex = 1;
+  }
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
