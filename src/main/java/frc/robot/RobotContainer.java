@@ -7,10 +7,8 @@ package frc.robot;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriverCommands;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.LimelightVisionSubsystem;
+import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,7 +26,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_driveTrain = new Drivetrain();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
-  private final LimelightVisionSubsystem ll = new LimelightVisionSubsystem();
+  private final Limelight ll = new Limelight();
   
   
   /**
