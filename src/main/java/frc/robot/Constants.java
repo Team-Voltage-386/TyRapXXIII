@@ -44,11 +44,20 @@ public final class Constants {
     public static final int kRightJoystickPressed = 10;
   }
 
+  public static final class AutoConstants {
+
+    public static final double driveTolerance = 0.5;
+    public static final double headingTolerance = 90;
+
+    public static final double[] kAutoPositionPID = { 2, 0, 0 };
+    public static final double[] kAutoHeadingPID = { 0, 0, 0 };
+  }
+
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
-    public static final double kMaxRotSpeed = 200; // should be in degrees per second
-    public static final double kMaxDriveSpeed = 5; // should be in meters per second
+    public static final double kMaxRotSpeed = 300; // should be in degrees per second
+    public static final double kMaxDriveSpeed = 1; // should be in meters per second
 
     public static final int kIMUid = 2;
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
