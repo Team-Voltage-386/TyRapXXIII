@@ -46,10 +46,10 @@ public final class Constants {
 
   public static final class AutoConstants {
 
-    public static final double driveTolerance = 0.5;
+    public static final double driveTolerance = 0.05;
     public static final double headingTolerance = 90;
 
-    public static final double[] kAutoPositionPID = { 2, 0, 0 };
+    public static final double[] kAutoPositionPID = { 2, 5, 0 };
     public static final double[] kAutoHeadingPID = { 0, 0, 0 };
   }
 

@@ -34,11 +34,15 @@ public class Drive extends CommandBase {
         dt.xDriveTarget = autoPositionX.calc(x - dt.xPos);
         dt.yDriveTarget = autoPositionY.calc(y - dt.yPos);
         dt.rotationTarget = autoPositionH.calc(dt.getHeadingError(h));
+
+        // System.out.println("x value: " + dt.xDriveTarget + " " + "y value: " +
+        // dt.yDriveTarget);
     }
 
     @Override
     public boolean isFinished() {
-        return dt.distanceTo(x, y) < driveTolerance && Math.abs(dt.getRawHeading() - h) < headingTolerance;
+        return dt.distanceTo(x, y) < driveTolerance
+                && dt.getHeadingError(h) < headingTolerance;
     }
 
     @Override
