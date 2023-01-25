@@ -16,6 +16,7 @@ import static frc.robot.Constants.Limelightconstants.*;
 
 public class Limelight extends SubsystemBase {
   private Double[] bp;
+  private Double tx,ty;
   private boolean apriltagmode;
   private boolean retroreflectivemode;
   private NetworkTable nt;
@@ -38,17 +39,31 @@ public class Limelight extends SubsystemBase {
     if(apriltagmode){
       bp=nt.getEntry("botpose").getDoubleArray(new Double[] {});
     }
+    tx=nt.getEntry("tx").getDouble(0);
+    ty=nt.getEntry("ty").getDouble(0);
 
     updateWidgets();
   }
   public Double[] getPose(){
     return bp;
   }
-  public boolean tagsAvailable(){
+  public double tx(){return tx;}
+  public double ty(){return ty;}
+  public boolean apriltagsAvailable(){
     return bp.length>0;
   }
+  public boolean targetsAvailable(){
+    return nt.getEntry("tv").getInteger(0)==1;
+  }
   public void setPipeline(int index){
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(index);
+    nt.getEntry("pipeline").setNumber(index);
+    nt.getEntry("ledMode").setNumber(0);
+  }
+  public boolean apriltagmode(){
+    return apriltagmode;
+  }
+  public boolean retroreflectivemode(){
+    return retroreflectivemode;
   }
   //not needed
   private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");

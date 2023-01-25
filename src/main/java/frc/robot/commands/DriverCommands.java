@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.utils.Flags.*;
 
 public class DriverCommands extends CommandBase {
 
@@ -22,6 +23,7 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
+        if(HumanDriverControl){
         driveTrain.xDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
         driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
         driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
@@ -33,6 +35,7 @@ public class DriverCommands extends CommandBase {
 
         if (kDriver.getRawButtonPressed(kRightBumper))
             driveTrain.resetFO();
+        }
     }
 
     @Override
