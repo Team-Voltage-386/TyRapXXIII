@@ -5,6 +5,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.utils.apriltag;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -64,5 +65,38 @@ public final class Constants {
         kSwerveDrivePID, 23, -0.36, -0.26, 126.25);
     public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv, kSwerveSteerPID,
         kSwerveDrivePID, 22, -0.36, 0.26, 292);
+  }
+
+  public static final class Field{
+    public static final apriltag tag1=new apriltag(1, true,true, 7.24310, -2.93659, .46272);
+    public static final apriltag tag2=new apriltag(2, true,true, 7.24310,-1.26019, .46272);
+    public static final apriltag tag3=new apriltag(3, true,true, 7.24310, 0.41621, .46272);
+    public static final apriltag tag4=new apriltag(4, false,false, 7.90832, 2.74161, 0.695452);
+    public static final apriltag tag5=new apriltag(5, false,true, -7.90832, 2.74161, 0.695452);
+    public static final apriltag tag6=new apriltag(6, true,false, -7.24310, 0.41621, .46272);
+    public static final apriltag tag7=new apriltag(7, true,false, -7.24310, -1.26019, .46272);
+    public static final apriltag tag8=new apriltag(8, true,false, -7.24310, -2.93659, .46272);
+    public static final apriltag[] tags = {tag1,tag2,tag3,tag4,tag5,tag6,tag7,tag8};
+
+    public static apriltag closestGrid(double x,double y){
+      apriltag result=null;
+      double best=255;
+      double tmp=0;
+      for (apriltag i:tags){
+        tmp=Math.pow(i.x-x,2)+Math.pow(i.y-y,2);
+        if (i.isGrid&&tmp<best) {
+          result=i;
+          best=tmp;
+        }
+      }
+      return result;
+    }
+  }
+
+  public static final class AutoPilotConstants{
+    public static final double moep=0.1;//margin of error, position
+    public static final double moer=0.1;//margin of error, rotation
+    public static final double adjustableXDist=0.5;
+
   }
 }
