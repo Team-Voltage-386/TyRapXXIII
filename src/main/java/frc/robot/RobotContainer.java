@@ -5,13 +5,13 @@
 package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.AutoPilotCommands;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriverCommands;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,9 +27,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_driveTrain = new Drivetrain();
-  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
   private final Limelight ll = new Limelight();
-  private final AutoPilotCommands m_autopilotCOmmand= new AutoPilotCommands(m_driveTrain, ll);
+
+  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, ll);
+  // private final AutoPilotCommands m_autopilotCOmmand= new AutoPilotCommands(m_driveTrain, ll);
   
   
   /**
@@ -39,6 +40,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_driveTrain.setDefaultCommand(m_driverCommand);
+    // ll.setDefaultCommand(m_autopilotCOmmand);
+
   }
 
   /**
@@ -58,9 +62,9 @@ public class RobotContainer {
   private void configureBindings() {
   }
 
-  public Command getTeleOp() {
-    return Commands.parallel(m_driverCommand,m_autopilotCOmmand) ;
-  }
+  // public Command getTeleOp() {
+  //   return new ParallelCommandGroup(m_driverCommand,m_autopilotCOmmand);
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
