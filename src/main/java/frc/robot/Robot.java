@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.getTeleOp().cancel();
+  //   m_robotContainer.getTeleOp().cancel();
   }
 
   @Override
@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    m_robotContainer.getTeleOp().schedule();
+    // m_robotContainer.getTeleOp().schedule();
   }
 
   /** This function is called periodically during operator control. */

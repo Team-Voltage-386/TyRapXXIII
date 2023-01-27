@@ -50,10 +50,10 @@ public class Limelight extends SubsystemBase {
   public double tx(){return tx;}
   public double ty(){return ty;}
   public boolean apriltagsAvailable(){
-    return bp.length>0;
+    return apriltagmode && bp.length>0;
   }
   public boolean targetsAvailable(){
-    return nt.getEntry("tv").getInteger(0)==1;
+    return nt.getEntry("tv").getInteger(-1)==1||(apriltagmode&&bp.length>0);
   }
   public void setPipeline(int index){
     nt.getEntry("pipeline").setNumber(index);
@@ -67,10 +67,12 @@ public class Limelight extends SubsystemBase {
   }
   //not needed
   private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-  private final GenericPublisher mainBotPose=mainTab.add("botpose","").getEntry();
+  private final GenericPublisher mainBotPose=mainTab.add("botpose","").withPosition(0, 1).withSize(1, 1).getEntry();
+  private final GenericPublisher mainTagsAvail=mainTab.add("targets",false).withPosition(1, 1).withSize(1, 1).getEntry();
 
   private void updateWidgets(){
-    if(bp.length>0)
+    mainTagsAvail.setBoolean(targetsAvailable());
+    if(apriltagmode && bp.length>0)
     mainBotPose.setString(bp[0]+","+bp[1]+","+bp[2]+","+bp[3]+","+bp[4]+","+bp[5]);
   }
 }

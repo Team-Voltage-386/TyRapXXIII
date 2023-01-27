@@ -49,8 +49,8 @@ public final class Constants {
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
-    public static final double kMaxRotSpeed = 200; // should be in degrees per second
-    public static final double kMaxDriveSpeed = 5; // should be in meters per second
+    public static final double kMaxRotSpeed = 100; // should be in degrees per second
+    public static final double kMaxDriveSpeed = .1; // should be in meters per second
 
     public static final int kIMUid = 2;
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };

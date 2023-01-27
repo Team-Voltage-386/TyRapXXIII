@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.utils.*;
 
 public class Drivetrain extends SubsystemBase {
     public double xDriveTarget = 0;
@@ -136,10 +137,17 @@ public class Drivetrain extends SubsystemBase {
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
+    private static final GenericEntry xtarget = mainTab.add("xtarg", 0).withPosition(0, 3).withSize(1, 1).getEntry();
+    private static final GenericEntry ytarget = mainTab.add("ytarg", 0).withPosition(1, 3).withSize(1, 1).getEntry();
+
+    private static final GenericEntry hdmode = mainTab.add("humanMode",false).withPosition(2, 0).withSize(1, 1).getEntry();
 
     private void updateWidget() {
+        hdmode.setBoolean(Flags.HumanDriverControl);
         xPosWidget.setDouble(xPos);
         yPosWidget.setDouble(yPos);
+        xtarget.setDouble(xDriveTarget);
+        ytarget.setDouble(yDriveTarget);
     }
 
 }
