@@ -130,6 +130,19 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
+    public double distanceTo(double x, double y) {
+        return Math.sqrt(Math.pow(x - xPos, 2) + Math.pow(y - yPos, 2));
+    }
+
+    public double getHeadingError(double h) {
+        double res = h - getRawHeading() - 180;
+        while (angle > 180)
+            angle -= 360;
+        while (angle < 180)
+            angle += 360;
+        return res;
+    }
+
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
