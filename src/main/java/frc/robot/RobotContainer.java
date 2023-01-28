@@ -8,8 +8,10 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Autonomous.Drive;
+import frc.robot.commands.ManipulatorCommands;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,7 +29,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Drivetrain m_driveTrain = new Drivetrain();
+  private final Drivetrain m_driveTrain = new Drivetrain();
+  private final Arm m_Arm = new Arm();
+  private final Limelight m_ll = new Limelight();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
