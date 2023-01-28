@@ -24,6 +24,7 @@ public class DriverCommands extends CommandBase {
     private apriltag target=null;
     private double facingtoscore;
     private double deadband=0.1;
+    private double adjustableXDist;
     private PID autoRPID;
     private PID autoXPID;
     private PID autoYPID;
@@ -33,7 +34,8 @@ public class DriverCommands extends CommandBase {
         limelight = LL;
         addRequirements(driveTrain);
         addRequirements(limelight);
-        facingtoscore=270;//set to 0 or 180
+        facingtoscore=-180;//set to 0 or 180
+        adjustableXDist=6.25;
         autoRPID=new PID(kAutoRotationPID[0],kAutoRotationPID[1],kAutoRotationPID[2]);
         autoXPID=new PID(kAutoDriveXPID[0],kAutoDriveXPID[1],kAutoDriveXPID[2]);
         autoYPID=new PID(kAutoDriveYPID[0],kAutoDriveYPID[1],kAutoDriveYPID[2]);
@@ -80,11 +82,11 @@ public class DriverCommands extends CommandBase {
             HumanDriverControl=false;
             if(target==null) {target=closestGrid(limelight.getPose()[0],limelight.getPose()[1]);}
             driveTrain.setFO(limelightYawToDriveTrainYaw());
-            driveToTarget(6.25,target.y,facingtoscore,limelight.getPose()[0],limelight.getPose()[1],driveTrain.getRawHeading());
+            driveToTarget(adjustableXDist,target.y,facingtoscore,limelight.getPose()[0],limelight.getPose()[1],driveTrain.getProcessedHeading());
         } 
         if(limelight.retroreflectivemode() && Math.abs(kDriver.getRawAxis(kLeftTrigger))>deadband){
             HumanDriverControl=false;
-            driveToTarget(0, 0, facingtoscore, 0, 1*Math.atan(Math.toRadians(limelight.tx())) , driveTrain.getRawHeading());//the value tiimes arctan should be a constant (variable of sorts)
+            driveToTarget(0, 0, facingtoscore, 0, 1.5*Math.atan(Math.toRadians(limelight.tx())) , driveTrain.getProcessedHeading());//the value tiimes arctan should be a constant (variable of sorts)
         } 
         if(kDriver.getRawButtonPressed(kX)){
             if(limelight.apriltagmode())limelight.setPipeline(retroreflectivepipelineindex);
@@ -92,7 +94,7 @@ public class DriverCommands extends CommandBase {
         }
     }
     public double limelightYawToDriveTrainYaw(){
-        return limelight.getPose()[5]-90;
+        return (limelight.getPose()[5])+180-90;
     }
     @Override
     public boolean isFinished() {

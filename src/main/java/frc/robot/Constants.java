@@ -49,8 +49,8 @@ public final class Constants {
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
-    public static final double kMaxRotSpeed = 100; // should be in degrees per second
-    public static final double kMaxDriveSpeed = .4; // should be in meters per second
+    public static final double kMaxRotSpeed = 180; // should be in degrees per second
+    public static final double kMaxDriveSpeed = 1; // should be in meters per second
 
     public static final int kIMUid = 2;
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
@@ -96,9 +96,8 @@ public final class Constants {
   public static final class AutoPilotConstants{
     public static final double moep=0.1;//margin of error, position
     public static final double moer=0.1;//margin of error, rotation
-    public static final double adjustableXDist=0.5;
     public static final double[] kAutoRotationPID={1,.1,0};//5,0,1
-    public static final double[] kAutoDriveXPID={1,0.1,0.0};
-    public static final double[] kAutoDriveYPID={1,0.1,0.0};
+    public static final double[] kAutoDriveXPID={2,1,0.0};
+    public static final double[] kAutoDriveYPID={2,1,0.0};
   }
 }
