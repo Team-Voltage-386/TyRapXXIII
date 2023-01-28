@@ -68,7 +68,8 @@ public final class Constants {
   public static final class ArmConstants{
     public static final double kArmUpperLength=1;
     public static final double kArmLowerLength=1;
-
-    
+    public static double squareOf(double i){
+      return Math.pow(i,2);
+    }
   }
 }
