@@ -34,8 +34,8 @@ public class DriverCommands extends CommandBase {
         limelight = LL;
         addRequirements(driveTrain);
         addRequirements(limelight);
-        facingtoscore=-180;//set to 0 or 180
-        adjustableXDist=6.25;
+        facingtoscore=-180;//set to 0 or 180 based on team
+        adjustableXDist=6.25;//-6.25 if on blue team
         autoRPID=new PID(kAutoRotationPID[0],kAutoRotationPID[1],kAutoRotationPID[2]);
         autoXPID=new PID(kAutoDriveXPID[0],kAutoDriveXPID[1],kAutoDriveXPID[2]);
         autoYPID=new PID(kAutoDriveYPID[0],kAutoDriveYPID[1],kAutoDriveYPID[2]);
@@ -71,44 +71,36 @@ public class DriverCommands extends CommandBase {
             }
         }
 
-        if (kDriver.getRawButtonPressed(kRightBumper)&&limelight.apriltagmode()&&limelight.apriltagsAvailable()){
-            driveTrain.setFO(limelightYawToDriveTrainYaw());
-
-        }
-    
-    //the manipulator will set the targetX and targetY using controller (logic to get coordinates from button input)
-
+        //align to apriltag
         if(limelight.apriltagmode() && Math.abs(kDriver.getRawAxis(kLeftTrigger))>deadband&&limelight.apriltagsAvailable()){
             HumanDriverControl=false;
             if(target==null) {target=closestGrid(limelight.getPose()[0],limelight.getPose()[1]);}
             driveTrain.setFO(limelightYawToDriveTrainYaw());
             driveToTarget(adjustableXDist,target.y,facingtoscore,limelight.getPose()[0],limelight.getPose()[1],driveTrain.getProcessedHeading());
         } 
+        //align to retroreflective
         if(limelight.retroreflectivemode() && Math.abs(kDriver.getRawAxis(kLeftTrigger))>deadband){
             HumanDriverControl=false;
             driveToTarget(0, 0, facingtoscore, 0, 1.5*Math.atan(Math.toRadians(limelight.tx())) , driveTrain.getProcessedHeading());//the value tiimes arctan should be a constant (variable of sorts)
         } 
-        if(kDriver.getRawButtonPressed(kX)){
+        if(kDriver.getRawButtonPressed(kX)){//switch pipelines
             if(limelight.apriltagmode())limelight.setPipeline(retroreflectivepipelineindex);
             else if(limelight.retroreflectivemode())limelight.setPipeline(apriltagpipelineindex);
         }
     }
+    //feed limelight yaw into drivetrainyaw
     public double limelightYawToDriveTrainYaw(){
-        return (limelight.getPose()[5])+180-90;
+        return (limelight.getPose()[5])+180-90;//limelight field coordinate system is 180, gyroscope weirdness says subtract 90
     }
     @Override
     public boolean isFinished() {
         return false;
     }
+    //drive to target, feed in target position and rotation and robot position and rotation
     public void driveToTarget(double targetX, double targetY, double targetRot, double bpx, double bpy, double bpr){
         driveTrain.rotationTarget=autoRPID.calc(targetRot-bpr);
         driveTrain.xDriveTarget=autoXPID.calc(targetX-bpx);
         driveTrain.yDriveTarget=autoYPID.calc(targetY-bpy);
-    }
-    public double adjustableX(double targetX){
-        double result=Math.abs(targetX)-adjustableXDist;
-        result=6.25;
-        return result;
     }
     @Override
     public void end(boolean interrupted) {
