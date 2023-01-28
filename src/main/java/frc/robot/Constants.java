@@ -49,20 +49,20 @@ public final class Constants {
     public static final double driveTolerance = 0.05;
     public static final double headingTolerance = 90;
 
-    public static final double[] kAutoPositionPID = { 2, 5, 0 };
-    public static final double[] kAutoHeadingPID = { 0, 0, 0 };
+    public static final double[] kAutoPositionPID = { 1, 2.5, 0.2 };
+    public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
   }
 
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
     public static final double kMaxRotSpeed = 300; // should be in degrees per second
-    public static final double kMaxDriveSpeed = 1; // should be in meters per second
+    public static final double kMaxDriveSpeed = 2.5; // should be in meters per second
 
     public static final int kIMUid = 2;
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
     public static final double[] kSwerveDrivePID = { 0.35, 2, 0.01 };
-    public static final double kSwerveDriveEncConv = 0.0005;
+    public static final double kSwerveDriveEncConv = 0.000745;
 
     public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv, kSwerveSteerPID,
         kSwerveDrivePID, 24, 0.36, -0.26, 84.1);

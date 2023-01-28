@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drivetrain m_driveTrain = new Drivetrain();
+  public final Drivetrain m_driveTrain = new Drivetrain();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
 
   /**
@@ -64,7 +64,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new Drive(1, 1, 0, m_driveTrain),
-        new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
+    // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
+    // Drive(1, 1, 0, m_driveTrain),
+    // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
+    return new Drive(10, 0, 0, m_driveTrain);
   }
 }
