@@ -94,8 +94,8 @@ public final class Constants {
   }
 
   public static final class AutoPilotConstants{
-    public static final double moep=0.1;//margin of error, position
-    public static final double moer=0.1;//margin of error, rotation
+    public static final double moep=0.01;//margin of error, position
+    public static final double moer=0.01;//margin of error, rotation
     public static final double[] kAutoRotationPID={1,.1,0};//5,0,1
     public static final double[] kAutoDriveXPID={2,1,0.0};
     public static final double[] kAutoDriveYPID={2,1,0.0};
