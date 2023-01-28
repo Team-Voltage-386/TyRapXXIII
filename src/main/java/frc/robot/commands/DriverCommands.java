@@ -67,7 +67,8 @@ public class DriverCommands extends CommandBase {
         if(limelight.apriltagmode() && Math.abs(kDriver.getRawAxis(kLeftTrigger))>deadband&&limelight.apriltagsAvailable()){
             HumanDriverControl=false;
             if(target==null) {target=closestGrid(limelight.getPose()[0],limelight.getPose()[1]);}
-            driveToTarget(adjustableX(target.x),target.y,facingtoscore,limelight.getPose()[0],limelight.getPose()[1],limelight.getPose()[5]);
+            // driveToTarget(adjustableX(target.x),target.y,facingtoscore,limelight.getPose()[0],limelight.getPose()[1],limelight.getPose()[5]);
+            driveToTarget(0, 0, facingtoscore, 0, 0, limelight.getPose()[5]);
         } 
         if(limelight.retroreflectivemode() && Math.abs(kDriver.getRawAxis(kLeftTrigger))>deadband){
             HumanDriverControl=false;
@@ -84,8 +85,8 @@ public class DriverCommands extends CommandBase {
         return false;
     }
     public void driveToTarget(double targetX, double targetY, double targetRot, double bpx, double bpy, double bpr){
-        double tempX=-kMaxDriveSpeed;
-        double tempY=-kMaxDriveSpeed;
+        double tempX=kMaxDriveSpeed;
+        double tempY=kMaxDriveSpeed;
         double tempRot=-kMaxRotSpeed;
         if(Math.abs(bpx-targetX)<moep){tempX=0;}
         else if(bpx>targetX){tempX*=-1;}
