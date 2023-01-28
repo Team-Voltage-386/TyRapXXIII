@@ -67,12 +67,14 @@ public class Limelight extends SubsystemBase {
   }
   //not needed
   private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-  private final GenericPublisher mainBotPose=mainTab.add("botpose","").withPosition(0, 1).withSize(1, 1).getEntry();
-  private final GenericPublisher mainTagsAvail=mainTab.add("targets",false).withPosition(1, 1).withSize(1, 1).getEntry();
+  private final GenericPublisher BotPoseWidget=mainTab.add("botpose","").withPosition(2, 1).withSize(4, 1).getEntry();
+  private final GenericPublisher HastargetsWidget=mainTab.add("targets",false).withPosition(1, 1).withSize(1, 1).getEntry();
+  private final GenericPublisher PipelineWidget=mainTab.add("pipelineIndex",0).withPosition(0, 1).withSize(1, 1).getEntry();
 
   private void updateWidgets(){
-    mainTagsAvail.setBoolean(targetsAvailable());
+    HastargetsWidget.setBoolean(targetsAvailable());
+    PipelineWidget.setInteger(nt.getEntry("getpipe").getInteger(-1));
     if(apriltagmode && bp.length>0)
-    mainBotPose.setString(bp[0]+","+bp[1]+","+bp[2]+","+bp[3]+","+bp[4]+","+bp[5]);
+    BotPoseWidget.setString(bp[0]+","+bp[1]+","+bp[2]+","+bp[3]+","+bp[4]+","+bp[5]);
   }
 }
