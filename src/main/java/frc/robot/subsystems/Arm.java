@@ -7,8 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ArmConstants.*;
 public class Arm extends SubsystemBase {
-  public double ArmUpperAngle;
-  public double ArmLowerAngle;
+  public double ArmUpperAngleTarget;
+  public double ArmLowerAngleTarget;
   /** Creates a new Arm. */
   public Arm() {}
 
@@ -18,7 +18,9 @@ public class Arm extends SubsystemBase {
   }
 
   public void ArmIKDrive(double targetX, double targetY){//where x and y are relative to shoulder position
-    double r=Math.sqrt(Math.pow(targetX, 2)+Math.pow(targetY, 2));
-    ArmUpperAngle=(Math.acos(targetY));
+    double r=Math.sqrt(squareOf(targetY)+squareOf(targetX));
+    //might need to add/subtract 180 + offset from encoder
+    ArmUpperAngleTarget=Math.toDegrees(Math.acos((squareOf(r)+squareOf(kArmUpperLength)-squareOf(kArmLowerLength))/(2*kArmUpperLength*r))+Math.atan(targetY/targetX));
+    ArmLowerAngleTarget=Math.toDegrees(Math.acos((squareOf(kArmUpperLength)+squareOf(kArmLowerLength)-squareOf(r))/(2*kArmLowerLength*kArmUpperLength)));
   }
 }
