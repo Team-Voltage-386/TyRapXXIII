@@ -64,4 +64,11 @@ public final class Constants {
     public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv, kSwerveSteerPID,
         kSwerveDrivePID, 22, -0.36, 0.26, 292);
   }
+  
+  public static final class ArmConstants{
+    public static final double kArmUpperLength=1;
+    public static final double kArmLowerLength=1;
+
+    
+  }
 }
