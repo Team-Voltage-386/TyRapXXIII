@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.DriverCommands;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
