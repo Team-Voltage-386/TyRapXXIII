@@ -42,10 +42,21 @@ public final class Constants {
     public static final int kLeftJoystickPressed = 9;
     public static final int kRightJoystickPressed = 10;
   }
+  
   public static final class Limelightconstants{
     public static final int apriltagpipelineindex = 0;
     public static final int retroreflectivepipelineindex = 1;
   }
+  
+  public static final class AutoConstants {
+
+    public static final double driveTolerance = 0.05;
+    public static final double headingTolerance = 90;
+
+    public static final double[] kAutoPositionPID = { 1, 2.5, 0.2 };
+    public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
+  }
+
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
@@ -55,7 +66,7 @@ public final class Constants {
     public static final int kIMUid = 2;
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
     public static final double[] kSwerveDrivePID = { 0.35, 2, 0.01 };
-    public static final double kSwerveDriveEncConv = 0.0005;
+    public static final double kSwerveDriveEncConv = 0.000745;
 
     public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv, kSwerveSteerPID,
         kSwerveDrivePID, 24, 0.36, -0.26, 84.1);

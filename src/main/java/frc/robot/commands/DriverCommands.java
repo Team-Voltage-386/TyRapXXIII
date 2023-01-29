@@ -50,8 +50,10 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
-        // System.out.println(HumanDriverControl);
         HumanDriverControl=Math.abs(kDriver.getRawAxis(kLeftTrigger))<deadband;
+        driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
+        driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
+        driveTrain.rotationTarget = -Math.pow(kDriver.getRawAxis(kRightHorizontal),3) * kMaxRotSpeed;
 
         if(HumanDriverControl){
             driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;

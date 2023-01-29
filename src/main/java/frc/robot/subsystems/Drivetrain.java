@@ -101,7 +101,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.setYaw(-90);
+        IMU.setYaw(180);
     }
     public void setFO(double yaw){
         IMU.setYaw(yaw);
@@ -114,14 +114,14 @@ public class Drivetrain extends SubsystemBase {
         if (Robot.inst.isEnabled()) {
 
             if (!wasEnabled) {
-                odoTimerLast = odometryTimer.get();
+                odoTimerLast = System.currentTimeMillis();
             }
 
-            double time = odometryTimer.get();
-            odometryTimer.reset();
-            odometryTimer.start();
-            double deltaT = time - odoTimerLast;
-            odoTimerLast = time;
+            long thisTime = System.currentTimeMillis();
+
+            double deltaT = (thisTime - odoTimerLast);
+            deltaT /= 1000;
+            odoTimerLast = thisTime;
 
             double xAdd = 0;
             double yAdd = 0;
@@ -136,6 +136,19 @@ public class Drivetrain extends SubsystemBase {
             xPos += xAdd / modules.length;
             yPos += yAdd / modules.length;
         }
+    }
+
+    public double distanceTo(double x, double y) {
+        return Math.sqrt(Math.pow(x - xPos, 2) + Math.pow(y - yPos, 2));
+    }
+
+    public double getHeadingError(double h) {
+        double res = h - getRawHeading() - 180;
+        while (angle > 180)
+            angle -= 360;
+        while (angle < 180)
+            angle += 360;
+        return res;
     }
 
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");

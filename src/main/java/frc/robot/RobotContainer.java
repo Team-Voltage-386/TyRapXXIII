@@ -27,6 +27,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_driveTrain = new Drivetrain();
   private final Limelight ll = new Limelight();
+  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
 
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, ll);
   // private final AutoPilotCommands m_autopilotCOmmand= new AutoPilotCommands(m_driveTrain, ll);
