@@ -22,7 +22,7 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
-        driveTrain.xDriveTarget = kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
+        driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
         driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
         driveTrain.rotationTarget = -Math.pow(kDriver.getRawAxis(kRightHorizontal),3) * kMaxRotSpeed;
 

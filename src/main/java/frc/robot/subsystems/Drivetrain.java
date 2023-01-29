@@ -96,7 +96,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.setYaw(0);
+        IMU.setYaw(180);
     }
 
     private void updateOdometry() {
