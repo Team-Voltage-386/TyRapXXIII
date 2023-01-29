@@ -6,14 +6,14 @@ package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
-import frc.robot.commands.ManipulatorCommands;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import edu.wpi.first.wpilibj.DriverStation;
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -26,17 +26,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_driveTrain = new Drivetrain();
-  private final Arm m_Arm = new Arm();
-  private final Limelight m_ll = new Limelight();
+  private final Limelight ll = new Limelight();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
 
+  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, ll);
+  // private final AutoPilotCommands m_autopilotCOmmand= new AutoPilotCommands(m_driveTrain, ll);
+  
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+ 
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_driveTrain.setDefaultCommand(m_driverCommand);
+    // ll.setDefaultCommand(m_autopilotCOmmand);
+
   }
 
   /**
@@ -56,9 +63,9 @@ public class RobotContainer {
   private void configureBindings() {
   }
 
-  public Command getTeleOp() {
-    return m_driverCommand;
-  }
+  // public Command getTeleOp() {
+  //   return new ParallelCommandGroup(m_driverCommand,m_autopilotCOmmand);
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
