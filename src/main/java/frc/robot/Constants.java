@@ -62,7 +62,7 @@ public final class Constants {
     public static final int kIMUid = 2;
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
     public static final double[] kSwerveDrivePID = { 0.35, 2, 0.01 };
-    public static final double kSwerveDriveEncConv = 0.0005;
+    public static final double kSwerveDriveEncConv = 0.000745;
 
     public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv, kSwerveSteerPID,
         kSwerveDrivePID, 24, 0.36, -0.26, 84.1);

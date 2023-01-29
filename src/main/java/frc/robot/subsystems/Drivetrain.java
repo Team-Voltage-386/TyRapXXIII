@@ -96,7 +96,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.setYaw(-90);
+        IMU.setYaw(0);
     }
 
     private void updateOdometry() {
@@ -106,14 +106,14 @@ public class Drivetrain extends SubsystemBase {
         if (Robot.inst.isEnabled()) {
 
             if (!wasEnabled) {
-                odoTimerLast = odometryTimer.get();
+                odoTimerLast = System.currentTimeMillis();
             }
 
-            double time = odometryTimer.get();
-            odometryTimer.reset();
-            odometryTimer.start();
-            double deltaT = time - odoTimerLast;
-            odoTimerLast = time;
+            long thisTime = System.currentTimeMillis();
+
+            double deltaT = (thisTime - odoTimerLast);
+            deltaT /= 1000;
+            odoTimerLast = thisTime;
 
             double xAdd = 0;
             double yAdd = 0;
