@@ -6,11 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
+import frc.robot.commands.Autonomous.Balance;
 import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.SwerveModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -72,6 +74,6 @@ public class RobotContainer {
     // Drive(1, 1, 0, m_driveTrain),
     // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
     //return new Drive(10, 0, 0, m_driveTrain);
-    return new SequentialCommandGroup(new Drive(4, 0, 0, m_driveTrain), new Drive(2.5, 0, 0, m_driveTrain), new Balance)
+    return new SequentialCommandGroup(new Drive(4, 0, 0, m_driveTrain), new Drive(2.5, 0, 0, m_driveTrain), new Balance(m_driveTrain));
   }
 }
