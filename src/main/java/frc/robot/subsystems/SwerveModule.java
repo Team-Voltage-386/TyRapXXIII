@@ -55,6 +55,7 @@ public class SwerveModule {
 
     private double getSwerveHeadingError() {
         double res = targetSteer - getEncoderPosition();
+        //why not use mod?
         while (res < -180)
             res += 360;
         while (res > 180)
@@ -69,6 +70,10 @@ public class SwerveModule {
             driveMult = 1;
         }
         return res;
+    }
+
+    public void resetWheel() {
+        steerMotor.set(steerPID.calc(getSwerveHeadingError()));
     }
 
     public void drive() {
