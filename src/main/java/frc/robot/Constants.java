@@ -23,6 +23,7 @@ public final class Constants {
   /** the indexes to address buttons on the controller */
   public static final class ControllerConstants {
     public static final Joystick kDriver = new Joystick(0);
+    public static final Joystick kManipulator = new Joystick(1);
     // public static final Joystick kManipulator = new Joystick(1);
 
     public static final int kLeftVertical = 1;
@@ -66,16 +67,19 @@ public final class Constants {
   }
   
   public static final class ArmConstants{
-    public static final double kArmUpperLength=1;
-    public static final double kArmLowerLength=1;
-    public static final double kArmUpperEncoderConversion=1.0/44.4;
-    public static final double kArmLowerEncoderConversion=1.0/44.4;
+    public static final double[] kArmUpperPID={.01,0.0,0.0};
+    public static final double[] kArmLowerPID={.01,0.0,0.0};
+
+    public static final double kArmUpperLength=.3;//meters
+    public static final double kArmLowerLength=.4;//meters, the superior measuring system
+    public static final double kArmUpperEncoderConversion=360/44.4;//360 degrees per rotation times one rotation per 44.4 pulses
+    public static final double kArmLowerEncoderConversion=360/44.4;//360 degrees per rotation times one rotation per 44.4 pulses
     public static final int kArmUpperMotorID=1;
-    public static final int kArmLowerMotorID=1;
-    public static final int kArmUpperEncoderIDA=1;
-    public static final int kArmUpperEncoderIDB=1;
-    public static final int kArmLowerEncoderIDA=1;
-    public static final int kArmLowerEncoderIDB=1;
+    public static final int kArmLowerMotorID=2;
+    public static final int kArmUpperEncoderIDA=9;
+    public static final int kArmUpperEncoderIDB=8;
+    public static final int kArmLowerEncoderIDA=7;
+    public static final int kArmLowerEncoderIDB=6;
 
 
     public static double squareOf(double i){

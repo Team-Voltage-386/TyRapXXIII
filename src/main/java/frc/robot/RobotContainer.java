@@ -30,7 +30,7 @@ public class RobotContainer {
   private final Arm m_Arm = new Arm();
   private final Limelight m_ll = new Limelight();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
-  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -38,6 +38,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_Arm.setDefaultCommand(m_manipulatorCommand);
   }
 
   /**
@@ -57,9 +58,9 @@ public class RobotContainer {
   private void configureBindings() {
   }
 
-  public Command getTeleOp() {
-    return m_driverCommand;
-  }
+  // public Command getTeleOp() {
+  //   return m_driverCommand;
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
