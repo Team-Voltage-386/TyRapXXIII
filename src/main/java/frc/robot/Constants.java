@@ -68,6 +68,16 @@ public final class Constants {
   public static final class ArmConstants{
     public static final double kArmUpperLength=1;
     public static final double kArmLowerLength=1;
+    public static final double kArmUpperEncoderConversion=1.0/44.4;
+    public static final double kArmLowerEncoderConversion=1.0/44.4;
+    public static final int kArmUpperMotorID=1;
+    public static final int kArmLowerMotorID=1;
+    public static final int kArmUpperEncoderIDA=1;
+    public static final int kArmUpperEncoderIDB=1;
+    public static final int kArmLowerEncoderIDA=1;
+    public static final int kArmLowerEncoderIDB=1;
+
+
     public static double squareOf(double i){
       return Math.pow(i,2);
     }

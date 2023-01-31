@@ -4,17 +4,41 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ArmConstants.*;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class Arm extends SubsystemBase {
   public double ArmUpperAngleTarget;
   public double ArmLowerAngleTarget;
+
+  private TalonSRX ArmUpperMotor;
+  private Encoder ArmUpperEncoder;
+
+  private TalonSRX ArmLowerMotor;
+  private Encoder ArmLowerEncoder;
   /** Creates a new Arm. */
-  public Arm() {}
+  public Arm() {
+    ArmUpperMotor=new TalonSRX(kArmUpperMotorID);
+    ArmUpperEncoder=new Encoder(kArmUpperEncoderIDA, kArmUpperEncoderIDB);
+    ArmLowerMotor=new TalonSRX(kArmLowerMotorID);
+    ArmLowerEncoder = new Encoder(kArmLowerEncoderIDA, kArmLowerEncoderIDB);
+
+    ArmUpperEncoder.reset();
+    ArmLowerEncoder.reset();
+    ArmUpperEncoder.setDistancePerPulse(kArmUpperEncoderConversion);
+    ArmLowerEncoder.setDistancePerPulse(kArmLowerEncoderConversion);
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+  public double[] getArmAngles(){
+    double[] result = {(double)ArmUpperEncoder.getDistance(),(double)ArmLowerEncoder.getDistance()};
+    return result;
   }
   
   //prerequisites: view the robot so that the arm extends to the right
@@ -40,4 +64,6 @@ public class Arm extends SubsystemBase {
   public void ArmIKDrive(double targetX, double targetY){
     ArmIKDrive(targetX, targetY, true);
   }
+
+  
 }
