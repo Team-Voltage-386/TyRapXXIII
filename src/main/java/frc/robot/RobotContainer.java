@@ -71,6 +71,7 @@ public class RobotContainer {
     // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
     // Drive(1, 1, 0, m_driveTrain),
     // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
-    return new Drive(10, 0, 0, m_driveTrain);
+    //return new Drive(10, 0, 0, m_driveTrain);
+    return new SequentialCommandGroup(new Drive(4, 0, 0, m_driveTrain), new Drive(2.5, 0, 0, m_driveTrain), new Balance)
   }
 }
