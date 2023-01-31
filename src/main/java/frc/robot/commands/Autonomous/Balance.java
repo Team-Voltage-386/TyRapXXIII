@@ -11,13 +11,13 @@ import frc.robot.utils.PID;
 
 public class Balance extends CommandBase {
     private double balanceTarget = 2.5;
-    private final Drivetrain DT;
+    private final Drivetrain dt;
     private double ypr[] = new double[3];
     public Pigeon2 pigeonIMU = new Pigeon2(kIMUid);
-    private PID pid = new PID(0, 0, 0);
+    private final PID pid = new PID(0, 0, 0);
 
-    public Balance(Drivetrain dt) {
-        DT = dt;
+    public Balance(Drivetrain DT) {
+        dt = DT;
     }
 
     @Override
@@ -44,17 +44,22 @@ public class Balance extends CommandBase {
         ypr[1] = pigeonIMU.getPitch();
         pigeonIMU.getYawPitchRoll(ypr);
         //balancing
-        DT.xDriveTarget = pid.calc(balanceTarget - ypr[1]);
+        dt.xDriveTarget = pid.calc(balanceTarget - ypr[1]);
     }
 
     @Override
     public boolean isFinished() {
         //if the angle is straighter than the tolerance, it kills the command
         if(Math.abs(ypr[1]) < balanceTarget) {
-            end(true);
             return true;
         }
         else return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        balanceTarget = 0;
+        System.out.println("Balancing done.");
     }
 
 }

@@ -72,10 +72,6 @@ public class SwerveModule {
         return res;
     }
 
-    public void resetWheel() {
-        steerMotor.set(steerPID.calc(getSwerveHeadingError()));
-    }
-
     public void drive() {
         steerMotor.set(steerPID.calc(getSwerveHeadingError()));
 
