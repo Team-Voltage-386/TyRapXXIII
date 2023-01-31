@@ -20,7 +20,7 @@ public class Balance extends CommandBase {
     @Override
     public void initialize() {
         System.out.println("Balance Starting");
-        //makes all wheels face the same direction (direction that joystick is pointed when called)
+        //makes all wheels face the same direction (direction of target pos is pointed when called)
         LeftFront.resetWheel();
         RightFront.resetWheel();
         LeftRear.resetWheel();
@@ -37,9 +37,7 @@ public class Balance extends CommandBase {
     @Override
     public void execute() {
         //assigns ypr vals
-        ypr[0] = pigeonIMU.getYaw();
         ypr[1] = pigeonIMU.getPitch();
-        ypr[2] = pigeonIMU.getRoll();
         //easier to read
         robotBalance = ypr[1];
         pigeonIMU.getYawPitchRoll(ypr);
