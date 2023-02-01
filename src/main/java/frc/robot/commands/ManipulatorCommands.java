@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.GenericPublisher;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
@@ -31,9 +34,14 @@ public class ManipulatorCommands extends CommandBase {
   public void execute() {
     // targetX+=kManipulator.getRawAxis(kLeftHorizontal)*.1;
     // targetY+=kManipulator.getRawAxis(kLeftVertical)*.1;
-    arm.ArmUpperAngleTarget+=kManipulator.getRawAxis(kLeftVertical);
-    arm.ArmLowerAngleTarget+=kManipulator.getRawAxis(kRightVertical);
+    //increment targets
+    if(kManipulator.getRawButtonPressed(kA))arm.ShoulderTarget-=15;
+    if(kManipulator.getRawButtonPressed(kY))arm.ShoulderTarget+=15;
+    if(kManipulator.getRawButtonPressed(kB))arm.ElbowTarget-=15;
+    if(kManipulator.getRawButtonPressed(kX))arm.ElbowTarget+=15;
     // arm.ArmIKDrive(targetX, targetY);
+    // arm.JoystickDriveRawArm(-kManipulator.getRawAxis(kRightVertical), -kManipulator.getRawAxis(kLeftVertical));//uncomment this to just drive motors using joysticks
+    updateWidgets();
   }
 
   // Called once the command ends or is interrupted.
@@ -44,5 +52,13 @@ public class ManipulatorCommands extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+  }
+  private ShuffleboardTab mainTab=Shuffleboard.getTab("Main");
+  private GenericPublisher joystickLeftAxisVertWidget=mainTab.add("joystickLeftAxisVert",0.0).withPosition(0, 2).withSize(1, 1).getEntry();
+  private GenericPublisher joystickRightAxisVertWidget=mainTab.add("joystickRightAxisVert",0.0).withPosition(1, 2).withSize(1, 1).getEntry();
+  private void updateWidgets(){
+    joystickLeftAxisVertWidget.setDouble(kManipulator.getRawAxis(kLeftVertical));
+    joystickRightAxisVertWidget.setDouble(kManipulator.getRawAxis(kRightVertical));
+
   }
 }
