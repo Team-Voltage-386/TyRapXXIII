@@ -5,6 +5,8 @@ import static frc.robot.Constants.DriveConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Tracer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
@@ -15,6 +17,7 @@ public class Balance extends CommandBase {
     private double ypr[] = new double[3];
     public Pigeon2 pigeonIMU = new Pigeon2(kIMUid);
     private final PID pid = new PID(0, 0, 0);
+    
 
     public Balance(Drivetrain DT) {
         dt = DT;
@@ -41,8 +44,8 @@ public class Balance extends CommandBase {
     @Override
     public void execute() {
         //assigns ypr vals
-        ypr[1] = pigeonIMU.getPitch();
         pigeonIMU.getYawPitchRoll(ypr);
+        SmartDashboard.putNumber("Pigeon Pitch", ypr[1]);
         //balancing
         dt.xDriveTarget = pid.calc(balanceTarget - ypr[1]);
     }
