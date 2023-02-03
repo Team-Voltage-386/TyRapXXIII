@@ -65,6 +65,7 @@ public class Balance extends CommandBase {
             }
         }
         return false;
+        //ignore this <-
     }
 
     @Override
