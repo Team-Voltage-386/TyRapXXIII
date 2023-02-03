@@ -4,6 +4,7 @@ import com.ctre.phoenix.sensors.Pigeon2;
 import static frc.robot.Constants.DriveConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Tracer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,11 +13,10 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
 
 public class Balance extends CommandBase {
-    private double balanceTarget = 2.5;
+    private double balanceTarget = 2;
     private final Drivetrain dt;
-    private double ypr[] = new double[3];
-    public Pigeon2 pigeonIMU = new Pigeon2(kIMUid);
-    private final PID pid = new PID(0, 0, 0);
+    private Timer time = new Timer();
+    private final PID pid = new PID(0.05, 0, 0.22);
     
 
     public Balance(Drivetrain DT) {
@@ -26,6 +26,8 @@ public class Balance extends CommandBase {
     @Override
     public void initialize() {
         System.out.println("Balance Starting");
+        time.reset();
+        time.start();
         
         // //makes all wheels face the same direction (direction of target pos is pointed when called)
         // LeftFront.resetWheel();
@@ -44,25 +46,32 @@ public class Balance extends CommandBase {
     @Override
     public void execute() {
         //assigns ypr vals
-        pigeonIMU.getYawPitchRoll(ypr);
-        SmartDashboard.putNumber("Pigeon Pitch", ypr[1]);
+        SmartDashboard.putNumber("Pigeon Pitch", dt.ypr[2]);
         //balancing
-        dt.xDriveTarget = pid.calc(balanceTarget - ypr[1]);
+        dt.xDriveTarget = -pid.calc(balanceTarget - dt.ypr[2]);
     }
 
     @Override
     public boolean isFinished() {
         //if the angle is straighter than the tolerance, it kills the command
-        if(Math.abs(ypr[1]) < balanceTarget) {
-            return true;
+        if(Math.abs(dt.ypr[2]) < balanceTarget) {
+            
+            if(Math.abs(dt.ypr[2]) < balanceTarget && time.hasElapsed(2)) {
+                return true;
+            }
+            else{
+                time.reset();
+                return false;
+            }
         }
-        else return false;
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
         balanceTarget = 0;
         System.out.println("Balancing done.");
+        time.stop();
     }
 
 }

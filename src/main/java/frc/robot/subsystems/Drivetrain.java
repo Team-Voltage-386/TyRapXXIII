@@ -20,7 +20,7 @@ public class Drivetrain extends SubsystemBase {
     public double yPos = 0;
     public double angle = 0;
 
-    private double ypr[] = new double[3];
+    public double ypr[] = new double[3];
 
     public Pigeon2 IMU = new Pigeon2(kIMUid);
 
@@ -146,10 +146,11 @@ public class Drivetrain extends SubsystemBase {
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
-
+    private static final GenericEntry pitchWid = mainTab.add("Pitch",0).withPosition(0, 1).withSize(1,1).getEntry();
     private void updateWidget() {
         xPosWidget.setDouble(xPos);
         yPosWidget.setDouble(yPos);
+        pitchWid.setDouble(ypr[2]);
     }
 
 }
