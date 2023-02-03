@@ -4,11 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.networktables.GenericSubscriber;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.utils.PID;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -76,23 +78,26 @@ public final class Constants {
     public static final double[] kShoulderSafezone={-90,0};//lower limit is index 0, upper limit is index 1
     public static final double[] kElbowSafezone={0,90};//lowe limit is index 0, upper limit is index 1
     public static final double kArmMotorDeadband=.1;
-    public static final double kArmShoulderMaxPercent=.5;
-    public static final double kArmElbowMaxPercent=.3;
+    public static final double kShoulderMaxPercent=.5;
+    public static final double kElbowMaxPercent=.3;
     public static final double kArmUpperLength=.3;//meters
     public static final double kArmLowerLength=.4;//meters, the superior measuring system
     public static final double kArmUpperEncoderConversion=360/(44.4);//360 degrees per rotation times one rotation per 44.4 pulses
     public static final double kArmLowerEncoderConversion=360/(44.4);//360 degrees per rotation times one rotation per 44.4 pulses
-    public static final int kArmUpperMotorID=1;
-    public static final int kArmLowerMotorID=2;
-    public static final int kArmUpperEncoderIDA=9;
-    public static final int kArmUpperEncoderIDB=8;
-    public static final int kArmLowerEncoderIDA=7;
-    public static final int kArmLowerEncoderIDB=6;
+    public static final int kShoulderMotorID=1;
+    public static final int kElbowMotorID=2;
+    public static final int kShoulderEncoderIDA=9;
+    public static final int kShoulderEncoderIDB=8;
+    public static final int kElbowEncoderIDA=7;
+    public static final int kElbowEncoderIDB=6;
+    public static final double kShoulderOffset=-90.0;
+    public static final double kElbowOffset=0.0;
 
 
     public static double squareOf(double i){
       return Math.pow(i,2);
     }
+
   }
 
   
