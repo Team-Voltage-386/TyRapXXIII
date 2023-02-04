@@ -18,7 +18,7 @@ public class Balance extends CommandBase {
     private final Drivetrain dt;
     private Timer time = new Timer();
     private final PID pid = new PID(0.13, 0, 0.2);
-    
+    private boolean XLOCK = false;
 
     public Balance(Drivetrain DT) {
         dt = DT;
@@ -49,26 +49,36 @@ public class Balance extends CommandBase {
         //assigns ypr vals
         SmartDashboard.putNumber("Pigeon Pitch", dt.ypr[2]);
         //balancing
+        if(XLOCK == false)
         dt.xDriveTarget = -pid.calc(0 - dt.ypr[2]);
+
+
+        //BALANCE SYS
+        SmartDashboard.putNumber("time in seconds", time.get());
+
+        boolean isBalanced = false;
+
+        if(Math.abs(dt.ypr[2]) < balanceTarget) {
+            if(isBalanced == false) {
+                isBalanced = true;
+            }
+        }
+        else {
+            time.reset();
+            isBalanced = false;
+        }
+
+        if(time.get() > 0.5) XLOCK = true;
+        else XLOCK = false;
     }
 
     @Override
     public boolean isFinished() {
-        //if the angle is straighter than the tolerance, it kills the command
-        SmartDashboard.putNumber("time in seconds", time.get());
-        if(Math.abs(dt.ypr[2]) < balanceTarget) {
-            return true;
-        }
-        else{
-            time.reset();
-            return false;
-        }
-        //ignore this <-
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
-        balanceTarget = 0;
         System.out.println("Balancing done.");
         time.stop();
     }
