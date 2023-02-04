@@ -17,7 +17,7 @@ public class Balance extends CommandBase {
     private double balanceTarget = 2;
     private final Drivetrain dt;
     private Timer time = new Timer();
-    private final PID pid = new PID(0.13, 0, 0.2);
+    private final PID pid = new PID(0.09, 0, 0.13);
     private boolean XLOCK = false;
 
     public Balance(Drivetrain DT) {
@@ -46,11 +46,13 @@ public class Balance extends CommandBase {
     //maybe this'll work?
     @Override
     public void execute() {
+        SmartDashboard.putBoolean("XLOCK", XLOCK);
         //assigns ypr vals
         SmartDashboard.putNumber("Pigeon Pitch", dt.ypr[2]);
         //balancing
         if(XLOCK == false)
         dt.xDriveTarget = -pid.calc(0 - dt.ypr[2]);
+        else dt.xDriveTarget = 0;
 
 
         //BALANCE SYS
