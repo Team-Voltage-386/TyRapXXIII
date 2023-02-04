@@ -33,7 +33,7 @@ public class DriverCommands extends CommandBase {
             driveTrain.setOffset(0, 0);
 
         if (kDriver.getRawButtonPressed(kRightBumper))
-            driveTrain.resetFO();
+            driveTrain.resetFO(0);
     }
 
     @Override

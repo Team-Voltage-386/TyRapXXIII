@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_robotContainer.m_driveTrain.resetFO();
+    m_robotContainer.m_driveTrain.resetFO(0);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)

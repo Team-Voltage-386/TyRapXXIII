@@ -37,7 +37,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void init() {
         odoTimerLast = System.currentTimeMillis();
-        resetFO();
+        resetFO(0);
     }
 
     @Override
@@ -95,8 +95,8 @@ public class Drivetrain extends SubsystemBase {
             swerve.calcPosition(offX, offY);
     }
 
-    public void resetFO() {
-        IMU.setYaw(180);
+    public void resetFO(double a) {
+        IMU.setYaw(180 + a);
     }
 
     private void updateOdometry() {

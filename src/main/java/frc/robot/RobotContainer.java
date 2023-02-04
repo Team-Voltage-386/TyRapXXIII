@@ -8,6 +8,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.commands.ZeroOdo;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
@@ -71,6 +72,6 @@ public class RobotContainer {
     // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
     // Drive(1, 1, 0, m_driveTrain),
     // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
-    return new SequentialCommandGroup(new Drive(5.5, 0, 180, m_driveTrain), new Drive(0.5,0,0,m_driveTrain));
+    return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(4.25, 0, 0, m_driveTrain), new Drive(0, 0, 180, m_driveTrain),  new Drive(4.5, 0, 0, m_driveTrain), new Drive(4.5, -1, -90, m_driveTrain), new Drive(4.5, 0, 90,m_driveTrain), new Drive(0, 0, 180,m_driveTrain));
   }
 }
