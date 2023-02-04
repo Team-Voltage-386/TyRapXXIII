@@ -16,7 +16,7 @@ public class Balance extends CommandBase {
     private double balanceTarget = 2;
     private final Drivetrain dt;
     private Timer time = new Timer();
-    private final PID pid = new PID(0.05, 0, 0.22);
+    private final PID pid = new PID(0.075, 0, 0.3);
     
 
     public Balance(Drivetrain DT) {
@@ -48,7 +48,7 @@ public class Balance extends CommandBase {
         //assigns ypr vals
         SmartDashboard.putNumber("Pigeon Pitch", dt.ypr[2]);
         //balancing
-        dt.xDriveTarget = -pid.calc(balanceTarget - dt.ypr[2]);
+        dt.xDriveTarget = -pid.calc(0 - dt.ypr[2]);
     }
 
     @Override
