@@ -70,6 +70,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(new DriveUntil(m_driveTrain), new Balance(m_driveTrain));
+    // return new SequentialCommandGroup(new DriveUntil(m_driveTrain), new
+    // Balance(m_driveTrain));
+
+    return new SequentialCommandGroup(new DriveUntil(true, m_driveTrain), new Drive(5, 0, 0, m_driveTrain),
+        new DriveUntil(false, m_driveTrain),
+        new Balance(m_driveTrain));
   }
 }

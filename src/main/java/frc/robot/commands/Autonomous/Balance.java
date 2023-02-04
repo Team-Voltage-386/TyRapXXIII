@@ -42,11 +42,11 @@ public class Balance extends CommandBase {
         // The Pigeon is mounted 90 degrees off, so pitch and roll are reversed
         pigeon.getYawPitchRoll(ypr);
         // Slows down the robot as the balance progresses
-        driveMultiplier = Math.pow(0.5, numTimesDirectionChanged);
+        driveMultiplier = Math.pow(0.8, numTimesDirectionChanged);
 
         if (Math.abs(ypr[2]) > balanceTarget) {
             if (ypr[2] > balanceTarget) {
-                dt.xDriveTarget = 0.5 * driveMultiplier;
+                dt.xDriveTarget = 1 * driveMultiplier;
                 // Increments numTimesDirectionChanged
                 if (!wasGoingForward) {
                     wasGoingForward = true;
@@ -54,7 +54,7 @@ public class Balance extends CommandBase {
                 }
                 isDrivingForward = true;
             } else if (ypr[2] < balanceTarget) {
-                dt.xDriveTarget = -0.5 * driveMultiplier;
+                dt.xDriveTarget = -1 * driveMultiplier;
                 // Increments numTimesDirectionChanged
                 if (wasGoingForward) {
                     wasGoingForward = false;
@@ -63,6 +63,7 @@ public class Balance extends CommandBase {
                 isDrivingForward = false;
             }
         } else {
+            // x-lock the wheels when the charging station is balanced
             dt.xDriveTarget = 0;
         }
         // timesSwappedCounter++;

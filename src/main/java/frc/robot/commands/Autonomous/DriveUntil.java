@@ -20,8 +20,13 @@ public class DriveUntil extends CommandBase {
     // driving up the charging pad
     private boolean changeDetected;
 
-    public DriveUntil(Drivetrain DT) {
+    private int timerCounter = 0;
+
+    private boolean isForward;
+
+    public DriveUntil(boolean ISFORWARD, Drivetrain DT) {
         dt = DT;
+        isForward = ISFORWARD;
     }
 
     @Override
@@ -36,10 +41,18 @@ public class DriveUntil extends CommandBase {
         // Pigeon is mounted 90 degrees off, so use roll instead of pitch
 
         if (Math.abs(ypr[2]) > 12 && Math.abs(ypr[2]) <= 30) {
-            changeDetected = true;
+            timerCounter++;
+            if (timerCounter > 13) {
+                changeDetected = true;
+            }
         } else {
             // Changing this will change the speed of the robot's approach
-            dt.xDriveTarget = 4;
+            if (isForward) {
+                dt.xDriveTarget = 2;
+            } else {
+                dt.xDriveTarget = -2;
+            }
+
         }
         // PID to keep the robot driving straight
         // dt.yDriveTarget = autoPositionY.calc(0 - dt.yPos);
