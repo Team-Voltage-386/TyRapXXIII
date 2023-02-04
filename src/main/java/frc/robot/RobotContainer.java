@@ -39,6 +39,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     m_Arm.setDefaultCommand(m_manipulatorCommand);
+    // m_driveTrain.setDefaultCommand(m_driverCommand);
   }
 
   /**

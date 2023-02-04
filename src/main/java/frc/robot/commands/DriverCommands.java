@@ -11,6 +11,7 @@ public class DriverCommands extends CommandBase {
 
     public DriverCommands(Drivetrain DT) {
         driveTrain = DT;
+        addRequirements(driveTrain);
     }
 
     @Override
