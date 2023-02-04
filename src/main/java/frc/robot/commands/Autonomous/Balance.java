@@ -17,7 +17,7 @@ public class Balance extends CommandBase {
     private double balanceTarget = 2;
     private final Drivetrain dt;
     private Timer time = new Timer();
-    private final PIDShufflable pid = new PIDShufflable(0.075, 0, 0.3, "PID");
+    private final PID pid = new PID(0.13, 0, 0.2);
     
 
     public Balance(Drivetrain DT) {
@@ -55,17 +55,14 @@ public class Balance extends CommandBase {
     @Override
     public boolean isFinished() {
         //if the angle is straighter than the tolerance, it kills the command
+        SmartDashboard.putNumber("time in seconds", time.get());
         if(Math.abs(dt.ypr[2]) < balanceTarget) {
-            
-            if(Math.abs(dt.ypr[2]) < balanceTarget && time.hasElapsed(2)) {
-                return true;
-            }
-            else{
-                time.reset();
-                return false;
-            }
+            return true;
         }
-        return false;
+        else{
+            time.reset();
+            return false;
+        }
         //ignore this <-
     }
 
