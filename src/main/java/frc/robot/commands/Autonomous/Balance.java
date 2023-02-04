@@ -11,12 +11,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
+import frc.robot.utils.PIDShufflable;
 
 public class Balance extends CommandBase {
     private double balanceTarget = 2;
     private final Drivetrain dt;
     private Timer time = new Timer();
-    private final PID pid = new PID(0.075, 0, 0.3);
+    private final PIDShufflable pid = new PIDShufflable(0.075, 0, 0.3, "PID");
     
 
     public Balance(Drivetrain DT) {
