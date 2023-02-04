@@ -74,9 +74,7 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    ArmDrive();//move to target values
-    // ArmUpperMotor.set(ControlMode.PercentOutput,1);
-    // ArmLowerMotor.set(ControlMode.PercentOutput, 1);
+    ArmDrive();
     updateWidgets();
   }
   public double[] getArmAngles(){
@@ -84,9 +82,16 @@ public class Arm extends SubsystemBase {
     return result;
   }
   
+  //drive to target value always
   public void ArmDrive(){
-    ShoulderMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(bangbangdrive(ShoulderTarget-getArmAngles()[0],kShoulderMaxPercent),getArmAngles()[0],kShoulderSafezone));
-    ElbowMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(bangbangdrive(ElbowTarget-getArmAngles()[1],kElbowMaxPercent),getArmAngles()[1],kElbowSafezone));
+    ElbowMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(ElbowFeedForward.calc(ElbowTarget-getArmAngles()[1],(getArmAngles()[0]+getArmAngles()[1])),getArmAngles()[1],kElbowSafezone));
+    ShoulderMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(ShoulderFeedForward.calc(ShoulderTarget-getArmAngles()[0],(getArmAngles()[0]),ElbowFeedForward.getLoad()),getArmAngles()[0],kShoulderSafezone));
+  }
+
+  //bang-bang to target value always
+  public void ArmBangBang(){
+    ElbowMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(bangbangdrive(ElbowTarget-getArmAngles()[1],kElbowMaxPercent), getArmAngles()[1], kElbowSafezone));
+    ShoulderMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(bangbangdrive(ShoulderTarget-getArmAngles()[0],kShoulderMaxPercent), getArmAngles()[0], kShoulderSafezone));
   }
 
   public void JoystickDriveRawArm(double shoulder, double elbow){

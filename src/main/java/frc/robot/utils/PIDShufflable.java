@@ -34,6 +34,7 @@ public class PIDShufflable {
         pUpdater=pidTab.addPersistent("P", p).getEntry();
         iUpdater=pidTab.addPersistent("i", i).getEntry();
         dUpdater=pidTab.addPersistent("d", d).getEntry();
+        shuffleUpdatePID();
     }
     
 

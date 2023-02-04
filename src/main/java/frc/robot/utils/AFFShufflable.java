@@ -36,10 +36,11 @@ public class AFFShufflable {
 
         pidObjectCount++;
         pidTab=Shuffleboard.getTab(TabName);
-        pUpdater=pidTab.addPersistent("P", p).getEntry();
-        iUpdater=pidTab.addPersistent("i", i).getEntry();
-        dUpdater=pidTab.addPersistent("d", d).getEntry();
-        fUpdater=pidTab.addPersistent("f", f).getEntry();
+        pUpdater=pidTab.addPersistent("P", p).withPosition(0,0).getEntry();
+        iUpdater=pidTab.addPersistent("i", i).withPosition(1,0).getEntry();
+        dUpdater=pidTab.addPersistent("d", d).withPosition(2,0).getEntry();
+        fUpdater=pidTab.addPersistent("f", f).withPosition(3,0).getEntry();
+        shuffleUpdatePID();
     }
     
 
@@ -67,7 +68,7 @@ public class AFFShufflable {
     }
 
     public void loadUp(double SpatialAngle,double extraload){
-        load= f*Math.cos(SpatialAngle)+extraload;
+        load= f*Math.cos(Math.toRadians(SpatialAngle))+extraload;
     }
 
     public double getLoad(){
