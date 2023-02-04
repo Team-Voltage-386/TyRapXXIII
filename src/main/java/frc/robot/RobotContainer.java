@@ -13,6 +13,9 @@ import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,10 +38,25 @@ public class RobotContainer {
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
 
+  private final Command drive5 = new Drive(5, 0, 0, m_driveTrain);
+  private final Command balance = new Balance(m_driveTrain);
+  private final SequentialCommandGroup goOverAndBalance = new SequentialCommandGroup(new DriveUntil(true, m_driveTrain),
+      new Drive(5, 0, 0, m_driveTrain), new DriveUntil(false, m_driveTrain), new Balance(m_driveTrain));
+
+  // private static final Shuffleboard Tab mainTab = Shuffleboard.getTab("Main");
+
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    m_chooser.addOption("Drive to (5, 0)", drive5);
+    m_chooser.addOption("Balance", balance);
+    m_chooser.setDefaultOption("Go over and Balance", goOverAndBalance);
+
+    SmartDashboard.putData(m_chooser);
+    // mainTab.add("autoRoutine", m_chooser).withPosition(5, 5).withSize(3, 1);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -73,8 +91,11 @@ public class RobotContainer {
     // return new SequentialCommandGroup(new DriveUntil(m_driveTrain), new
     // Balance(m_driveTrain));
 
-    return new SequentialCommandGroup(new DriveUntil(true, m_driveTrain), new Drive(5, 0, 0, m_driveTrain),
-        new DriveUntil(false, m_driveTrain),
-        new Balance(m_driveTrain));
+    // return new SequentialCommandGroup(new DriveUntil(true, m_driveTrain), new
+    // Drive(5, 0, 0, m_driveTrain),
+    // new DriveUntil(false, m_driveTrain),
+    // new Balance(m_driveTrain));
+
+    return m_chooser.getSelected();
   }
 }

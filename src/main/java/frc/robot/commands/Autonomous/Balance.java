@@ -46,7 +46,7 @@ public class Balance extends CommandBase {
 
         if (Math.abs(ypr[2]) > balanceTarget) {
             if (ypr[2] > balanceTarget) {
-                dt.xDriveTarget = 1 * driveMultiplier;
+                dt.xDriveTarget = 1.5 * driveMultiplier;
                 // Increments numTimesDirectionChanged
                 if (!wasGoingForward) {
                     wasGoingForward = true;
@@ -54,7 +54,7 @@ public class Balance extends CommandBase {
                 }
                 isDrivingForward = true;
             } else if (ypr[2] < balanceTarget) {
-                dt.xDriveTarget = -1 * driveMultiplier;
+                dt.xDriveTarget = -1.5 * driveMultiplier;
                 // Increments numTimesDirectionChanged
                 if (wasGoingForward) {
                     wasGoingForward = false;

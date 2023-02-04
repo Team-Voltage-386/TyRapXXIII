@@ -91,6 +91,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   @Override
@@ -104,6 +105,7 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer.getTeleOp().schedule();
+
   }
 
   /** This function is called periodically during operator control. */
