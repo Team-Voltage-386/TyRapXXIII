@@ -2,6 +2,8 @@ package frc.robot.commands.Autonomous;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 import static frc.robot.Constants.DriveConstants.*;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
@@ -19,6 +21,12 @@ public class Balance extends CommandBase {
     boolean balanceDone = false;
     // This is zone in degrees when the charging station is considered balanced
     private double balanceTarget = 2.5;
+    private int numTimesDirectionChanged = 0;
+    private boolean wasGoingForward = true;
+    public double driveMultiplier;
+
+    // variables to display on shuffleboard
+    private boolean isDrivingForward;
 
     public Balance(Drivetrain DT) {
         dt = DT;
@@ -31,28 +39,44 @@ public class Balance extends CommandBase {
 
     @Override
     public void execute() {
-        pigeon.getYawPitchRoll(ypr);
         // The Pigeon is mounted 90 degrees off, so pitch and roll are reversed
+        pigeon.getYawPitchRoll(ypr);
+        // Slows down the robot as the balance progresses
+        driveMultiplier = Math.pow(0.5, numTimesDirectionChanged);
+
         if (Math.abs(ypr[2]) > balanceTarget) {
-            // timerCounter = 0;
             if (ypr[2] > balanceTarget) {
-                dt.xDriveTarget = 0.5;
-                // Might need in order to slow down balancing
-                // dt.xDriveTarget = 0.25 * Math.pow(0.5, (timesSwappedCounter));
+                dt.xDriveTarget = 0.5 * driveMultiplier;
+                // Increments numTimesDirectionChanged
+                if (!wasGoingForward) {
+                    wasGoingForward = true;
+                    numTimesDirectionChanged++;
+                }
+                isDrivingForward = true;
+            } else if (ypr[2] < balanceTarget) {
+                dt.xDriveTarget = -0.5 * driveMultiplier;
+                // Increments numTimesDirectionChanged
+                if (wasGoingForward) {
+                    wasGoingForward = false;
+                    numTimesDirectionChanged++;
+                }
+                isDrivingForward = false;
             }
-            if (ypr[2] < balanceTarget) {
-                dt.xDriveTarget = -0.5;
-                // Might need in order to slow down balancing
-                // dt.xDriveTarget = -0.25 * Math.pow(0.5, (timesSwappedCounter));
-            }
+        } else {
+            dt.xDriveTarget = 0;
         }
         // timesSwappedCounter++;
+        SmartDashboard.putBoolean("Is Driving Forward", isDrivingForward);
+        SmartDashboard.putNumber("Number of Times Direction Changed", numTimesDirectionChanged);
+        SmartDashboard.putNumber("driveMultiplier", driveMultiplier);
+        SmartDashboard.putNumber("Balance Target", balanceTarget);
     }
 
     @Override
     public boolean isFinished() {
         // Checks to make sure that the robot pitch is within the acceptable range
-        return Math.abs(ypr[2]) < balanceTarget;
+        // return Math.abs(ypr[2]) < balanceTarget;
+        return false;
     }
 
     @Override
