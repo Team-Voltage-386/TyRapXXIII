@@ -39,10 +39,10 @@ public class DriveUntil extends CommandBase {
             changeDetected = true;
         } else {
             // Changing this will change the speed of the robot's approach
-            dt.xDriveTarget = 2;
+            dt.xDriveTarget = 4;
         }
         // PID to keep the robot driving straight
-        dt.yDriveTarget = autoPositionY.calc(0 - dt.yPos);
+        // dt.yDriveTarget = autoPositionY.calc(0 - dt.yPos);
     }
 
     @Override

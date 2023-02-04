@@ -36,12 +36,12 @@ public class Balance extends CommandBase {
         if (Math.abs(ypr[2]) > balanceTarget) {
             // timerCounter = 0;
             if (ypr[2] > balanceTarget) {
-                dt.xDriveTarget = 0.25;
+                dt.xDriveTarget = 0.5;
                 // Might need in order to slow down balancing
                 // dt.xDriveTarget = 0.25 * Math.pow(0.5, (timesSwappedCounter));
             }
             if (ypr[2] < balanceTarget) {
-                dt.xDriveTarget = -0.25;
+                dt.xDriveTarget = -0.5;
                 // Might need in order to slow down balancing
                 // dt.xDriveTarget = -0.25 * Math.pow(0.5, (timesSwappedCounter));
             }
