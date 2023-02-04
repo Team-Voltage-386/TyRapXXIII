@@ -17,7 +17,7 @@ public class Balance extends CommandBase {
     private double balanceTarget = 2;
     private final Drivetrain dt;
     private Timer time = new Timer();
-    private final PID pid = new PID(0.09, 0, 0.13);
+    private final PID pid = new PID(0.95, 0, 0.13);
     private boolean XLOCK = false;
 
     public Balance(Drivetrain DT) {
@@ -29,21 +29,8 @@ public class Balance extends CommandBase {
         System.out.println("Balance Starting");
         time.reset();
         time.start();
-        
-        // //makes all wheels face the same direction (direction of target pos is pointed when called)
-        // LeftFront.resetWheel();
-        // RightFront.resetWheel();
-        // LeftRear.resetWheel();
-        // RightFront.resetWheel();
-
-        // //stop wheels from turning
-        // LeftFront.steerMotor.set(0);
-        // RightFront.steerMotor.set(0);
-        // LeftRear.steerMotor.set(0);
-        // RightRear.steerMotor.set(0);
     }
 
-    //maybe this'll work?
     @Override
     public void execute() {
         SmartDashboard.putBoolean("XLOCK", XLOCK);

@@ -8,6 +8,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Balance;
 import frc.robot.commands.Autonomous.Drive;
+import frc.robot.commands.Autonomous.DriveUntilAngle;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
@@ -74,6 +75,9 @@ public class RobotContainer {
     // Drive(1, 1, 0, m_driveTrain),
     // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
     //return new Drive(10, 0, 0, m_driveTrain);
-    return new SequentialCommandGroup(new Balance(m_driveTrain));
+    //2.24
+    //game auto
+    return new SequentialCommandGroup(new Drive(4.24, 0, 0, m_driveTrain), new DriveUntilAngle(2.12, 0, 0, m_driveTrain, 15, 2), new Balance(m_driveTrain));
+    //return new SequentialCommandGroup(new Balance(m_driveTrain));
   }
 }
