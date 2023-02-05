@@ -68,10 +68,11 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
-    // Drive(1, 1, 0, m_driveTrain),
-    // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
-    return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(4.25, 0, 0, m_driveTrain), new Drive(0, 0, 180, m_driveTrain),  new Drive(4.5, 0, 0, m_driveTrain), new Drive(4.5, -1, -90, m_driveTrain), new Drive(4.5, 0, 90,m_driveTrain), new Drive(0, 0, 180,m_driveTrain));
+  public Command getAutonomousCommand() 
+  {
+    //Auto mode for rightmost position
+    //return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(4.25, 0, 0, m_driveTrain), new Drive(0, 0, 180, m_driveTrain));
+    //Auto mode for leftmost position
+    return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(2.0, 0, m_driveTrain), new Drive(4.25, 0, 0, m_driveTrain), new Drive(3.0, 0, 180, m_driveTrain), new Drive(0, 0, m_driveTrain));
   }
 }
