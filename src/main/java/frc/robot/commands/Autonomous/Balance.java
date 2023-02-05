@@ -14,10 +14,10 @@ import frc.robot.utils.PID;
 import frc.robot.utils.PIDShufflable;
 
 public class Balance extends CommandBase {
-    private double balanceTarget = 2;
+    private double balanceTarget = 2.5;
     private final Drivetrain dt;
     private Timer time = new Timer();
-    private final PID pid = new PID(0.95, 0, 0.13);
+    private final PID pid = new PID(0.06, 0, 0.15);
     private boolean XLOCK = false;
 
     public Balance(Drivetrain DT) {
@@ -57,7 +57,7 @@ public class Balance extends CommandBase {
             isBalanced = false;
         }
 
-        if(time.get() > 0.5) XLOCK = true;
+        if(time.get() > 0.15) XLOCK = true;
         else XLOCK = false;
     }
 
