@@ -3,6 +3,7 @@ package frc.robot.utils;
 import edu.wpi.first.networktables.GenericSubscriber;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.commands.Autonomous.Balance;
 
 public class PIDShufflable {
     public double p;
@@ -16,7 +17,6 @@ public class PIDShufflable {
     private long lastTime = 0;
 
     //this next block of stuff is just shuffleboard Implementation
-    private static ShuffleboardTab pidTab;
     private static GenericSubscriber pUpdater;
     private static GenericSubscriber iUpdater;
     private static GenericSubscriber dUpdater;
@@ -31,10 +31,10 @@ public class PIDShufflable {
         lastTime = System.currentTimeMillis();
 
         pidObjectCount++;
-        pidTab=Shuffleboard.getTab(TabName);
-        pUpdater=pidTab.addPersistent("P", p).getEntry();
-        iUpdater=pidTab.addPersistent("i", i).getEntry();
-        dUpdater=pidTab.addPersistent("d", d).getEntry();
+        Balance.mainTab=Shuffleboard.getTab(TabName);
+        pUpdater=Balance.mainTab.addPersistent("P", p).getEntry();
+        iUpdater=Balance.mainTab.addPersistent("i", i).getEntry();
+        dUpdater=Balance.mainTab.addPersistent("d", d).getEntry();
         shuffleUpdatePID();
     }
     

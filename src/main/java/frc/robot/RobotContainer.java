@@ -78,7 +78,8 @@ public class RobotContainer {
     //return new Drive(10, 0, 0, m_driveTrain);s
     //2.24
     //game autos
-    return new SequentialCommandGroup(new DriveUntilAngleInc(2.3, 0, 0, m_driveTrain, 10, 2), new DriveUntilAngleDec(5, 0, 0, m_driveTrain, 0.1, 2), new Drive(m_driveTrain.xPos+1, 0, 0, m_driveTrain),new DriveUntilAngleInc(3.2, 0, 0, m_driveTrain, 6, 2), new Balance(m_driveTrain));
+    //return new SequentialCommandGroup(new DriveUntilAngleInc(2.3, 0, 0, m_driveTrain, 10, 2), new Drive(3.8, 0, 0, m_driveTrain),new DriveUntilAngleInc(2.5, 0, 0, m_driveTrain, 8, 2), new Balance(m_driveTrain));
     //return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
+    return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2), new Balance(m_driveTrain));
   }
 }
