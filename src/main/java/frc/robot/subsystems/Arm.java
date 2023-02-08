@@ -85,8 +85,8 @@ public class Arm extends SubsystemBase {
   
   //drive to target value always
   public void ArmDrive(){
-    ElbowMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(ElbowFeedForward.calc(ElbowTarget-getArmAngles()[1],(getArmAngles()[0]+getArmAngles()[1])),getArmAngles()[1],kElbowSafezone));
-    ShoulderMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(ShoulderFeedForward.calc(ShoulderTarget-getArmAngles()[0],(getArmAngles()[0]),0*ElbowFeedForward.getLoad()),getArmAngles()[0],kShoulderSafezone));
+    ElbowMotor.set(TalonSRXControlMode.PercentOutput,capPercent(safeZoneDrive(ElbowFeedForward.calc(ElbowTarget-getArmAngles()[1],(getArmAngles()[0]+getArmAngles()[1])),getArmAngles()[1],kElbowSafezone)));
+    ShoulderMotor.set(TalonSRXControlMode.PercentOutput,capPercent(safeZoneDrive(ShoulderFeedForward.calc(ShoulderTarget-getArmAngles()[0],(getArmAngles()[0]),0*ElbowFeedForward.getLoad()),getArmAngles()[0],kShoulderSafezone)));
   }
 
   //bang-bang to target value always
@@ -105,6 +105,13 @@ public class Arm extends SubsystemBase {
     if(motorAngle>=safeZone[1]&&pv>0) return 0;
     if(motorAngle<=safeZone[0]&&pv<0) return 0;
     return pv;
+  }
+
+  public double capPercent(double output){
+    if(Math.abs(output)>1){
+      return 1*Math.signum(output);
+    }
+    return output;
   }
   //like PID but just constant drive
   public double bangbangdrive(double pv,double motorMaxPercent){
@@ -163,4 +170,5 @@ public class Arm extends SubsystemBase {
     if(ElbowFeedForward.detectChange())ElbowFeedForward.shuffleUpdatePID();
     if(ShoulderFeedForward.detectChange())ShoulderFeedForward.shuffleUpdatePID();
   }
+  
 }
