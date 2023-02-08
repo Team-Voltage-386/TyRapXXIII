@@ -76,7 +76,7 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
     ArmDrive();
     updateWidgets();
-    fixPID();
+    updatePIDs();
   }
   public double[] getArmAngles(){
     double[] result = {ShoulderEncoder.getDistance()+ShoulderAngleOffset,ElbowEncoder.getDistance()+ElbowAngleOffset};
@@ -159,7 +159,7 @@ public class Arm extends SubsystemBase {
     shoulderDrivePercentageWidget.setDouble(safeZoneDrive(ShoulderFeedForward.calc(ShoulderTarget-getArmAngles()[0],getArmAngles()[0],0*ElbowFeedForward.getLoad()),getArmAngles()[0],kShoulderSafezone));
   }
 
-  public void fixPID(){
+  public void updatePIDs(){
     if(ElbowFeedForward.detectChange())ElbowFeedForward.shuffleUpdatePID();
     if(ShoulderFeedForward.detectChange())ShoulderFeedForward.shuffleUpdatePID();
   }
