@@ -31,10 +31,10 @@ public class PIDShufflable {
         lastTime = System.currentTimeMillis();
 
         pidObjectCount++;
-        Balance.mainTab=Shuffleboard.getTab(TabName);
-        pUpdater=Balance.mainTab.addPersistent("P", p).getEntry();
-        iUpdater=Balance.mainTab.addPersistent("i", i).getEntry();
-        dUpdater=Balance.mainTab.addPersistent("d", d).getEntry();
+        ShuffleboardTab mainTab=Shuffleboard.getTab(TabName);
+        pUpdater=mainTab.addPersistent("P", p).withPosition(2, 0).getEntry();
+        iUpdater=mainTab.addPersistent("i", i).withPosition(2, 1).getEntry();
+        dUpdater=mainTab.addPersistent("d", d).withPosition(2, 2).getEntry();
         shuffleUpdatePID();
     }
     

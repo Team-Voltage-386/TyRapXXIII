@@ -13,7 +13,7 @@ import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.SwerveModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -33,7 +33,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Drivetrain m_driveTrain = new Drivetrain();
   private final Arm m_Arm = new Arm();
-  private final Limelight m_ll = new Limelight();
+  private final LimeLight m_ll = new LimeLight();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
 

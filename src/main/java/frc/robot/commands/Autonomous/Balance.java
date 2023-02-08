@@ -17,7 +17,7 @@ public class Balance extends CommandBase {
     private double balanceTarget = 2.5;
     private final Drivetrain dt;
     private Timer time = new Timer();
-    private final PID pid = new PID(0.08, 1, 1.3);
+    private final PIDShufflable pid = new PIDShufflable(0.08, 1, 1.3, "BalanceInfo");
     private boolean XLOCK = false;
     public static ShuffleboardTab mainTab = Shuffleboard.getTab("BalanceInfo");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
