@@ -62,4 +62,8 @@ public class PIDShufflable {
         d=dUpdater.getDouble(d);
         reset(); 
     }
+
+    public boolean detectChange(){
+        return p!=pUpdater.getDouble(p)||i!=iUpdater.getDouble(i)||d!=dUpdater.getDouble(d);
+    }
 }

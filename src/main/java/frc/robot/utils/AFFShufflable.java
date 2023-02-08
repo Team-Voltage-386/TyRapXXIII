@@ -5,10 +5,11 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class AFFShufflable {
-    public double p;//p is a misnomer, this is like a bang-bang controller essentially
+    public double p;//proper p now
     public double i;
     public double d;
     public double f;//f is maximum torque the motor fights
+    public double s;//static from feedforward
     public double integralAcc;
     public double load;//total load on this arm bit
 
@@ -23,15 +24,17 @@ public class AFFShufflable {
     private static GenericSubscriber iUpdater;
     private static GenericSubscriber dUpdater;
     private static GenericSubscriber fUpdater;
+    private static GenericSubscriber sUpdater;
     public static int pidObjectCount=0;
 
 
     
-    public AFFShufflable(double P, double I, double D, double F, String TabName){
+    public AFFShufflable(double P, double I, double D, double F, double S, String TabName){
         p = P;
         i = I;
         d = D;
         f=F;
+        s=S;
         lastTime = System.currentTimeMillis();
 
         pidObjectCount++;
@@ -40,6 +43,7 @@ public class AFFShufflable {
         iUpdater=pidTab.addPersistent("i", i).withPosition(1,0).getEntry();
         dUpdater=pidTab.addPersistent("d", d).withPosition(2,0).getEntry();
         fUpdater=pidTab.addPersistent("f", f).withPosition(3,0).getEntry();
+        sUpdater=pidTab.addPersistent("s", s).withPosition(4, 0).getEntry();
         shuffleUpdatePID();
     }
     
@@ -58,7 +62,7 @@ public class AFFShufflable {
         integralAcc += pv * timeStep;
         lastTime = time;
         loadUp(SpatialAngle, extraload);
-        double result = (p*Math.signum(pv)) + (integralAcc * i) - (((pv - lastPV) * timeStep) * d) + getLoad();
+        double result = p*pv + (s*Math.signum(pv)) + (integralAcc * i) - (((pv - lastPV) * timeStep) * d) + getLoad();
         lastPV = pv;
         return result;
     }
@@ -80,6 +84,11 @@ public class AFFShufflable {
         i=iUpdater.getDouble(i);
         d=dUpdater.getDouble(d);
         f=fUpdater.getDouble(f);
+        s=sUpdater.getDouble(s);
         reset(); 
+    }
+
+    public boolean detectChange(){
+        return p!=pUpdater.getDouble(p)||i!=iUpdater.getDouble(i)||d!=dUpdater.getDouble(d)||f!=fUpdater.getDouble(f)||s!=sUpdater.getDouble(s);
     }
 }

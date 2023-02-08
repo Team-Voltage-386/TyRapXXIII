@@ -65,9 +65,9 @@ public class Arm extends SubsystemBase {
     ShoulderMotor.setInverted(true);
     ElbowMotor.setInverted(true);
 
-    ShoulderFeedForward=new AFFShufflable(kShoulderMaxPercent, 0, 0, 0, "ShoulderPID");
+    ShoulderFeedForward=new AFFShufflable(0, 0, 0, 0, 0, "ShoulderPID");
     ShoulderFeedForward.shuffleUpdatePID();
-    ElbowFeedForward=new AFFShufflable(kElbowMaxPercent, 0, 0, 0, "ElbowPID");
+    ElbowFeedForward=new AFFShufflable(0, 0, 0, 0, 0, "ElbowPID");
     ElbowFeedForward.shuffleUpdatePID();
   }
 
@@ -76,6 +76,7 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
     ArmDrive();
     updateWidgets();
+    fixPID();
   }
   public double[] getArmAngles(){
     double[] result = {ShoulderEncoder.getDistance()+ShoulderAngleOffset,ElbowEncoder.getDistance()+ElbowAngleOffset};
@@ -85,7 +86,7 @@ public class Arm extends SubsystemBase {
   //drive to target value always
   public void ArmDrive(){
     ElbowMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(ElbowFeedForward.calc(ElbowTarget-getArmAngles()[1],(getArmAngles()[0]+getArmAngles()[1])),getArmAngles()[1],kElbowSafezone));
-    ShoulderMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(ShoulderFeedForward.calc(ShoulderTarget-getArmAngles()[0],(getArmAngles()[0]),ElbowFeedForward.getLoad()),getArmAngles()[0],kShoulderSafezone));
+    ShoulderMotor.set(TalonSRXControlMode.PercentOutput,safeZoneDrive(ShoulderFeedForward.calc(ShoulderTarget-getArmAngles()[0],(getArmAngles()[0]),0*ElbowFeedForward.getLoad()),getArmAngles()[0],kShoulderSafezone));
   }
 
   //bang-bang to target value always
@@ -137,25 +138,29 @@ public class Arm extends SubsystemBase {
   }
 
   private ShuffleboardTab mainTab=Shuffleboard.getTab("Main");
-  private GenericPublisher armUpperAngleWidget=mainTab.add("upperArmAngle",0.0).withPosition(0,3).withSize(1,1).getEntry();
-  private GenericPublisher armLowerAngleWidget=mainTab.add("lowerArmAngle",0.0).withPosition(1, 3).withSize(1, 1).getEntry();
-  private GenericPublisher armUpperTargetWidget=mainTab.add("shouldertarget",0.0).withPosition(2, 3).withSize(1, 1).getEntry();
-  private GenericPublisher armLowerTargetWidget=mainTab.add("elbowTarget",0.0).withPosition(3, 3).withSize(1, 1).getEntry();
-  private GenericPublisher armUpperAngleRawWidget=mainTab.add("upperArmRaw",0.0).withPosition(4, 3).withSize(1, 1).getEntry();
-  private GenericPublisher armLowerAngleRawWidget=mainTab.add("lowerArmRaw",0.0).withPosition(5, 3).withSize(1, 1).getEntry();
-  private GenericPublisher armUpperDrivePercentWidget=mainTab.add("ShoulderDrive",0.0).withPosition(6, 3).withSize(1, 1).getEntry();
-  private GenericPublisher armLowerDrivePercentWidget=mainTab.add("elbowDrive",0.0).withPosition(7, 3).withSize(1, 1).getEntry();
+  private GenericPublisher shoulderAngleWidget=mainTab.add("ShoulderAngle",0.0).withPosition(0,3).withSize(1,1).getEntry();
+  private GenericPublisher elbowAngleWidget=mainTab.add("elbowAngle",0.0).withPosition(1, 3).withSize(1, 1).getEntry();
+  private GenericPublisher shoulderTargetWidget=mainTab.add("shouldertarget",0.0).withPosition(2, 3).withSize(1, 1).getEntry();
+  private GenericPublisher elbowTargetWidget=mainTab.add("elbowTarget",0.0).withPosition(3, 3).withSize(1, 1).getEntry();
+  private GenericPublisher shoulderRawWidget=mainTab.add("shoulderRaw",0.0).withPosition(4, 3).withSize(1, 1).getEntry();
+  private GenericPublisher elbowRawWidget=mainTab.add("elbowRaw",0.0).withPosition(5, 3).withSize(1, 1).getEntry();
+  private GenericPublisher shoulderDrivePercentageWidget=mainTab.add("ShoulderDrive",0.0).withPosition(6, 3).withSize(1, 1).getEntry();
+  private GenericPublisher elbowDrivePercentWidget=mainTab.add("elbowDrive",0.0).withPosition(7, 3).withSize(1, 1).getEntry();
 
   
   public void updateWidgets(){
-    armUpperAngleWidget.setDouble(getArmAngles()[0]);
-    armLowerAngleWidget.setDouble(getArmAngles()[1]);
-    armUpperTargetWidget.setDouble(ShoulderTarget);
-    armLowerTargetWidget.setDouble(ElbowTarget);
-    armUpperAngleRawWidget.setDouble(ShoulderEncoder.getRaw());
-    armLowerAngleRawWidget.setDouble(ElbowEncoder.getRaw());
-    armUpperDrivePercentWidget.setDouble(safeZoneDrive(bangbangdrive(ShoulderTarget-getArmAngles()[0],kShoulderMaxPercent),getArmAngles()[0],kShoulderSafezone));
-    armLowerDrivePercentWidget.setDouble(safeZoneDrive(bangbangdrive(ElbowTarget-getArmAngles()[1],kElbowMaxPercent),getArmAngles()[1],kElbowSafezone));
+    shoulderAngleWidget.setDouble(getArmAngles()[0]);
+    elbowAngleWidget.setDouble(getArmAngles()[1]);
+    shoulderTargetWidget.setDouble(ShoulderTarget);
+    elbowTargetWidget.setDouble(ElbowTarget);
+    shoulderRawWidget.setDouble(ShoulderEncoder.getRaw());
+    elbowRawWidget.setDouble(ElbowEncoder.getRaw());
+    elbowDrivePercentWidget.setDouble(safeZoneDrive(ElbowFeedForward.calc(ElbowTarget-getArmAngles()[1],getArmAngles()[0]+getArmAngles()[1]),getArmAngles()[1],kElbowSafezone));
+    shoulderDrivePercentageWidget.setDouble(safeZoneDrive(ShoulderFeedForward.calc(ShoulderTarget-getArmAngles()[0],getArmAngles()[0],0*ElbowFeedForward.getLoad()),getArmAngles()[0],kShoulderSafezone));
+  }
 
+  public void fixPID(){
+    if(ElbowFeedForward.detectChange())ElbowFeedForward.shuffleUpdatePID();
+    if(ShoulderFeedForward.detectChange())ShoulderFeedForward.shuffleUpdatePID();
   }
 }
