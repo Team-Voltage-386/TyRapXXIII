@@ -12,7 +12,6 @@ public class Drive extends CommandBase {
     private final double x;
     private final double y;
     private final double h;
-    private  boolean noSpin = false;
     private final Drivetrain dt;
     private final PID autoPositionX = new PID(kAutoPositionPID[0], kAutoPositionPID[1], kAutoPositionPID[2]);
     private final PID autoPositionY = new PID(kAutoPositionPID[0], kAutoPositionPID[1], kAutoPositionPID[2]);
@@ -23,16 +22,6 @@ public class Drive extends CommandBase {
         y = Y;
         h = H;
         dt = DT;
-        noSpin = false;
-    }
-
-    public Drive(double X, double Y, Drivetrain DT) 
-    {
-        x = X;
-        y = Y;
-        h = 0;
-        dt = DT;
-        noSpin = true;
     }
 
     @Override
@@ -43,18 +32,15 @@ public class Drive extends CommandBase {
     public void execute() {
         dt.xDriveTarget = autoPositionX.calc(x - dt.xPos);
         dt.yDriveTarget = autoPositionY.calc(y - dt.yPos);
-        if(!noSpin)
-        {
-            dt.rotationTarget = -autoPositionH.calc(dt.getHeadingError(h));
-        }
+        dt.rotationTarget = -autoPositionH.calc(dt.getHeadingError(h));
         // System.out.println("x value: " + dt.xDriveTarget + " " + "y value: " +
         // dt.yDriveTarget);
     }
 
     @Override
-    public boolean isFinished() {
-        return dt.distanceTo(x, y) < driveTolerance
-                && dt.getHeadingError(h) < headingTolerance;
+    public boolean isFinished() 
+    {
+        return (dt.distanceTo(x, y) < driveTolerance  && dt.getHeadingError(h) < headingTolerance);
     }
 
     @Override

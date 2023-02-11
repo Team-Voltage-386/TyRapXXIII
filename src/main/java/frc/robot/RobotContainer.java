@@ -71,8 +71,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() 
   {
     //Auto mode for rightmost position
-    //return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(4.25, 0, 0, m_driveTrain), new Drive(0, 0, 180, m_driveTrain));
+    return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(4.25, -0.2, 0, m_driveTrain), new Drive(0, 0, -180, m_driveTrain));
     //Auto mode for leftmost position
-    return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(2.0, 0, m_driveTrain), new Drive(4.25, 0, 0, m_driveTrain), new Drive(3.0, 0, 180, m_driveTrain), new Drive(0, 0, m_driveTrain));
+    //return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(2.0, 0.4, 180, m_driveTrain), new Drive(3.0, 0.4, 180, m_driveTrain), new Drive(4.4, 1, 10, m_driveTrain), new Drive(2.5, 0.4, 180, m_driveTrain), new Drive(2.0, 0.4, 180, m_driveTrain), new Drive(1.5, 0.4, 180, m_driveTrain), new Drive(0, 0, 180, m_driveTrain));
   }
 }
