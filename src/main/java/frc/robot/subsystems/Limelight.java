@@ -77,4 +77,8 @@ public class Limelight extends SubsystemBase {
     if(apriltagmode && bp.length>0)
     BotPoseWidget.setString(bp[0]+","+bp[1]+","+bp[2]+","+bp[3]+","+bp[4]+","+bp[5]);
   }
+  public double limelightYawToDriveTrainYaw(){
+    if(apriltagsAvailable())return (this.getPose()[5])+180-90;//limelight field coordinate system is 180, gyroscope weirdness says subtract 90
+    return 0;
+  }
 }

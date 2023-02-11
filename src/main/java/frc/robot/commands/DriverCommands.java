@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.Limelightconstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.utils.PID;
@@ -19,26 +20,14 @@ import static frc.robot.Constants.Limelightconstants.*;
 public class DriverCommands extends CommandBase {
 
     private Drivetrain driveTrain;
-    
     private Limelight limelight;
-    private apriltag target=null;
-    private double facingtoscore;
     private double deadband=0.1;
-    private double adjustableXDist;
-    private PID autoRPID;
-    private PID autoXPID;
-    private PID autoYPID;
 
     public DriverCommands(Drivetrain DT, Limelight LL) {
         driveTrain = DT;
-        limelight = LL;
-        addRequirements(driveTrain);
+        limelight=LL;
         addRequirements(limelight);
-        facingtoscore=-180;//set to 0 or 180 based on team
-        adjustableXDist=6.25;//-6.25 if on blue team
-        autoRPID=new PID(kAutoRotationPID[0],kAutoRotationPID[1],kAutoRotationPID[2]);
-        autoXPID=new PID(kAutoDriveXPID[0],kAutoDriveXPID[1],kAutoDriveXPID[2]);
-        autoYPID=new PID(kAutoDriveYPID[0],kAutoDriveYPID[1],kAutoDriveYPID[2]);
+        addRequirements(driveTrain);        
     }
 
     @Override
@@ -50,11 +39,6 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
-        HumanDriverControl=Math.abs(kDriver.getRawAxis(kLeftTrigger))<deadband;
-        driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
-        driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
-        driveTrain.rotationTarget = -Math.pow(kDriver.getRawAxis(kRightHorizontal),3) * kMaxRotSpeed;
-
         if(HumanDriverControl){
             driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
             driveTrain.xDriveTarget = kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
@@ -67,42 +51,18 @@ public class DriverCommands extends CommandBase {
 
             if (kDriver.getRawButtonPressed(kRightBumper)){
                 if(limelight.apriltagmode()&&limelight.apriltagsAvailable())
-                    driveTrain.setFO(limelightYawToDriveTrainYaw());
+                    driveTrain.setFO(limelight.limelightYawToDriveTrainYaw());
                 else
                     driveTrain.resetFO();
             }
         }
 
-        //align to apriltag
-        if(limelight.apriltagmode() && Math.abs(kDriver.getRawAxis(kLeftTrigger))>deadband&&limelight.apriltagsAvailable()){
-            HumanDriverControl=false;
-            if(target==null) {target=closestGrid(limelight.getPose()[0],limelight.getPose()[1]);}
-            driveTrain.setFO(limelightYawToDriveTrainYaw());
-            driveToTarget(adjustableXDist,target.y,facingtoscore,limelight.getPose()[0],limelight.getPose()[1],driveTrain.getProcessedHeading());
-        } 
-        //align to retroreflective
-        if(limelight.retroreflectivemode() && Math.abs(kDriver.getRawAxis(kLeftTrigger))>deadband){
-            HumanDriverControl=false;
-            driveToTarget(0, 0, facingtoscore, 0, 1.5*Math.atan(Math.toRadians(limelight.tx())) , driveTrain.getProcessedHeading());//the value tiimes arctan should be a constant (variable of sorts)
-        } 
-        if(kDriver.getRawButtonPressed(kX)){//switch pipelines
-            if(limelight.apriltagmode())limelight.setPipeline(retroreflectivepipelineindex);
-            else if(limelight.retroreflectivemode())limelight.setPipeline(apriltagpipelineindex);
-        }
+        
     }
-    //feed limelight yaw into drivetrainyaw
-    public double limelightYawToDriveTrainYaw(){
-        return (limelight.getPose()[5])+180-90;//limelight field coordinate system is 180, gyroscope weirdness says subtract 90
-    }
+    
     @Override
     public boolean isFinished() {
         return false;
-    }
-    //drive to target, feed in target position and rotation and robot position and rotation
-    public void driveToTarget(double targetX, double targetY, double targetRot, double bpx, double bpy, double bpr){
-        driveTrain.rotationTarget=autoRPID.calc(targetRot-bpr);
-        driveTrain.xDriveTarget=autoXPID.calc(targetX-bpx);
-        driveTrain.yDriveTarget=autoYPID.calc(targetY-bpy);
     }
     @Override
     public void end(boolean interrupted) {

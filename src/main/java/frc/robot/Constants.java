@@ -35,6 +35,7 @@ public final class Constants {
     public static final int kRightHorizontal = 4;
     public static final int kLeftTrigger = 2;
     public static final int kRightTrigger = 3;
+    public static final int kPOV = 0;
 
     public static final int kA = 1;
     public static final int kB = 2;
@@ -46,6 +47,7 @@ public final class Constants {
     public static final int kRightOptions = 8;
     public static final int kLeftJoystickPressed = 9;
     public static final int kRightJoystickPressed = 10;
+
   }
   
   public static final class Limelightconstants{
