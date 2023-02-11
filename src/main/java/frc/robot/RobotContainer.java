@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
@@ -70,9 +71,18 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() 
   {
-    //Auto mode for rightmost position
-    return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(4.25, -0.2, 0, m_driveTrain), new Drive(0, 0, -180, m_driveTrain));
-    //Auto mode for leftmost position
-    //return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(2.0, 0.4, 180, m_driveTrain), new Drive(3.0, 0.4, 180, m_driveTrain), new Drive(4.4, 1, 10, m_driveTrain), new Drive(2.5, 0.4, 180, m_driveTrain), new Drive(2.0, 0.4, 180, m_driveTrain), new Drive(1.5, 0.4, 180, m_driveTrain), new Drive(0, 0, 180, m_driveTrain));
+    int autoMode=DriverStation.getLocation();
+    if (autoMode==1)
+    {
+      //Auto mode for rightmost position
+      return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(4.25, -0.2, 0, m_driveTrain), new Drive(0, 0, -180, m_driveTrain));
+    }
+    if(autoMode==3)
+    {
+      //Auto mode for leftmost position
+      return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(2.0, 0.4, 180, m_driveTrain), new Drive(3.0, 0.4, 180, m_driveTrain), new Drive(4.4, 1, 10, m_driveTrain), new Drive(2.5, 0.4, 180, m_driveTrain), new Drive(2.0, 0.4, 180, m_driveTrain), new Drive(1.5, 0.4, 180, m_driveTrain), new Drive(0, 0, 180, m_driveTrain));
+    }
+    //Auto mode for middle position
+    return null;
   }
 }
