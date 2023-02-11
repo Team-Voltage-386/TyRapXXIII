@@ -26,8 +26,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_driveTrain = new Drivetrain();
-  private final Limelight ll = new Limelight();
-  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, ll);
+  private final Limelight m_ll = new Limelight();
+  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, m_ll);
+  private final Arm m_Arm = new Arm();
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
 
   
   
@@ -39,8 +41,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     m_driveTrain.setDefaultCommand(m_driverCommand);
-    // ll.setDefaultCommand(m_autopilotCOmmand);
-
+    m_Arm.setDefaultCommand(m_manipulatorCommand);
   }
 
   /**
@@ -62,6 +63,7 @@ public class RobotContainer {
 
   // public Command getTeleOp() {
   //   return new ParallelCommandGroup(m_driverCommand,m_autopilotCOmmand);
+  //   return m_driverCommand;
   // }
 
   /**
