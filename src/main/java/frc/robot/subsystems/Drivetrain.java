@@ -144,7 +144,11 @@ public class Drivetrain extends SubsystemBase {
     public double distanceTo(double x, double y) {
         return Math.sqrt(Math.pow(x - xPos, 2) + Math.pow(y - yPos, 2));
     }
-
+    /**
+     * heading error between current robot heading and a target angle; fit the result from -180 to 180
+     * @param h
+     * @return
+     */
     public double getHeadingError(double h) {
         double res = h - getRawHeading() - 180;
         while (angle > 180)
