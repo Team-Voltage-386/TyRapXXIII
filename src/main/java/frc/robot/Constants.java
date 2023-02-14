@@ -84,6 +84,9 @@ public final class Constants {
   }
 
   public static final class Field{
+    //RED IS POSITIVE X (TAG 1)
+    //X IS FIELD LONG SIDE
+    //Y IS FIELD SHORT SIDE
     public static final apriltag tag1=new apriltag(1, true,true, 7.24310, -2.93659, .46272);
     public static final apriltag tag2=new apriltag(2, true,true, 7.24310,-1.26019, .46272);
     public static final apriltag tag3=new apriltag(3, true,true, 7.24310, 0.41621, .46272);

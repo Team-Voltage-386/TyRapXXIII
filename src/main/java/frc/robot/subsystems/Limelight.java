@@ -60,11 +60,15 @@ public class Limelight extends SubsystemBase {
   public double ty() {
     return ty;
   }
-  /** */
+  /**boolean
+   * are there april tags available?
+   * does check if pipeline is apriltag
+   */
   public boolean apriltagsAvailable() {
     return apriltagmode && bp.length > 0;
   }
 
+  //are there targets, regardless of pipeline
   public boolean targetsAvailable() {
     return nt.getEntry("tv").getInteger(-1) == 1 || (apriltagmode && bp.length > 0);
   }
