@@ -101,7 +101,9 @@ public class Drivetrain extends SubsystemBase {
         for (SwerveModule swerve : modules)
             swerve.calcPosition(offX, offY);
     }
-    /**reset field orientation */
+    /**reset field orientation
+     * sets current yaw as 180 degrees in field orientation
+     */
     public void resetFO() {
         IMU.setYaw(180);
     }
