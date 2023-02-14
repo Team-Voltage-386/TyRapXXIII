@@ -72,15 +72,25 @@ public final class Constants {
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
     public static final double[] kSwerveDrivePID = { 0.35, 2, 0.01 };
     public static final double kSwerveDriveEncConv = 0.000745;
+    //old swerve modules
+    // public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv, kSwerveSteerPID,
+    //     kSwerveDrivePID, 24, 0.36, -0.26, 84.1);
+    // public static final SwerveModule RightFront = new SwerveModule(11, 15, kSwerveDriveEncConv, kSwerveSteerPID,
+    //     kSwerveDrivePID, 21, 0.36, 0.26, 213.15);
+    // public static final SwerveModule LeftRear = new SwerveModule(13, 17, kSwerveDriveEncConv, kSwerveSteerPID,
+    //     kSwerveDrivePID, 23, -0.36, -0.26, 126.25);
+    // public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv, kSwerveSteerPID,
+    //     kSwerveDrivePID, 22, -0.36, 0.26, 292);
 
+    //new swerve modules
     public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 24, 0.36, -0.26, 84.1);
+        kSwerveDrivePID, 24, 0.365125, -0.263525, 84.1);
     public static final SwerveModule RightFront = new SwerveModule(11, 15, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 21, 0.36, 0.26, 213.15);
+        kSwerveDrivePID, 21, 0.365125, 0.263525, 213.15);
     public static final SwerveModule LeftRear = new SwerveModule(13, 17, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 23, -0.36, -0.26, 126.25);
+        kSwerveDrivePID, 23, -0.365125, -0.263525, 126.25);
     public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 22, -0.36, 0.26, 292);
+        kSwerveDrivePID, 22, -0.365125, 0.263525, 292);
   }
 
   public static final class Field{
