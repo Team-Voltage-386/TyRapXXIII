@@ -29,7 +29,7 @@ public class ManipulatorCommands extends CommandBase {
   private Arm arm;
   private double targetX,targetY;
   private Limelight limelight;
-  private apriltag target=null;
+  private apriltag currentATTarget=null;
   private double adjustableXDist;
   private double solidXDist;
   private double kYOffsetToScore=0.7;
@@ -63,7 +63,7 @@ public class ManipulatorCommands extends CommandBase {
     autoYPID=new PIDShufflable(kAutoDriveYPID[0],kAutoDriveYPID[1],kAutoDriveYPID[2],"homeInYPID");
 
     //defaultStates
-    trafficConeMode=true;
+    trafficConeMode=false;//whatever we like
     targetIsLeft=true;
     targetIsTop=true;
   }
@@ -109,6 +109,8 @@ public class ManipulatorCommands extends CommandBase {
       lockOn();
     } else{
       HumanDriverControl=true;
+    limelight.setPipeline(apriltagpipelineindex);
+
     }
     updateWidgets();
   }
@@ -133,40 +135,27 @@ public class ManipulatorCommands extends CommandBase {
     double pvx=0;
     double pvy=0;
     double pvr=0;
-    if(!limelight.apriltagsAvailable()){
-      target=null;
-    }
-    //set pvy
-    limelight.setPipeline(apriltagpipelineindex);
-    if(trafficConeMode&&!limelight.apriltagsAvailable()){
-      limelight.setPipeline(retroreflectivepipelineindex);
-    }
-    if(limelight.apriltagsAvailable()){
-    if(target==null) {target=closestGrid(limelight.getPose()[0],limelight.getPose()[1]);}
-
+    //align to apriltag using apriltag
+    if(!limelight.apriltagsAvailable()){currentATTarget=null;}
+    if(limelight.apriltagmode() &&limelight.apriltagsAvailable()&&!trafficConeMode){
+      HumanDriverControl=false;
+      if(currentATTarget==null) {currentATTarget=closestGrid(limelight.getPose()[0],limelight.getPose()[1]);}
       driveTrain.setFO(limelight.limelightYawToDriveTrainYaw());
-      if(!trafficConeMode)
-      {pvy=targetY-limelight.getPose()[1];}
-      else if(trafficConeMode){
-        if(targetIsLeft){pvy=kYOffsetToScore + targetY-limelight.getPose()[1];}
-        else{pvy=-kYOffsetToScore + targetY-limelight.getPose()[1];}
-      }
-    } if(!limelight.apriltagsAvailable()&&limelight.targetsAvailable()&&limelight.retroreflectivemode()){
-      if(trafficConeMode){
-        {pvy=1.5*Math.atan(Math.toRadians(limelight.tx()));}
-      }
+      // driveToTarget(adjustableXDist,target.y,facingtoscore,limelight.getPose()[0],limelight.getPose()[1],driveTrain.getProcessedHeading());
+      pvx=adjustableXDist-limelight.getPose()[0];
+      pvy=currentATTarget.y-limelight.getPose()[0];
+      pvr=facingtoscore-driveTrain.getProcessedHeading();
+    } 
+    //align to retroreflective using retroreflective
+    if(limelight.retroreflectivemode() && trafficConeMode){
+        HumanDriverControl=false;
+        driveToTarget(0, 0, facingtoscore, 0, 1.5*Math.atan(Math.toRadians(limelight.tx())) , driveTrain.getProcessedHeading());//the value tiimes arctan should be a constant (variable of sorts)
     }
-    //set pvx
-    if(Math.abs(pvy)<.1){
-      if(limelight.apriltagsAvailable())pvx=solidXDist-limelight.getPose()[0];
-    } else {
-      if(limelight.apriltagsAvailable())pvx=adjustableXDist-limelight.getPose()[0];
-    }
-    //set pvr
-    if(limelight.apriltagsAvailable()){
-      pvr=facingtoscore-limelight.getPose()[5];
-    }
+    //align to retroreflective using apriltags?
     driveToTarget(pvx,pvy,pvr);
+    widgetPVX.setDouble(pvx);
+    widgetPVY.setDouble(pvy);
+    widgetPVR.setDouble(pvr);
   }
 
 
@@ -211,6 +200,9 @@ public class ManipulatorCommands extends CommandBase {
   private final GenericEntry widgetMiddleLeft=m_tab.add("m1",false).withPosition(0, 1).getEntry();
   private final GenericEntry widgetMiddleMid=m_tab.add("m2",false).withPosition(1, 1).getEntry();
   private final GenericEntry widgetMiddleRight=m_tab.add("m3",false).withPosition(2, 1).getEntry();
+  private final GenericEntry widgetPVX=m_tab.add("pvx",0.0).withPosition(0, 3).getEntry();
+  private final GenericEntry widgetPVY=m_tab.add("pvy",0.0).withPosition(1, 3).getEntry();
+  private final GenericEntry widgetPVR=m_tab.add("pvr",0.0).withPosition(2, 3).getEntry();
   private void updateWidgets(){
     widgetTopLeft.setBoolean(trafficConeMode&& targetIsLeft&&targetIsTop);
     widgetTopMid.setBoolean(!trafficConeMode&&targetIsTop);

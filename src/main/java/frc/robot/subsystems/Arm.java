@@ -144,7 +144,7 @@ public class Arm extends SubsystemBase {
     ArmIKDrive(targetX, targetY, true);
   }
 
-  private ShuffleboardTab mainTab=Shuffleboard.getTab("Main");
+  private ShuffleboardTab mainTab=Shuffleboard.getTab("Arm");
   private GenericPublisher shoulderAngleWidget=mainTab.add("ShoulderAngle",0.0).withPosition(0,3).withSize(1,1).getEntry();
   private GenericPublisher elbowAngleWidget=mainTab.add("elbowAngle",0.0).withPosition(1, 3).withSize(1, 1).getEntry();
   private GenericPublisher shoulderTargetWidget=mainTab.add("shouldertarget",0.0).withPosition(2, 3).withSize(1, 1).getEntry();
