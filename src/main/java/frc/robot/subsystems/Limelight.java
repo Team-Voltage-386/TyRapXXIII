@@ -45,43 +45,44 @@ public class Limelight extends SubsystemBase {
 
     updateWidgets();
   }
-  /**return bot pose
-   * double array length six
+  /**@return bot pose as
+   * double array length six - 
    * x y z position, x y z rotation
    */
   public Double[] getPose() {
     return bp;
   }
-  /**target x angle*/
+  /**@return target x angle*/
   public double tx() {
     return tx;
   }
-  /**target y angle*/
+  /**@return target y angle*/
   public double ty() {
     return ty;
   }
-  /**boolean
-   * are there april tags available?
-   * does check if pipeline is apriltag
+  
+  /**
+   * @return are there april tags available? does check if pipeline is apriltag
+   * 
    */
   public boolean apriltagsAvailable() {
     return apriltagmode && bp.length > 0;
   }
 
-  //are there targets, regardless of pipeline
+  /**@return are there targets regardless of pipeline */
   public boolean targetsAvailable() {
     return nt.getEntry("tv").getInteger(-1) == 1 || (apriltagmode && bp.length > 0);
   }
-
+  
   public void setPipeline(int index) {
     nt.getEntry("pipeline").setNumber(index);
     nt.getEntry("ledMode").setNumber(0);
   }
-
+  /**@return is pipeline apriltag */
   public boolean apriltagmode() {
     return apriltagmode;
   }
-
+  /**@return is pipeline retroreflective */
   public boolean retroreflectivemode() {
     return retroreflectivemode;
   }
