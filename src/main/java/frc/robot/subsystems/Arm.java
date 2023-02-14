@@ -42,7 +42,16 @@ public class Arm extends SubsystemBase {
   private TalonSRX ElbowMotor;
   private Encoder ElbowEncoder;
 
-  /** Creates a new Arm. */
+  /**
+   * Creates a new Arm.
+   * arm angles zeroed when arm is extended outward horizontally
+   * angles of depression are negative off zero
+   * angles of elevation are positive off zero
+   * 
+   * alternatively, view the robot so that the arm extends to the right
+   * when all arm angles are zeroed, the arm sticks straight out to the right
+   * positive theta is counter clockwise, negative theta is clockwise
+   */
   public Arm() {
     ShoulderMotor = new TalonSRX(kShoulderMotorID);
     ShoulderEncoder = new Encoder(kShoulderEncoderIDA, kShoulderEncoderIDB);// , false, EncodingType.k4X)
@@ -91,9 +100,8 @@ public class Arm extends SubsystemBase {
     return result;
   }
 
-  // drive to target value always
-  /**clean PIDFF with safeties; method goes into teleop and always drives motors to target */
-  public void ArmDrive() {
+  /**run the clean PIDFF with safeties; method is for this subsystem periodic only and always drives motors to target */
+  private void ArmDrive() {
     ElbowMotor.set(TalonSRXControlMode.PercentOutput,
         capPercent(safeZoneDrive(
             ElbowFeedForward.calc(ElbowTarget - getArmAngles()[1], (getArmAngles()[0] + getArmAngles()[1])),
@@ -103,18 +111,17 @@ public class Arm extends SubsystemBase {
             0 * ElbowFeedForward.getLoad()), getArmAngles()[0], kShoulderSafezone)));
   }
 
-  // bang-bang to target value always
   /**alternative ArmDrive method, use constant percentages to drive motors to meet target angles
    * like very bad PID
    */
-  public void ArmBangBang() {
+  private void ArmBangBang() {
     ElbowMotor.set(TalonSRXControlMode.PercentOutput, safeZoneDrive(
         bangbangdrive(ElbowTarget - getArmAngles()[1], kElbowMaxPercent), getArmAngles()[1], kElbowSafezone));
     ShoulderMotor.set(TalonSRXControlMode.PercentOutput, safeZoneDrive(
         bangbangdrive(ShoulderTarget - getArmAngles()[0], kShoulderMaxPercent), getArmAngles()[0], kShoulderSafezone));
   }
   /**alternative ArmDrive method
-   * delete all armdrive type methods and use this method in the manipuloatir/teleop command
+   * delete all armdrive type methods and use this method in the manipulator/teleop command
    * diagnostic tool
    */
   public void JoystickDriveRawArm(double shoulder, double elbow) {
@@ -124,12 +131,11 @@ public class Arm extends SubsystemBase {
         safeZoneDrive(bangbangdrive(elbow, kElbowMaxPercent), getArmAngles()[1], kElbowSafezone));
   }
 
-  // filter PID and motor drive values to be within safe zone (PID goes in, safe
-  // number goes out)
   /**make sure we are not going to drive the motor out of the safe zone of angles
    * @param pv current calculation from PID; what the motor percentage will become
    * @param motorAngle the current motor angle
    * @param safeZone the two-double array of safe angles; [0] is lower limit [1] is upper limit
+   * the safe zone is the range of angles we will allow the arm segment to drive through (do not go outside angle range)
    */
   public double safeZoneDrive(double pv, double motorAngle, double[] safeZone) {
     if (motorAngle >= safeZone[1] && pv > 0)
@@ -148,9 +154,9 @@ public class Arm extends SubsystemBase {
     return output;
   }
 
-  // like PID but just constant drive
   /**for one motor only, set the percentage power to the output of this method
    * do not need this method
+   * for basic testing, use constant percent outpus
    */
   public double bangbangdrive(double pv, double motorMaxPercent) {
     if (Math.abs(pv) > kArmMotorDeadband)
@@ -158,9 +164,8 @@ public class Arm extends SubsystemBase {
     return 0;
   }
 
-  // prerequisites: view the robot so that the arm extends to the right
-  // when all arm angles are zeroed, the arm sticks straight out to the right
-  // positive theta is counter clockwise, negative theta is clockwise
+  
+
   /**
    * 
    * set target angles based off of spatial coordinates from the shoulder (XY
@@ -194,8 +199,7 @@ public class Arm extends SubsystemBase {
     }
   }
 
-  // the default mode
-  /**
+  /**alternative armDrive method
    * set target angles based off of spatial coordinates from the shoulder (XY
    * coordinates)
    * inverse kinematics
@@ -210,7 +214,7 @@ public class Arm extends SubsystemBase {
     ArmIKDrive(targetX, targetY, true);
   }
 
-  private ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
+  private ShuffleboardTab mainTab = Shuffleboard.getTab("Arm");
   private GenericPublisher shoulderAngleWidget = mainTab.add("ShoulderAngle", 0.0).withPosition(0, 3).withSize(1, 1)
       .getEntry();
   private GenericPublisher elbowAngleWidget = mainTab.add("elbowAngle", 0.0).withPosition(1, 3).withSize(1, 1)
