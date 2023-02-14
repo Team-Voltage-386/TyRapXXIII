@@ -158,11 +158,11 @@ public class Arm extends SubsystemBase {
     return 0;
   }
 
-  
+  // prerequisites: view the robot so that the arm extends to the right
+  // when all arm angles are zeroed, the arm sticks straight out to the right
+  // positive theta is counter clockwise, negative theta is clockwise
   /**
-   * // prerequisites: view the robot so that the arm extends to the right
-   * // when all arm angles are zeroed, the arm sticks straight out to the right
-   * // positive theta is counter clockwise, negative theta is clockwise
+   * 
    * set target angles based off of spatial coordinates from the shoulder (XY
    * coordinates)
    * inverse kinematics
