@@ -9,8 +9,11 @@ public class DriverCommands extends CommandBase {
 
     private Drivetrain driveTrain;
 
+    private double testingBoostSpeed; // comment out before tryouts
+
     public DriverCommands(Drivetrain DT) {
         driveTrain = DT;
+        testingBoostSpeed = kMaxDriveSpeed; // comment out before tryouts
     }
 
     @Override
@@ -22,10 +25,29 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
+        // put back in before tryouts
+        // driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) *
+        // kMaxDriveSpeed;
+        // driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) *
+        // kMaxDriveSpeed;
+        // driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) *
+        // kMaxRotSpeed;
 
-        driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
-        driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
-        driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
+        // comment out before tryouts
+        if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
+            testingBoostSpeed += 2;
+        } else {
+            testingBoostSpeed = kMaxDriveSpeed;
+        }
+
+        driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * testingBoostSpeed;
+        driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * testingBoostSpeed;
+
+        if (Math.abs(kDriver.getRawAxis(kRightHorizontal)) > 0.05) {
+            driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
+        } else {
+            driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
+        }
 
         if (kDriver.getRawButtonPressed(kLeftBumper))
             driveTrain.setOffset(-0.65, 0);
