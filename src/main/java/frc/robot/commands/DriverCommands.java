@@ -21,13 +21,13 @@ public class DriverCommands extends CommandBase {
 
     private Drivetrain driveTrain;
     private Limelight limelight;
-    private double deadband=0.1;
+    private double deadband = 0.1;
 
     public DriverCommands(Drivetrain DT, Limelight LL) {
         driveTrain = DT;
-        limelight=LL;
+        limelight = LL;
         addRequirements(limelight);
-        addRequirements(driveTrain);        
+        addRequirements(driveTrain);
     }
 
     @Override
@@ -39,31 +39,33 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
-        if(HumanDriverControl){
+        if (HumanDriverControl) {
             driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
             driveTrain.xDriveTarget = kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
-            driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
+            driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;// add the smoothing
+                                                                                             // feature from the main
+                                                                                             // branch
 
             if (kDriver.getRawButtonPressed(kLeftBumper))
                 driveTrain.setOffset(-0.65, 0);
             else if (kDriver.getRawButtonReleased(kLeftBumper))
                 driveTrain.setOffset(0, 0);
 
-            if (kDriver.getRawButtonPressed(kRightBumper)){
-                if(limelight.apriltagmode()&&limelight.apriltagsAvailable())
+            if (kDriver.getRawButtonPressed(kRightBumper)) {
+                if (limelight.apriltagmode() && limelight.apriltagsAvailable())
                     driveTrain.setFO(limelight.limelightYawToDriveTrainYaw());
                 else
                     driveTrain.resetFO();
             }
         }
 
-        
     }
-    
+
     @Override
     public boolean isFinished() {
         return false;
     }
+
     @Override
     public void end(boolean interrupted) {
         driveTrain.yDriveTarget = 0;

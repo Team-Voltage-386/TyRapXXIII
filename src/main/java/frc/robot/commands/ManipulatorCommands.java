@@ -109,8 +109,7 @@ public class ManipulatorCommands extends CommandBase {
       lockOn();
     } else{
       HumanDriverControl=true;
-    limelight.setPipeline(apriltagpipelineindex);
-
+      limelight.setPipeline(apriltagpipelineindex);
     }
     updateWidgets();
   }
