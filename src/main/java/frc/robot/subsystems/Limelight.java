@@ -60,7 +60,7 @@ public class Limelight extends SubsystemBase {
   public double ty() {
     return ty;
   }
-
+  /** */
   public boolean apriltagsAvailable() {
     return apriltagmode && bp.length > 0;
   }

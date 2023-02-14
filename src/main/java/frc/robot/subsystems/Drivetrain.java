@@ -109,7 +109,7 @@ public class Drivetrain extends SubsystemBase {
     public void setFO(double yaw){
         IMU.setYaw(yaw);
     }
-    
+    /**teleop method to update odometry */
     private void updateOdometry() {
         IMU.getYawPitchRoll(ypr);
         angle = getRawHeading();
