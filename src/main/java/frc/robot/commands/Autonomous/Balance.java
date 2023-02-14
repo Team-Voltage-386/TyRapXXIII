@@ -14,11 +14,14 @@ import frc.robot.utils.PID;
 import frc.robot.utils.PIDShufflable;
 
 public class Balance extends CommandBase {
+    //init vars and methods
     private double balanceTarget = 2.5;
     private final Drivetrain dt;
     private Timer time = new Timer();
     private final PIDShufflable pid = new PIDShufflable(0.08, 1, 1.3, "BalanceInfo");
+    //controls if the robot is Xlocked or not
     private boolean XLOCK = false;
+    //shuffleboard stuff
     public static ShuffleboardTab mainTab = Shuffleboard.getTab("BalanceInfo");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
@@ -30,6 +33,7 @@ public class Balance extends CommandBase {
         dt = DT;
     }
 
+    //basically starts timer
     @Override
     public void initialize() {
         System.out.println("Balance Starting");
@@ -37,8 +41,10 @@ public class Balance extends CommandBase {
         time.start();
     }
 
+    //FUN STUFF.
     @Override
     public void execute() {
+        //update values 50 times a sec
         xPosWidget.setDouble(dt.xPos);
         yPosWidget.setDouble(dt.yPos);
         pitchWid.setDouble(dt.ypr[2]);
@@ -50,8 +56,7 @@ public class Balance extends CommandBase {
         dt.xDriveTarget = -pid.calc(0 - dt.ypr[2]);
         else dt.xDriveTarget = 0;
 
-        //BALANCE SYS
-
+        //BALANCE SYSTEM
         boolean isBalanced = false;
 
         if(Math.abs(dt.ypr[2]) < balanceTarget) {
