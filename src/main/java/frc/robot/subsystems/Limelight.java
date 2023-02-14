@@ -52,11 +52,11 @@ public class Limelight extends SubsystemBase {
   public Double[] getPose() {
     return bp;
   }
-
+  /**target x angle*/
   public double tx() {
     return tx;
   }
-
+  /**target y angle*/
   public double ty() {
     return ty;
   }

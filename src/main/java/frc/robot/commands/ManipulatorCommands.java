@@ -16,7 +16,9 @@ public class ManipulatorCommands extends CommandBase {
   private Arm arm;
   private double targetX,targetY;
 
-  /** Creates a new ManipulatorCommands. */
+  /** Creates a new ManipulatorCommands.
+   * Teleop Manipulator controls
+   */
   public ManipulatorCommands(Arm ARM) {
     arm=ARM;
     // Use addRequirements() here to declare subsystem dependencies.
