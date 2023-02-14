@@ -81,7 +81,7 @@ public class Drivetrain extends SubsystemBase {
 
         updateWidget();
     }
-
+    
     public double getRawHeading() {
         double y = ypr[0];
         while (y < -360)
@@ -90,23 +90,26 @@ public class Drivetrain extends SubsystemBase {
             y -= 360;
         return -y;
     }
-
+    /**this is to comply with Limelight
+     * feed gyro stuff into limelight
+     */
     public double getProcessedHeading() {
         return -(getRawHeading() - 90);
     }
-
+    /**when we want to move the point of rotation away from robot center/robot default */
     public void setOffset(double offX, double offY) {
         for (SwerveModule swerve : modules)
             swerve.calcPosition(offX, offY);
     }
-
+    /**reset field orientation */
     public void resetFO() {
         IMU.setYaw(180);
     }
+    /**set field orientation to specific angle*/
     public void setFO(double yaw){
         IMU.setYaw(yaw);
     }
-
+    
     private void updateOdometry() {
         IMU.getYawPitchRoll(ypr);
         angle = getRawHeading();

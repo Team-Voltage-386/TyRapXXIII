@@ -100,6 +100,9 @@ public class Arm extends SubsystemBase {
   }
 
   // bang-bang to target value always
+  /**alternative ArmDrive method, use constant percentages to drive motors to meet target angles
+   * like very bad PID
+   */
   public void ArmBangBang() {
     ElbowMotor.set(TalonSRXControlMode.PercentOutput, safeZoneDrive(
         bangbangdrive(ElbowTarget - getArmAngles()[1], kElbowMaxPercent), getArmAngles()[1], kElbowSafezone));
