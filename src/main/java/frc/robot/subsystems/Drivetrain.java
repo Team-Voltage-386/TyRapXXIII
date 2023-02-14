@@ -91,7 +91,7 @@ public class Drivetrain extends SubsystemBase {
         return -y;
     }
     /**this is to comply with Limelight
-     * feed gyro stuff into limelight
+     * feed gyro yaw into limelight
      */
     public double getProcessedHeading() {
         return -(getRawHeading() - 90);
@@ -105,11 +105,16 @@ public class Drivetrain extends SubsystemBase {
     public void resetFO() {
         IMU.setYaw(180);
     }
-    /**set field orientation to specific angle*/
+    /**set field orientation to specific angle
+     * NOT odometry, only fixes yaw
+    */
     public void setFO(double yaw){
         IMU.setYaw(yaw);
     }
-    /**teleop method to update odometry */
+    /**teleop method to update odometry 
+     * using velocity and orientation, find velocity vector and mutlitply velocity vector by time to find change in position
+     * add change in position to last position to find current robot position
+    */
     private void updateOdometry() {
         IMU.getYawPitchRoll(ypr);
         angle = getRawHeading();
