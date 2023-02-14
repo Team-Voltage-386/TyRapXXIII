@@ -81,7 +81,10 @@ public class Arm extends SubsystemBase {
     updateWidgets();
     updatePIDs();
   }
-
+  /**return current arm angles as a double array length 2
+   * angle[0] is shoulder angle
+   * angle[1] is elbow angle
+   */
   public double[] getArmAngles() {
     double[] result = { ShoulderEncoder.getDistance() + ShoulderAngleOffset,
         ElbowEncoder.getDistance() + ElbowAngleOffset };
@@ -89,6 +92,7 @@ public class Arm extends SubsystemBase {
   }
 
   // drive to target value always
+  /**clean PIDFF with safeties; method goes into teleop and always drives motors to target */
   public void ArmDrive() {
     ElbowMotor.set(TalonSRXControlMode.PercentOutput,
         capPercent(safeZoneDrive(
@@ -109,7 +113,10 @@ public class Arm extends SubsystemBase {
     ShoulderMotor.set(TalonSRXControlMode.PercentOutput, safeZoneDrive(
         bangbangdrive(ShoulderTarget - getArmAngles()[0], kShoulderMaxPercent), getArmAngles()[0], kShoulderSafezone));
   }
-
+  /**alternative ArmDrive method
+   * delete all armdrive type methods and use this method in the manipuloatir/teleop command
+   * diagnostic tool
+   */
   public void JoystickDriveRawArm(double shoulder, double elbow) {
     ShoulderMotor.set(TalonSRXControlMode.PercentOutput,
         safeZoneDrive(bangbangdrive(shoulder, kShoulderMaxPercent), getArmAngles()[0], kShoulderSafezone));
@@ -119,6 +126,11 @@ public class Arm extends SubsystemBase {
 
   // filter PID and motor drive values to be within safe zone (PID goes in, safe
   // number goes out)
+  /**make sure we are not going to drive the motor out of the safe zone of angles
+   * @param pv current calculation from PID; what the motor percentage will become
+   * @param motorAngle the current motor angle
+   * @param safeZone the two-double array of safe angles; [0] is lower limit [1] is upper limit
+   */
   public double safeZoneDrive(double pv, double motorAngle, double[] safeZone) {
     if (motorAngle >= safeZone[1] && pv > 0)
       return 0;
@@ -126,7 +138,9 @@ public class Arm extends SubsystemBase {
       return 0;
     return pv;
   }
-
+  /**make sure percent output is capped to one hundred percent 
+   * @param pv current calculation from PID; what the motor percentage will become
+  */
   public double capPercent(double output) {
     if (Math.abs(output) > 1) {
       return 1 * Math.signum(output);
@@ -135,16 +149,20 @@ public class Arm extends SubsystemBase {
   }
 
   // like PID but just constant drive
+  /**for one motor only, set the percentage power to the output of this method
+   * do not need this method
+   */
   public double bangbangdrive(double pv, double motorMaxPercent) {
     if (Math.abs(pv) > kArmMotorDeadband)
       return motorMaxPercent * Math.signum(pv);
     return 0;
   }
 
-  // prerequisites: view the robot so that the arm extends to the right
-  // when all arm angles are zeroed, the arm sticks straight out to the right
-  // positive theta is counter clockwise, negative theta is clockwise
+  
   /**
+   * // prerequisites: view the robot so that the arm extends to the right
+   * // when all arm angles are zeroed, the arm sticks straight out to the right
+   * // positive theta is counter clockwise, negative theta is clockwise
    * set target angles based off of spatial coordinates from the shoulder (XY
    * coordinates)
    * inverse kinematics
