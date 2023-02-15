@@ -7,7 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
-import frc.robot.commands.Autonomous.Balance;
+import frc.robot.commands.Autonomous.LogicBalance;
 import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
@@ -39,9 +39,9 @@ public class RobotContainer {
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
 
   private final Command drive5 = new Drive(5, 0, 0, m_driveTrain);
-  private final Command balance = new Balance(m_driveTrain);
+  private final Command balance = new LogicBalance(m_driveTrain);
   private final SequentialCommandGroup goOverAndBalance = new SequentialCommandGroup(new DriveUntil(true, m_driveTrain),
-      new Drive(5, 0, 0, m_driveTrain), new DriveUntil(false, m_driveTrain), new Balance(m_driveTrain));
+      new Drive(5, 0, 0, m_driveTrain), new DriveUntil(false, m_driveTrain), new LogicBalance(m_driveTrain));
 
   // private static final Shuffleboard Tab mainTab = Shuffleboard.getTab("Main");
 

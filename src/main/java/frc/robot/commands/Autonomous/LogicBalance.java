@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class Balance extends CommandBase {
+public class LogicBalance extends CommandBase {
 
     private final Drivetrain dt;
     private double ypr[] = new double[3];
@@ -28,7 +28,7 @@ public class Balance extends CommandBase {
     // variables to display on shuffleboard
     private boolean isDrivingForward;
 
-    public Balance(Drivetrain DT) {
+    public LogicBalance(Drivetrain DT) {
         dt = DT;
     }
 
