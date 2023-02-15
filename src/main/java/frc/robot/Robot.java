@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -37,6 +39,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
     inst = this;
   }
 
@@ -65,7 +68,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.getTeleOp().cancel();
+    // m_robotContainer.getTeleOp().cancel();
     m_robotContainer.getAutonomousCommand().cancel();
   }
 
@@ -79,7 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_robotContainer.m_driveTrain.resetFO();
+    // m_robotContainer.m_driveTrain.resetFO();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -104,8 +107,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    m_robotContainer.getTeleOp().schedule();
 
+    // m_robotContainer.getTeleOp().schedule();
   }
 
   /** This function is called periodically during operator control. */

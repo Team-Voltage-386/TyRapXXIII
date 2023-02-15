@@ -1,0 +1,17 @@
+{
+  "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    },
+    "Transitory Values": {
+      "open": false
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "386"
+  }
+}
