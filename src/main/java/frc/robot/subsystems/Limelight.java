@@ -87,13 +87,35 @@ public class Limelight extends SubsystemBase {
     return retroreflectivemode;
   }
 
+  /**
+   * set limelight crop both x and y use values within -1 to 1
+   * @param xMin
+   * @param xMax
+   * @param yMin
+   * @param yMax
+   */
+  public void setCameraCrop(double xMin, double xMax, double yMin, double yMax){
+    nt.getEntry("crop").setDoubleArray(new double[]{xMin,xMax,yMin,yMax});
+  }
+  /**
+   * use double array of size four to set limelight cropping
+   * @param cropValues
+   */
+  public void setCameraCrop(double[] cropValues){
+    setCameraCrop(cropValues[0],cropValues[1],cropValues[2],cropValues[3]);
+  }
+  /**reset camera cropping */
+  public void resetCameraCrop(){
+    setCameraCrop(-1, 1, -1, 1);
+  }
+
   // not needed
-  private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-  private final GenericPublisher BotPoseWidget = mainTab.add("botpose", "").withPosition(2, 1).withSize(4, 1)
+  private final ShuffleboardTab limelightTab = Shuffleboard.getTab("limelight");
+  private final GenericPublisher BotPoseWidget = limelightTab.add("botpose", "").withPosition(2, 1).withSize(4, 1)
       .getEntry();
-  private final GenericPublisher HastargetsWidget = mainTab.add("targets", false).withPosition(1, 1).withSize(1, 1)
+  private final GenericPublisher HastargetsWidget = limelightTab.add("targets", false).withPosition(1, 1).withSize(1, 1)
       .getEntry();
-  private final GenericPublisher PipelineWidget = mainTab.add("pipelineIndex", 0).withPosition(0, 1).withSize(1, 1)
+  private final GenericPublisher PipelineWidget = limelightTab.add("pipelineIndex", 0).withPosition(0, 1).withSize(1, 1)
       .getEntry();
 
   private void updateWidgets() {
