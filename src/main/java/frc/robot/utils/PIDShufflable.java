@@ -3,7 +3,7 @@ package frc.robot.utils;
 import edu.wpi.first.networktables.GenericSubscriber;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.commands.Autonomous.Balance;
+import frc.robot.commands.Autonomous.LucasBalance;
 
 public class PIDShufflable {
     public double p;
@@ -16,29 +16,26 @@ public class PIDShufflable {
 
     private long lastTime = 0;
 
-    //this next block of stuff is just shuffleboard Implementation
+    // this next block of stuff is just shuffleboard Implementation
     private static ShuffleboardTab pidTab;
     private static GenericSubscriber pUpdater;
     private static GenericSubscriber iUpdater;
     private static GenericSubscriber dUpdater;
-    public static int pidObjectCount=0;
+    public static int pidObjectCount = 0;
 
-
-    
-    public PIDShufflable(double P, double I, double D, String TabName){
+    public PIDShufflable(double P, double I, double D, String TabName) {
         p = P;
         i = I;
         d = D;
         lastTime = System.currentTimeMillis();
 
         pidObjectCount++;
-        pidTab=Shuffleboard.getTab(TabName);
-        pUpdater=pidTab.addPersistent("P", p).getEntry();
-        iUpdater=pidTab.addPersistent("i", i).getEntry();
-        dUpdater=pidTab.addPersistent("d", d).getEntry();
+        pidTab = Shuffleboard.getTab(TabName);
+        pUpdater = pidTab.addPersistent("P", p).getEntry();
+        iUpdater = pidTab.addPersistent("i", i).getEntry();
+        dUpdater = pidTab.addPersistent("d", d).getEntry();
         shuffleUpdatePID();
     }
-    
 
     public void reset() {
         integralAcc = 0;
@@ -57,14 +54,14 @@ public class PIDShufflable {
         return result;
     }
 
-    public void shuffleUpdatePID(){
-        p=pUpdater.getDouble(p);
-        i=iUpdater.getDouble(i);
-        d=dUpdater.getDouble(d);
-        reset(); 
+    public void shuffleUpdatePID() {
+        p = pUpdater.getDouble(p);
+        i = iUpdater.getDouble(i);
+        d = dUpdater.getDouble(d);
+        reset();
     }
 
-    public boolean detectChange(){
-        return p!=pUpdater.getDouble(p)||i!=iUpdater.getDouble(i)||d!=dUpdater.getDouble(d);
+    public boolean detectChange() {
+        return p != pUpdater.getDouble(p) || i != iUpdater.getDouble(i) || d != dUpdater.getDouble(d);
     }
 }

@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
-import frc.robot.commands.Autonomous.Balance;
+import frc.robot.commands.Autonomous.LucasBalance;
 import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.DriveUntilAngleDec;
 import frc.robot.commands.Autonomous.DriveUntilAngleInc;
@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -39,12 +40,10 @@ public class RobotContainer {
   private final Arm m_Arm = new Arm();
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
 
-  
-  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
- 
+
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
@@ -70,8 +69,8 @@ public class RobotContainer {
   }
 
   // public Command getTeleOp() {
-  //   return new ParallelCommandGroup(m_driverCommand,m_autopilotCOmmand);
-  //   return m_driverCommand;
+  // return new ParallelCommandGroup(m_driverCommand,m_autopilotCOmmand);
+  // return m_driverCommand;
   // }
 
   /**
@@ -82,12 +81,17 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
     // Drive(1, 1, 0, m_driveTrain),
-    // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain)); 
-    //return new Drive(10, 0, 0, m_driveTrain);s
-    //2.24
-    //game autos
-    //return new SequentialCommandGroup(new DriveUntilAngleInc(2.3, 0, 0, m_driveTrain, 10, 2), new Drive(3.8, 0, 0, m_driveTrain),new DriveUntilAngleInc(2.5, 0, 0, m_driveTrain, 8, 2), new Balance(m_driveTrain));
-    //return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
-    return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2), new Balance(m_driveTrain));
+    // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
+    // return new Drive(10, 0, 0, m_driveTrain);s
+    // 2.24
+    // game autos
+    // return new SequentialCommandGroup(new DriveUntilAngleInc(2.3, 0, 0,
+    // m_driveTrain, 10, 2), new Drive(3.8, 0, 0, m_driveTrain),new
+    // DriveUntilAngleInc(2.5, 0, 0, m_driveTrain, 8, 2), new
+    // Balance(m_driveTrain));
+    // return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new
+    // Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
+    return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2),
+        new LucasBalance(m_driveTrain));
   }
 }
