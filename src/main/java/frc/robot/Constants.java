@@ -35,6 +35,7 @@ public final class Constants {
     public static final int kRightHorizontal = 4;
     public static final int kLeftTrigger = 2;
     public static final int kRightTrigger = 3;
+    public static final int kPOV = 0;
 
     public static final int kA = 1;
     public static final int kB = 2;
@@ -46,6 +47,7 @@ public final class Constants {
     public static final int kRightOptions = 8;
     public static final int kLeftJoystickPressed = 9;
     public static final int kRightJoystickPressed = 10;
+
   }
   
   public static final class Limelightconstants{
@@ -66,7 +68,7 @@ public final class Constants {
   public static final class DriveConstants {
 
     public static final double kMaxRotSpeed = 180; // should be in degrees per second
-    public static final double kMaxDriveSpeed = 1; // should be in meters per second
+    public static final double kMaxDriveSpeed = 2.5; // should be in meters per second
 
     public static final int kIMUid = 2;
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
