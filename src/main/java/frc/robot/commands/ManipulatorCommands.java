@@ -43,6 +43,7 @@ public class ManipulatorCommands extends CommandBase {
   private boolean targetIsTop;
   private boolean targetIsLeft;
 
+
   /** Creates a new ManipulatorCommands. */
   public ManipulatorCommands(Arm ARM, Limelight LL,Drivetrain DT) {
     
