@@ -11,15 +11,17 @@ import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.DriveUntilAngleDec;
 import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.ManipulatorCommands;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.SwerveModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Arm;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import edu.wpi.first.wpilibj.DriverStation;
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -31,18 +33,23 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public final Drivetrain m_driveTrain = new Drivetrain();
+  private final Drivetrain m_driveTrain = new Drivetrain();
+  private final Limelight m_ll = new Limelight();
+  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, m_ll);
   private final Arm m_Arm = new Arm();
-  private final LimeLight m_ll = new LimeLight();
-  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
-  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
 
+  
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+ 
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_driveTrain.setDefaultCommand(m_driverCommand);
+    m_Arm.setDefaultCommand(m_manipulatorCommand);
   }
 
   /**
@@ -62,9 +69,10 @@ public class RobotContainer {
   private void configureBindings() {
   }
 
-  public Command getTeleOp() {
-    return m_driverCommand;
-  }
+  // public Command getTeleOp() {
+  //   return new ParallelCommandGroup(m_driverCommand,m_autopilotCOmmand);
+  //   return m_driverCommand;
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

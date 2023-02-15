@@ -10,10 +10,11 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.utils.*;
 
 public class Drivetrain extends SubsystemBase {
-    public double xDriveTarget = 0;
     public double yDriveTarget = 0;
+    public double xDriveTarget = 0;
     public double rotationTarget = 0;
 
     public double xPos = 0;
@@ -45,11 +46,11 @@ public class Drivetrain extends SubsystemBase {
         updateOdometry();
         if (Robot.inst.isEnabled()) {
             for (SwerveModule swerve : modules) {
-                if (Math.abs(xDriveTarget) > 0.05 || Math.abs(yDriveTarget) > 0.05 || Math.abs(rotationTarget) > 1) {
+                if (Math.abs(yDriveTarget) > 0.01 || Math.abs(xDriveTarget) > 0.01 || Math.abs(rotationTarget) > 0.2) {
                     double angleRad = Math.toRadians(angle);
 
-                    double x = xDriveTarget;
-                    double y = yDriveTarget;
+                    double x = yDriveTarget;
+                    double y = xDriveTarget;
 
                     double r = ((2 * Math.PI * swerve.distFromCenter) / 360) * rotationTarget; // rotation speed
                     double rAngle = swerve.angleFromCenter + angle + 90;
@@ -83,11 +84,15 @@ public class Drivetrain extends SubsystemBase {
 
     public double getRawHeading() {
         double y = ypr[0];
-        while (y < 0)
+        while (y < -360)
             y += 360;
-        while (y > 360)
+        while (y > 0)
             y -= 360;
         return -y;
+    }
+
+    public double getProcessedHeading() {
+        return -(getRawHeading() - 90);
     }
 
     public void setOffset(double offX, double offY) {
@@ -97,6 +102,9 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetFO() {
         IMU.setYaw(180);
+    }
+    public void setFO(double yaw){
+        IMU.setYaw(yaw);
     }
 
     private void updateOdometry() {
@@ -147,10 +155,18 @@ public class Drivetrain extends SubsystemBase {
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
     private static final GenericEntry pitchWid = mainTab.add("Pitch",0).withPosition(0, 1).withSize(1,1).getEntry();
+    private static final GenericEntry yawWidget = mainTab.add("Yaw", 0).withPosition(2, 0).withSize(1, 1).getEntry();
+    private static final GenericEntry xtarget = mainTab.add("xtarg", 0).withPosition(0, 3).withSize(1, 1).getEntry();
+    private static final GenericEntry ytarget = mainTab.add("ytarg", 0).withPosition(1, 3).withSize(1, 1).getEntry();
+    private static final GenericEntry hdmode = mainTab.add("humanMode",false).withPosition(3, 0).withSize(1, 1).getEntry();
     private void updateWidget() {
+        hdmode.setBoolean(Flags.HumanDriverControl);
         xPosWidget.setDouble(xPos);
         yPosWidget.setDouble(yPos);
         pitchWid.setDouble(ypr[2]);
+        yawWidget.setDouble(getProcessedHeading());
+        xtarget.setDouble(yDriveTarget);
+        ytarget.setDouble(xDriveTarget);
     }
 
 }
