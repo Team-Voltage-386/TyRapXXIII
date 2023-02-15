@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
-import frc.robot.commands.Autonomous.LucasBalance;
+import frc.robot.commands.Autonomous.LucasPIDBalance;
 import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.DriveUntilAngleDec;
 import frc.robot.commands.Autonomous.DriveUntilAngleInc;
@@ -92,6 +92,6 @@ public class RobotContainer {
     // return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new
     // Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
     return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2),
-        new LucasBalance(m_driveTrain));
+        new LucasPIDBalance(m_driveTrain));
   }
 }

@@ -13,7 +13,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
 import frc.robot.utils.PIDShufflable;
 
-public class LucasBalance extends CommandBase {
+public class LucasPIDBalance extends CommandBase {
     // init vars and methods
     private double balanceTarget = 2.5;
     private final Drivetrain dt;
@@ -30,7 +30,7 @@ public class LucasBalance extends CommandBase {
             .getEntry();
     private static final GenericEntry Timer = mainTab.add("Timer", 0).withPosition(0, 2).withSize(1, 1).getEntry();
 
-    public LucasBalance(Drivetrain DT) {
+    public LucasPIDBalance(Drivetrain DT) {
         dt = DT;
     }
 
