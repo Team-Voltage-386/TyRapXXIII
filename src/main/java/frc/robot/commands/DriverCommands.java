@@ -42,9 +42,7 @@ public class DriverCommands extends CommandBase {
         if (HumanDriverControl) {
             driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
             driveTrain.xDriveTarget = kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
-            driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;// add the smoothing
-                                                                                             // feature from the main
-                                                                                             // branch
+            driveTrain.rotationTarget = -Math.pow(kDriver.getRawAxis(kRightHorizontal),3) * kMaxRotSpeed;
 
             if (kDriver.getRawButtonPressed(kLeftBumper))
                 driveTrain.setOffset(-0.65, 0);
