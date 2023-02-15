@@ -31,8 +31,6 @@ public class ManipulatorCommands extends CommandBase {
   private Limelight limelight;
   private apriltag currentATTarget=null;
   private double adjustableXDist;
-  private double solidXDist;
-  private double kYOffsetToScore=0.7;
   private double facingtoscore;
   private double deadband=0.1;
   private boolean povHeld;
@@ -50,9 +48,6 @@ public class ManipulatorCommands extends CommandBase {
     arm=ARM;
     limelight = LL;
     driveTrain=DT;
-    adjustableXDist=6.25;//-6.25 if on blue team
-    solidXDist=6.5;
-    facingtoscore=-180;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
     // addRequirements(limelight);
@@ -63,7 +58,7 @@ public class ManipulatorCommands extends CommandBase {
     autoXPID=new PIDShufflable(kAutoDriveXPID[0],kAutoDriveXPID[1],kAutoDriveXPID[2],"homeinXPID");
     autoYPID=new PIDShufflable(kAutoDriveYPID[0],kAutoDriveYPID[1],kAutoDriveYPID[2],"homeInYPID");
 
-    //defaultStates
+    //defaultStates TBD move to flags?
     trafficConeMode=false;//whatever we like
     targetIsLeft=true;
     targetIsTop=true;
@@ -105,7 +100,7 @@ public class ManipulatorCommands extends CommandBase {
     //     if(limelight.apriltagmode())limelight.setPipeline(retroreflectivepipelineindex);
     //     else if(limelight.retroreflectivemode())limelight.setPipeline(apriltagpipelineindex);
     // }
-    if(Math.abs(kManipulator.getRawAxis(kLeftTrigger))>.1){
+    if(Math.abs(kManipulator.getRawAxis(kLeftTrigger))>deadband){
       HumanDriverControl=false;
       lockOn();
     } else{

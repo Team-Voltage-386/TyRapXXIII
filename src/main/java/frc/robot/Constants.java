@@ -125,11 +125,17 @@ public final class Constants {
   }
 
   public static final class AutoPilotConstants{
+    //as in lock on constants; rename this constants class in main
     public static final double moep=0.01;//margin of error, position
     public static final double moer=0.01;//margin of error, rotation
     public static final double[] kAutoRotationPID={1,.1,0};//5,0,1
     public static final double[] kAutoDriveXPID={2,1,0.0};
     public static final double[] kAutoDriveYPID={2,1,0.0};
+    //currently red side oriented
+    public static final double adjustableXPosition=6.25;//negative on blue team
+    public static final double facingtoscore=-180;//0 for blue team
+    public static final double solidXDist=6.5;
+    public static final double coneGoalYOffset=0.7;//from the cube shelf of the respective grid
   }
   
   public static final class ArmConstants{
