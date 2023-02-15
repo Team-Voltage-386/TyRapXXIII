@@ -21,14 +21,14 @@ public class Drivetrain extends SubsystemBase {
     public double yPos = 0;
     public double angle = 0;
 
-    private double ypr[] = new double[3];
+    public double ypr[] = new double[3];
 
     public Pigeon2 IMU = new Pigeon2(kIMUid);
 
     private boolean wasEnabled = false;
 
     private Timer odometryTimer = new Timer();
-    private double odoTimerLast = 0;
+    private long odoTimerLast = 0;
 
     public SwerveModule[] modules = { RightFront, RightRear, LeftRear, LeftFront };
 
@@ -37,8 +37,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void init() {
-        odometryTimer.start();
-        odoTimerLast = odometryTimer.get();
+        odoTimerLast = System.currentTimeMillis();
+        resetFO();
     }
 
     @Override
@@ -151,20 +151,19 @@ public class Drivetrain extends SubsystemBase {
         return res;
     }
 
-    private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
+    private static final ShuffleboardTab mainTab = Shuffleboard.getTab("DriveTrainInfo");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
+    private static final GenericEntry pitchWid = mainTab.add("Pitch",0).withPosition(0, 1).withSize(1,1).getEntry();
     private static final GenericEntry yawWidget = mainTab.add("Yaw", 0).withPosition(2, 0).withSize(1, 1).getEntry();
-
     private static final GenericEntry xtarget = mainTab.add("xtarg", 0).withPosition(0, 3).withSize(1, 1).getEntry();
     private static final GenericEntry ytarget = mainTab.add("ytarg", 0).withPosition(1, 3).withSize(1, 1).getEntry();
-
     private static final GenericEntry hdmode = mainTab.add("humanMode",false).withPosition(3, 0).withSize(1, 1).getEntry();
-
     private void updateWidget() {
         hdmode.setBoolean(Flags.HumanDriverControl);
         xPosWidget.setDouble(xPos);
         yPosWidget.setDouble(yPos);
+        pitchWid.setDouble(ypr[2]);
         yawWidget.setDouble(getProcessedHeading());
         xtarget.setDouble(yDriveTarget);
         ytarget.setDouble(xDriveTarget);

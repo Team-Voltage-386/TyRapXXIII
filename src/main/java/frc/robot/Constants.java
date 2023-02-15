@@ -52,7 +52,7 @@ public final class Constants {
     public static final int apriltagpipelineindex = 0;
     public static final int retroreflectivepipelineindex = 1;
   }
-  
+
   public static final class AutoConstants {
 
     public static final double driveTolerance = 0.05;
