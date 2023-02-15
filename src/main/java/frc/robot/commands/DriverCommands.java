@@ -29,6 +29,7 @@ public class DriverCommands extends CommandBase {
     private PID autoXPID;
     private PID autoYPID;
 
+
     public DriverCommands(Drivetrain DT, Limelight LL) {
         driveTrain = DT;
         limelight = LL;
@@ -50,6 +51,7 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
+
         HumanDriverControl=Math.abs(kDriver.getRawAxis(kLeftTrigger))<deadband;
         
         if(HumanDriverControl){

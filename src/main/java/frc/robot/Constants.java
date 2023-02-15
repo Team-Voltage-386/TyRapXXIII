@@ -58,12 +58,14 @@ public final class Constants {
     public static final double driveTolerance = 0.05;
     public static final double headingTolerance = 90;
 
-    public static final double[] kAutoPositionPID = { 1, 2.5, 0.2 };
+    // was 1, 2.5, 0.2
+    public static final double[] kAutoPositionPID = { 1.5, 3, 0.4 };
     public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
   }
 
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
+
 
     public static final double kMaxRotSpeed = 180; // should be in degrees per second
     public static final double kMaxDriveSpeed = 1; // should be in meters per second

@@ -8,10 +8,16 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.LucasPIDBalance;
 import frc.robot.commands.Autonomous.Drive;
+import frc.robot.commands.Autonomous.LogicBalance;
+import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.Autonomous.DriveUntilAngleDec;
 import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.SwerveModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -40,11 +46,26 @@ public class RobotContainer {
   private final Arm m_Arm = new Arm();
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
 
+  private final Command drive5 = new Drive(5, 0, 0, m_driveTrain);
+  private final Command balance = new LogicBalance(m_driveTrain);
+  private final SequentialCommandGroup goOverAndBalance = new SequentialCommandGroup(new DriveUntil(true, m_driveTrain),
+      new Drive(5, 0, 0, m_driveTrain), new DriveUntil(false, m_driveTrain), new LogicBalance(m_driveTrain));
+
+  // private static final Shuffleboard Tab mainTab = Shuffleboard.getTab("Main");
+
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
 
   public RobotContainer() {
+    m_chooser.addOption("Drive to (5, 0)", drive5);
+    m_chooser.addOption("Balance", balance);
+    m_chooser.setDefaultOption("Go over and Balance", goOverAndBalance);
+
+    SmartDashboard.putData(m_chooser);
+    // mainTab.add("autoRoutine", m_chooser).withPosition(5, 5).withSize(3, 1);
     // Configure the trigger bindings
     configureBindings();
     m_driveTrain.setDefaultCommand(m_driverCommand);
@@ -79,6 +100,16 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    //gabe logic balance
+    // return new SequentialCommandGroup(new DriveUntil(m_driveTrain), new
+    // Balance(m_driveTrain));
+    // return new SequentialCommandGroup(new DriveUntil(true, m_driveTrain), new
+    // Drive(5, 0, 0, m_driveTrain),
+    // new DriveUntil(false, m_driveTrain),
+    // new Balance(m_driveTrain));
+    //return m_chooser.getSelected();
+    
+    //lucas PID balance 
     // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
     // Drive(1, 1, 0, m_driveTrain),
     // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
@@ -91,7 +122,6 @@ public class RobotContainer {
     // Balance(m_driveTrain));
     // return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new
     // Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
-    return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2),
-        new LucasPIDBalance(m_driveTrain));
+    // return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2),new LucasPIDBalance(m_driveTrain));
   }
 }
