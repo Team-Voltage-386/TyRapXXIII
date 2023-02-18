@@ -52,7 +52,7 @@ import static frc.robot.Constants.AutoConstants.*;
     @Override
     public boolean isFinished() {
         flag = dt.distanceTo(x, y) < driveTolerance && dt.getHeadingError(h) < headingTolerance;
-        if(Math.abs(dt.ypr[yprAxis]) <= targAngle || flag) {
+        if(Math.abs(dt.ypr[yprAxis]) < targAngle || flag) {
             return true;
         }
         else 
