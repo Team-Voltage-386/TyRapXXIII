@@ -39,8 +39,8 @@ public class RobotContainer {
   private final Drivetrain m_driveTrain = new Drivetrain();
   private final Limelight m_ll = new Limelight();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, m_ll);
-  private final Arm m_Arm = new Arm();
-  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
+  // private final Arm m_Arm = new Arm();
+  // private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
 
   // private final Command drive5 = new Drive(5, 0, 0, m_driveTrain);
   // private final Command balance = new LogicBalance(m_driveTrain);
