@@ -6,14 +6,16 @@ import static frc.robot.Constants.AutoConstants.*;
 import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
-public class Drivetrain extends SubsystemBase {
-
+public class Drivetrain extends SubsystemBase 
+{  
     public double xDriveTarget = 0;
     public double yDriveTarget = 0;
     public double rotationTarget = 0;
@@ -58,7 +60,7 @@ public class Drivetrain extends SubsystemBase {
                     double rAngle = swerve.angleFromCenter + angle + 90;
                     x += r * Math.cos(Math.toRadians(rAngle));
                     y += r * Math.sin(Math.toRadians(rAngle));
-                    double xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
+                    double xFin = ((x * Math.cos(angleRad)) + (y * Math.sin(angleRad)));
                     double yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
 
                     swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
@@ -140,9 +142,19 @@ public class Drivetrain extends SubsystemBase {
 
     public double getHeadingError(double h) {
         double res = h - getRawHeading() - 180;
-        if (360-Math.abs(res)<headingTolerance)
+        //Checks if robot wants to do a 360 and sets it to a more reasonable value (closer to 0)
+        if (360-Math.abs(res)<10)
         {
-            res=0;
+            if (res<0)
+            {
+                //Robot wants to do negative 360
+                res=360+res;
+            }
+            else 
+            {
+                //Robot wants to do positive 360
+                res=360-res;
+            }
         }
         while (angle > 180)
             angle -= 360;

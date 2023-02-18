@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import javax.lang.model.util.ElementScanner14;
+
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
@@ -71,18 +74,31 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() 
   {
+    //X_flip and A_flip starts at 1, it will change to negative if on blue team (the Y axis is always positive)
+    int Y_flip = 1;
+    int A_flip = 1;
     int autoMode=DriverStation.getLocation();
-    if (autoMode==1)
+    if((DriverStation.getAlliance())==(Alliance.Red))
+    {
+      autoMode+=3;
+    }
+    else
+    {
+      //Flips the Y axis and angles (if on blue side for the auto commands)
+      Y_flip=-1;
+      A_flip=-1;
+    }
+    if (autoMode==1||autoMode==6)
     {
       //Auto mode for rightmost position
-      return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(4.25, -0.2, 0, m_driveTrain), new Drive(0, 0, -180, m_driveTrain));
+      return new SequentialCommandGroup(new ZeroOdo(0,0,A_flip*180, m_driveTrain), new Drive(4.25, Y_flip*-0.2, 0, m_driveTrain), new Drive(0, 0, A_flip*(-180), m_driveTrain));
     }
-    if(autoMode==3)
+    if(autoMode==3||autoMode==4)
     {
       //Auto mode for leftmost position
-      return new SequentialCommandGroup(new ZeroOdo(0,0,180, m_driveTrain), new Drive(2.0, 0.4, 180, m_driveTrain), new Drive(3.0, 0.4, 180, m_driveTrain), new Drive(4.4, 1, 10, m_driveTrain), new Drive(2.5, 0.4, 180, m_driveTrain), new Drive(2.0, 0.4, 180, m_driveTrain), new Drive(1.5, 0.4, 180, m_driveTrain), new Drive(0, 0, 180, m_driveTrain));
+      return new SequentialCommandGroup(new ZeroOdo(0,0,A_flip*180, m_driveTrain), new Drive(2.0, Y_flip*0.4, A_flip*180, m_driveTrain), new Drive(3.0, Y_flip*0.4, A_flip*180, m_driveTrain), new Drive(4.4, Y_flip*1, A_flip*10, m_driveTrain), new Drive(2.5, Y_flip*0.4, A_flip*180, m_driveTrain), new Drive(2.0, Y_flip*0.4, A_flip*180, m_driveTrain), new Drive(1.5, Y_flip*0.4, A_flip*180, m_driveTrain), new Drive(0, 0, A_flip*180, m_driveTrain));
     }
-    //Auto mode for middle position
+    //Auto mode for middle position (do not yet have)
     return null;
   }
 }
