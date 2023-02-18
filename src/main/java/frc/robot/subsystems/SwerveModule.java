@@ -10,6 +10,8 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.utils.PID;
+import frc.robot.utils.PIDShufflable;
+
 import static frc.robot.utils.mapping.*;
 
 public class SwerveModule {
@@ -17,8 +19,8 @@ public class SwerveModule {
     public final CANSparkMax steerMotor;
     public final CANSparkMax driveMotor;
     public final CANCoder encoder;
-    public final PID steerPID;
-    public final PID drivePID;
+    public final PIDShufflable steerPID;
+    public final PIDShufflable drivePID;
     public final double x;
     public final double y;
     public final double encoderOffs;
@@ -46,8 +48,8 @@ public class SwerveModule {
 
         encoder = new CANCoder(encoderID);
 
-        steerPID = new PID(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2]);
-        drivePID = new PID(drivePIDValue[0], drivePIDValue[1], drivePIDValue[2]);
+        steerPID = new PIDShufflable(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2],"DTSteer");
+        drivePID = new PIDShufflable(drivePIDValue[0], drivePIDValue[1], drivePIDValue[2],"DTDrive");
 
         x = X;
         y = Y;
@@ -116,6 +118,15 @@ public class SwerveModule {
         xPosWidget.setDouble(steerMotor.getOutputCurrent());
         yPosWidget.setDouble(driveMotor.getOutputCurrent());
         posiitonWidget.setDouble(getEncoderPosition());
+    }
+
+    private void updateShufflables(){
+        if(steerPID.detectChange()){
+            steerPID.shuffleUpdatePID();
+        }
+        if(drivePID.detectChange()){
+            drivePID.shuffleUpdatePID();
+        }
     }
 
 }

@@ -9,7 +9,7 @@ public class PID {
 
     public double lastPV;
 
-    private long lastTime = 0;
+    protected long lastTime = 0;
 
     public PID(double P, double I, double D) {
         p = P;

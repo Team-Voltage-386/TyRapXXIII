@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.utils.PIDShufflable;
+import frc.robot.utils.PersistentShufflableDouble;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -56,9 +58,10 @@ public final class Constants {
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
-    public static final double kMaxRotSpeed = 180; // should be in degrees per second
-    public static final double kMaxDriveSpeed = 4; // should be in meters per second
-
+    // public static final double kMaxRotSpeed = 180; // should be in degrees per second
+    // public static final double kMaxDriveSpeed = 4; // should be in meters per second
+    public static PersistentShufflableDouble kMaxRotSpeed = new PersistentShufflableDouble(180, "maxRotationSpeed");
+    public static PersistentShufflableDouble kMaxDriveSpeed=new PersistentShufflableDouble(4,"maxDriveSpeed");
     public static final int kIMUid = 2;
     public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
     public static final double[] kSwerveDrivePID = { 0.35, 2, 0.01 };
@@ -87,8 +90,11 @@ public final class Constants {
   }
 
   public static final class SmoothingConstants {
-    public static final double kAccelerationSmoothFactor = .2;
-    public static final double kRotationAccelerationSmoothFactor = .5;
+    // public static final double kAccelerationSmoothFactor = .2;
+    public static PersistentShufflableDouble kAccelerationSmoothFactor = new PersistentShufflableDouble(.2, "driveAccelSmooth");
+    // public static final double kRotationAccelerationSmoothFactor = .5;
+    public static PersistentShufflableDouble kRotationAccelerationSmoothFactor = new PersistentShufflableDouble(.5,
+        "rotateAccelSmooth");
 
   }
 

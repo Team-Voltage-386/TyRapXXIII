@@ -17,8 +17,9 @@ public class DriverCommands extends CommandBase {
     private double testingBoostSpeed; // comment out before tryouts
 
     public DriverCommands(Drivetrain DT) {
+        updateShufflables();
         driveTrain = DT;
-        testingBoostSpeed = kMaxDriveSpeed; // comment out before tryouts
+        testingBoostSpeed = kMaxDriveSpeed.get(); // comment out before tryouts
     }
 
     @Override
@@ -26,24 +27,26 @@ public class DriverCommands extends CommandBase {
         driveTrain.xDriveTarget = 0;
         driveTrain.yDriveTarget = 0;
         driveTrain.rotationTarget = 0;
+        updateShufflables();
     }
 
     @Override
     public void execute() {
+        updateShufflables();
         updateWidget();
         // HumanDriverControl=Math.abs(kDriver.getRawAxis(kLeftTrigger))<deadband;
-        driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor, 0, 1, driveTrain.xDriveTarget,
-                -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed);
-        driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor, 0, 1, driveTrain.yDriveTarget,
-                kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed);
+        driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor.get(), 0, 1, driveTrain.xDriveTarget,
+                -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed.get());
+        driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor.get(), 0, 1, driveTrain.yDriveTarget,
+                kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed.get());
         driveTrain.rotationTarget = mapValue(1, 0, 1, driveTrain.yDriveTarget,
-                -Math.pow(kDriver.getRawAxis(kRightHorizontal), 3) * kMaxRotSpeed);
+                -Math.pow(kDriver.getRawAxis(kRightHorizontal), 3) * kMaxRotSpeed.get());
 
         // comment out before tryouts
         if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
             testingBoostSpeed += 2;
         } else {
-            testingBoostSpeed = kMaxDriveSpeed;
+            testingBoostSpeed = kMaxDriveSpeed.get();
         }
 
         // driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) *
@@ -92,6 +95,18 @@ public class DriverCommands extends CommandBase {
         xPosWidget.setDouble(kDriver.getRawAxis(kLeftVertical));
         yPosWidget.setDouble(kDriver.getRawAxis(kLeftHorizontal));
         widget3.setDouble(kDriver.getRawAxis(kRightHorizontal));
+    }
+
+    private void updateShufflables(){
+        if(kMaxDriveSpeed.detectChanges()){
+            kMaxDriveSpeed.subscribeAndSet();
+        }
+        if(kMaxRotSpeed.detectChanges()){
+            kMaxRotSpeed.subscribeAndSet();
+        }
+        if(kAccelerationSmoothFactor.detectChanges()){
+            kAccelerationSmoothFactor.subscribeAndSet();
+        }
     }
 
 }
