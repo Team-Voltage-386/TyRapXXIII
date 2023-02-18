@@ -51,6 +51,33 @@ public final class Constants {
 
     public static final double[] kAutoPositionPID = { 1, 2.5, 0.2 };
     public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
+
+    //All constants after this were added by Ryan
+    //Enums for where the robot wants to place the object it holds
+    public enum Place 
+    {
+      LOW,//Ground
+      MID,//Middle
+      HIGH,//Top
+      NULL//No piece
+    }
+    public enum Piece
+    {
+      CONE, //Cone
+      CUBE, //Cube
+      NULL //Neither cone or cube
+    }
+    public enum Position
+    {
+      CABLE, //Cable bump side
+      CHARGER, //Charging station side
+      CLEAR //Clear side (closest to the enemy loading zone)
+    }
+    public enum Balancing
+    {
+      BALANCE, //Robot will balance
+      NORMAL //Robot won't balance
+    }
   }
 
   /** Can IDs, PID values, ect. */

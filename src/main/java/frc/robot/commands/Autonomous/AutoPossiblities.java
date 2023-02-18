@@ -1,6 +1,7 @@
 package frc.robot.commands.Autonomous;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,7 +18,9 @@ public class AutoPossiblities extends CommandBase
         if (!MartianRock)
         {
             //Martian Rock is false robot will run auto
-            return null;
+            return new SequentialCommandGroup(PlaceObject(StartingObject, StartingPlace), BeginMove(StartingLocation, PickUpObject, Balance), 
+            getPeice(PickUpObject), middleMove(StartingLocation, PickUpObject, Balance), autoBalance(Balance, StartingLocation), 
+            returnRobot(StartingLocation, PickUpObject, Balance), PlaceObject(PickUpObject, PickedUpScore));
         }
         //Martian Rock is true robot won't do anything
         return null;
@@ -142,6 +145,33 @@ public class AutoPossiblities extends CommandBase
             }
         }
         //Martian Rock the robot does not have a starting position inputed
+        return null;
+    }
+
+    private static Command middleMove(Position Starting, Piece PickedUp, Balancing Balance)
+    {
+        //Moves robot from piece to balance
+        if ((PickedUp != null && PickedUp != Piece.NULL) && Balance == Balancing.BALANCE && Starting != null)
+        {
+            if (Starting == Position.CABLE)
+            {
+                //Manuver from cable piece to charger
+                //return
+            }
+
+            if (Starting == Position.CHARGER)
+            {
+                //Manuver from charger piece to charger
+                //return
+            }
+
+            if (Starting == Position.CLEAR)
+            {
+                //Manuver from clear piece to charger
+                //return
+            }
+        }
+        //Robot does not need to manuver to balance
         return null;
     }
 
