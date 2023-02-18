@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.utils.PID;
-import static frc.robot.utils.mapping.*;
 
 public class SwerveModule {
 
@@ -75,7 +74,7 @@ public class SwerveModule {
     public void drive() {
         steerMotor.set(steerPID.calc(getSwerveHeadingError()));
 
-        driveMotor.set(mapValue(getSwerveHeadingError(), 0, 360, 1, 0) * drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
+        driveMotor.set(drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
     }
 
     public void reset() {
