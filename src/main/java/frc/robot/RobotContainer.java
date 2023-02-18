@@ -6,12 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
-import frc.robot.commands.Autonomous.LucasPIDBalance;
 import frc.robot.commands.Autonomous.Drive;
-// import frc.robot.commands.Autonomous.LogicBalance;
-// import frc.robot.commands.Autonomous.DriveUntil;
-import frc.robot.commands.Autonomous.DriveUntilAngleDec;
-import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
@@ -23,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Arm;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -102,30 +98,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // gabe logic balance
-    // return new SequentialCommandGroup(new DriveUntil(m_driveTrain), new
-    // Balance(m_driveTrain));
-    // return new SequentialCommandGroup(new DriveUntil(true, m_driveTrain), new
-    // Drive(5, 0, 0, m_driveTrain),
-    // new DriveUntil(false, m_driveTrain),
-    // new Balance(m_driveTrain));
-    // return m_chooser.getSelected();
-
-    // lucas PID balance
-    // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
-    // Drive(1, 1, 0, m_driveTrain),
-    // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
-    // return new Drive(10, 0, 0, m_driveTrain);s
-    // 2.24
-    // game autos
-    // return new SequentialCommandGroup(new DriveUntilAngleInc(2.3, 0, 0,
-    // m_driveTrain, 10, 2), new Drive(3.8, 0, 0, m_driveTrain),new
-    // DriveUntilAngleInc(2.5, 0, 0, m_driveTrain, 8, 2), new
-    // Balance(m_driveTrain));
-    // return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new
-    // Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
-    // return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0,
-    // m_driveTrain, 10, 2),new LucasPIDBalance(m_driveTrain));
+    // An example command will be run in autonomous
+    // return Autos.exampleAuto(m_exampleSubsystem);
     return null;
   }
 }

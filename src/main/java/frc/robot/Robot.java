@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
     inst = this;
@@ -68,8 +69,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    // m_robotContainer.getTeleOp().cancel();
-    m_robotContainer.getAutonomousCommand().cancel();
+  //   m_robotContainer.getTeleOp().cancel();
   }
 
   @Override
@@ -82,7 +82,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // m_robotContainer.m_driveTrain.resetFO();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)

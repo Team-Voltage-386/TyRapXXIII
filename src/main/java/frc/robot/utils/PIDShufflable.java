@@ -3,7 +3,6 @@ package frc.robot.utils;
 import edu.wpi.first.networktables.GenericSubscriber;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.commands.Autonomous.LucasPIDBalance;
 
 public class PIDShufflable {
     public double p;
