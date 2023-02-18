@@ -7,12 +7,13 @@ import frc.robot.utils.PID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
-public class AutoPossiblities extends CommandBase
+public class AutoPossibilities extends CommandBase
 {
+    
     public static Command Choice (Piece StartingObject, Place StartingPlace, Position StartingLocation, Piece PickUpObject, Place PickedUpScore, Balancing Balance, boolean MartianRock)
     {
         if (!MartianRock)

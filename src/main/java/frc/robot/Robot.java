@@ -78,7 +78,8 @@ public class Robot extends TimedRobot {
    * {@link RobotContainer} class.
    */
   @Override
-  public void autonomousInit() {
+  public void autonomousInit() 
+  {
     m_robotContainer.m_driveTrain.resetFO();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 

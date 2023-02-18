@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
+import frc.robot.commands.Autonomous.AutoPossibilities;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
@@ -70,7 +71,9 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() 
+  {
     return null;
+    //return Choice();
   }
 }
