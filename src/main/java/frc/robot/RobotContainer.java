@@ -7,8 +7,6 @@ package frc.robot;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
-import frc.robot.commands.Autonomous.LogicBalance;
-import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
@@ -73,14 +71,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return new SequentialCommandGroup(new DriveUntil(m_driveTrain), new
-    // Balance(m_driveTrain));
-
-    // return new SequentialCommandGroup(new DriveUntil(true, m_driveTrain), new
-    // Drive(5, 0, 0, m_driveTrain),
-    // new DriveUntil(false, m_driveTrain),
-    // new Balance(m_driveTrain));
-
-    return m_chooser.getSelected();
+    return null;
   }
 }
