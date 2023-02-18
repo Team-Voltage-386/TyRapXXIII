@@ -48,8 +48,10 @@ public class RobotContainer {
 
   // private final Command drive5 = new Drive(5, 0, 0, m_driveTrain);
   // private final Command balance = new LogicBalance(m_driveTrain);
-  // private final SequentialCommandGroup goOverAndBalance = new SequentialCommandGroup(new DriveUntil(true, m_driveTrain),
-  //     new Drive(5, 0, 0, m_driveTrain), new DriveUntil(false, m_driveTrain), new LogicBalance(m_driveTrain));
+  // private final SequentialCommandGroup goOverAndBalance = new
+  // SequentialCommandGroup(new DriveUntil(true, m_driveTrain),
+  // new Drive(5, 0, 0, m_driveTrain), new DriveUntil(false, m_driveTrain), new
+  // LogicBalance(m_driveTrain));
 
   // private static final Shuffleboard Tab mainTab = Shuffleboard.getTab("Main");
 
@@ -69,7 +71,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     m_driveTrain.setDefaultCommand(m_driverCommand);
-    m_Arm.setDefaultCommand(m_manipulatorCommand);
+    // m_Arm.setDefaultCommand(m_manipulatorCommand);
   }
 
   /**
@@ -100,16 +102,16 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //gabe logic balance
+    // gabe logic balance
     // return new SequentialCommandGroup(new DriveUntil(m_driveTrain), new
     // Balance(m_driveTrain));
     // return new SequentialCommandGroup(new DriveUntil(true, m_driveTrain), new
     // Drive(5, 0, 0, m_driveTrain),
     // new DriveUntil(false, m_driveTrain),
     // new Balance(m_driveTrain));
-    //return m_chooser.getSelected();
-    
-    //lucas PID balance 
+    // return m_chooser.getSelected();
+
+    // lucas PID balance
     // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
     // Drive(1, 1, 0, m_driveTrain),
     // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
@@ -122,7 +124,8 @@ public class RobotContainer {
     // Balance(m_driveTrain));
     // return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new
     // Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
-    // return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2),new LucasPIDBalance(m_driveTrain));
+    // return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0,
+    // m_driveTrain, 10, 2),new LucasPIDBalance(m_driveTrain));
     return null;
   }
 }
