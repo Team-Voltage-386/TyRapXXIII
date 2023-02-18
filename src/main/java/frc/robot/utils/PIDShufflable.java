@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class PIDShufflable extends PID {
     public String name;
 
-    private ShuffleboardTab pidTab;
+    protected ShuffleboardTab pidTab;
     private GenericSubscriber pUpdater;
     private GenericSubscriber iUpdater;
     private GenericSubscriber dUpdater;
