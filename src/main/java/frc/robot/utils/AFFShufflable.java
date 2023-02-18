@@ -10,7 +10,6 @@ public class AFFShufflable extends PIDShufflable {
     public double load;// total load on this arm bit
 
     // this next block of stuff is just shuffleboard Implementation
-    public String name;
     private static GenericSubscriber fUpdater;
     private static GenericSubscriber sUpdater;
 
@@ -31,9 +30,13 @@ public class AFFShufflable extends PIDShufflable {
     // from the other arm segment(s)
     /**
      * 
-     * @param extraload the load caused by not just the arm segment; example: the
-     *                  shoulder supports the extraload of the elbow (potentially)
-     * @return
+     * @param extraload    the load caused by not just the arm segment; example: the
+     *                     shoulder supports the extraload of the elbow
+     *                     (potentially)
+     * @param SpatialAngle is the angle within real-world space; example: the
+     *                     spatial elbow angle is different from encoder angle
+     *                     because of
+     *                     shoulder angle
      */
     public double calc(double pv, double SpatialAngle, double extraload) {
         double result = super.calc(pv) + f * Math.cos(Math.toRadians(SpatialAngle)) + extraload;
@@ -42,9 +45,12 @@ public class AFFShufflable extends PIDShufflable {
     }
 
     /**
+     * (default calc, no extra load)
+     * 
      * @param SpatialAngle is the angle within real-world space; example: the
-     *                     shoulder
-     * @return
+     *                     spatial elbow angle is different from encoder angle
+     *                     because of
+     *                     shoulder angle
      */
     public double calc(double pv, double SpatialAngle) {
         return calc(pv, SpatialAngle, 0.0);
