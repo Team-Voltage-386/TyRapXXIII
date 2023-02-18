@@ -25,13 +25,10 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
-        // put back in before tryouts
-        // driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) *
-        // kMaxDriveSpeed;
-        // driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) *
-        // kMaxDriveSpeed;
-        // driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) *
-        // kMaxRotSpeed;
+        // HumanDriverControl=Math.abs(kDriver.getRawAxis(kLeftTrigger))<deadband;
+        driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
+        driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
+        driveTrain.rotationTarget = -Math.pow(kDriver.getRawAxis(kRightHorizontal),3) * kMaxRotSpeed;
 
         // comment out before tryouts
         if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
