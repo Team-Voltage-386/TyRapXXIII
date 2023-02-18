@@ -61,7 +61,7 @@ public class DriverCommands extends CommandBase {
             // it is facing, but field oriented joystick is likely to be wrong)
             if (kDriver.getRawButtonPressed(kRightBumper)) {
                 if (limelight.apriltagmode() && limelight.apriltagsAvailable())
-                    driveTrain.setFO(limelightYawToDriveTrainYaw());
+                    driveTrain.setFO(limelight.limelightYawToDriveTrainYaw());
                 else
                     driveTrain.resetFO();
             }
