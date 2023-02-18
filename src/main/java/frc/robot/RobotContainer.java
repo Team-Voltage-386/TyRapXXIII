@@ -8,8 +8,8 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.LucasPIDBalance;
 import frc.robot.commands.Autonomous.Drive;
-import frc.robot.commands.Autonomous.LogicBalance;
-import frc.robot.commands.Autonomous.DriveUntil;
+// import frc.robot.commands.Autonomous.LogicBalance;
+// import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.Autonomous.DriveUntilAngleDec;
 import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.ManipulatorCommands;
@@ -46,10 +46,10 @@ public class RobotContainer {
   private final Arm m_Arm = new Arm();
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
 
-  private final Command drive5 = new Drive(5, 0, 0, m_driveTrain);
-  private final Command balance = new LogicBalance(m_driveTrain);
-  private final SequentialCommandGroup goOverAndBalance = new SequentialCommandGroup(new DriveUntil(true, m_driveTrain),
-      new Drive(5, 0, 0, m_driveTrain), new DriveUntil(false, m_driveTrain), new LogicBalance(m_driveTrain));
+  // private final Command drive5 = new Drive(5, 0, 0, m_driveTrain);
+  // private final Command balance = new LogicBalance(m_driveTrain);
+  // private final SequentialCommandGroup goOverAndBalance = new SequentialCommandGroup(new DriveUntil(true, m_driveTrain),
+  //     new Drive(5, 0, 0, m_driveTrain), new DriveUntil(false, m_driveTrain), new LogicBalance(m_driveTrain));
 
   // private static final Shuffleboard Tab mainTab = Shuffleboard.getTab("Main");
 
@@ -60,9 +60,9 @@ public class RobotContainer {
    */
 
   public RobotContainer() {
-    m_chooser.addOption("Drive to (5, 0)", drive5);
-    m_chooser.addOption("Balance", balance);
-    m_chooser.setDefaultOption("Go over and Balance", goOverAndBalance);
+    // m_chooser.addOption("Drive to (5, 0)", drive5);
+    // m_chooser.addOption("Balance", balance);
+    // m_chooser.setDefaultOption("Go over and Balance", goOverAndBalance);
 
     SmartDashboard.putData(m_chooser);
     // mainTab.add("autoRoutine", m_chooser).withPosition(5, 5).withSize(3, 1);
@@ -123,5 +123,6 @@ public class RobotContainer {
     // return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new
     // Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
     // return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2),new LucasPIDBalance(m_driveTrain));
+    return null;
   }
 }
