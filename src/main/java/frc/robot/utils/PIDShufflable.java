@@ -17,7 +17,6 @@ public class PIDShufflable {
     private long lastTime = 0;
 
     //this next block of stuff is just shuffleboard Implementation
-    private static ShuffleboardTab pidTab;
     private static GenericSubscriber pUpdater;
     private static GenericSubscriber iUpdater;
     private static GenericSubscriber dUpdater;
@@ -32,10 +31,10 @@ public class PIDShufflable {
         lastTime = System.currentTimeMillis();
 
         pidObjectCount++;
-        pidTab=Shuffleboard.getTab(TabName);
-        pUpdater=pidTab.addPersistent("P", p).getEntry();
-        iUpdater=pidTab.addPersistent("i", i).getEntry();
-        dUpdater=pidTab.addPersistent("d", d).getEntry();
+        ShuffleboardTab mainTab=Shuffleboard.getTab(TabName);
+        pUpdater=mainTab.addPersistent("P", p).withPosition(2, 0).getEntry();
+        iUpdater=mainTab.addPersistent("i", i).withPosition(2, 1).getEntry();
+        dUpdater=mainTab.addPersistent("d", d).withPosition(2, 2).getEntry();
         shuffleUpdatePID();
     }
     
@@ -63,8 +62,5 @@ public class PIDShufflable {
         d=dUpdater.getDouble(d);
         reset(); 
     }
-
-    public boolean detectChange(){
-        return p!=pUpdater.getDouble(p)||i!=iUpdater.getDouble(i)||d!=dUpdater.getDouble(d);
-    }
 }
+
