@@ -6,22 +6,20 @@ package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
-import frc.robot.commands.Autonomous.LucasPIDBalance;
 import frc.robot.commands.Autonomous.Drive;
-import frc.robot.commands.Autonomous.DriveUntilAngleDec;
-import frc.robot.commands.Autonomous.DriveUntilAngleInc;
+import frc.robot.commands.Autonomous.LogicBalance;
+import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.Limelight;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Arm;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -34,21 +32,18 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drivetrain m_driveTrain = new Drivetrain();
-  private final Limelight m_ll = new Limelight();
-  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, m_ll);
+  public final Drivetrain m_driveTrain = new Drivetrain();
   private final Arm m_Arm = new Arm();
-  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
+  private final Limelight m_ll = new Limelight();
+  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    m_driveTrain.setDefaultCommand(m_driverCommand);
-    m_Arm.setDefaultCommand(m_manipulatorCommand);
   }
 
   /**
@@ -68,10 +63,9 @@ public class RobotContainer {
   private void configureBindings() {
   }
 
-  // public Command getTeleOp() {
-  // return new ParallelCommandGroup(m_driverCommand,m_autopilotCOmmand);
-  // return m_driverCommand;
-  // }
+  public Command getTeleOp() {
+    return m_driverCommand;
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -79,19 +73,14 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return new SequentialCommandGroup(new Drive(1, 0, 0, m_driveTrain), new
-    // Drive(1, 1, 0, m_driveTrain),
-    // new Drive(0, 1, 0, m_driveTrain), new Drive(0, 0, 0, m_driveTrain));
-    // return new Drive(10, 0, 0, m_driveTrain);s
-    // 2.24
-    // game autos
-    // return new SequentialCommandGroup(new DriveUntilAngleInc(2.3, 0, 0,
-    // m_driveTrain, 10, 2), new Drive(3.8, 0, 0, m_driveTrain),new
-    // DriveUntilAngleInc(2.5, 0, 0, m_driveTrain, 8, 2), new
+    // return new SequentialCommandGroup(new DriveUntil(m_driveTrain), new
     // Balance(m_driveTrain));
-    // return new SequentialCommandGroup(new Drive(2.12, 0, 0, m_driveTrain), new
-    // Drive(4.24, 0, 0, m_driveTrain), new Drive(2.12, 0, 0, m_driveTrain));
-    // return new SequentialCommandGroup(new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 10, 2),new LucasPIDBalance(m_driveTrain));
-    return null;
+
+    // return new SequentialCommandGroup(new DriveUntil(true, m_driveTrain), new
+    // Drive(5, 0, 0, m_driveTrain),
+    // new DriveUntil(false, m_driveTrain),
+    // new Balance(m_driveTrain));
+
+    return m_chooser.getSelected();
   }
 }

@@ -55,7 +55,6 @@ public class SwerveModule {
 
     private double getSwerveHeadingError() {
         double res = targetSteer - getEncoderPosition();
-        //why not use mod?
         while (res < -180)
             res += 360;
         while (res > 180)
