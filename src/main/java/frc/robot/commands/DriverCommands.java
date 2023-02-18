@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import static frc.robot.Constants.ControllerConstants.*;
@@ -25,6 +28,7 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
+        updateWidget();
         // HumanDriverControl=Math.abs(kDriver.getRawAxis(kLeftTrigger))<deadband;
         driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
         driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed;
@@ -37,14 +41,14 @@ public class DriverCommands extends CommandBase {
             testingBoostSpeed = kMaxDriveSpeed;
         }
 
-        driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * testingBoostSpeed;
-        driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * testingBoostSpeed;
+        // driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) * testingBoostSpeed;
+        // driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) * testingBoostSpeed;
 
-        if (Math.abs(kDriver.getRawAxis(kRightHorizontal)) > 0.05) {
-            driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
-        } else {
-            driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
-        }
+        // if (Math.abs(kDriver.getRawAxis(kRightHorizontal)) > 0.05) {
+        //     driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
+        // } else {
+        //     driveTrain.rotationTarget = -kDriver.getRawAxis(kRightHorizontal) * kMaxRotSpeed;
+        // }
 
         if (kDriver.getRawButtonPressed(kLeftBumper))
             driveTrain.setOffset(-0.65, 0);
@@ -65,6 +69,18 @@ public class DriverCommands extends CommandBase {
         driveTrain.xDriveTarget = 0;
         driveTrain.yDriveTarget = 0;
         driveTrain.rotationTarget = 0;
+    }
+
+    private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
+    private static final GenericEntry xPosWidget = mainTab.add("left horizontal", 0).withPosition(0, 2).withSize(1, 1).getEntry();
+    private static final GenericEntry yPosWidget = mainTab.add("left vertical", 0).withPosition(1, 2).withSize(1, 1).getEntry();
+    private static final GenericEntry widget3 = mainTab.add("right horizontal", 0).withPosition(2, 2).withSize(1, 1)
+            .getEntry();
+    
+    private void updateWidget() {
+        xPosWidget.setDouble(kDriver.getRawAxis(kLeftVertical));
+        yPosWidget.setDouble(kDriver.getRawAxis(kLeftHorizontal));
+        widget3.setDouble(kDriver.getRawAxis(kRightHorizontal));
     }
 
 }

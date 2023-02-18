@@ -1,9 +1,14 @@
 package frc.robot.subsystems;
 
+import javax.swing.text.Position;
+
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.utils.PID;
 
 public class SwerveModule {
@@ -24,8 +29,15 @@ public class SwerveModule {
 
     public int driveMult = 1;
 
+    public int swerveModuleID;
+    public static int swerveModuleCount = 0;
+    public final ShuffleboardTab mainTab;
+    public final GenericEntry xPosWidget;
+    public final GenericEntry yPosWidget;
+    public final GenericEntry posiitonWidget;
+
     public SwerveModule(int STEERMOTOR, int DRIVEMOTOR, double driveConversion, double[] steerPIDValue,
-            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS) {
+            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS,String SwerveModuleName) {
         steerMotor = new CANSparkMax(STEERMOTOR, MotorType.kBrushless);
         driveMotor = new CANSparkMax(DRIVEMOTOR, MotorType.kBrushless);
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);
@@ -42,6 +54,19 @@ public class SwerveModule {
         encoderOffs = ENCOFFS;
 
         this.calcPosition(0, 0);
+
+        swerveModuleID = swerveModuleCount;
+
+        swerveModuleCount++;
+        mainTab = Shuffleboard.getTab("Main");
+        xPosWidget = mainTab.add("steerMotor" + SwerveModuleName, 0).withPosition(5, swerveModuleID).withSize(1, 1)
+                .getEntry();
+        yPosWidget = mainTab.add("drive motor" + SwerveModuleName, 0).withPosition(6,
+                swerveModuleID).withSize(1, 1)
+                .getEntry();
+        posiitonWidget = mainTab.add("orientation" + SwerveModuleName, 0).withPosition(7,
+                swerveModuleID).withSize(1, 1)
+                .getEntry();
     }
 
     public double getEncoderPosition() {
@@ -72,6 +97,8 @@ public class SwerveModule {
     }
 
     public void drive() {
+        updateWidget();
+
         steerMotor.set(steerPID.calc(getSwerveHeadingError()));
 
         driveMotor.set(drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
@@ -82,6 +109,12 @@ public class SwerveModule {
         drivePID.reset();
         steerMotor.set(0);
         driveMotor.set(0);
+    }
+
+    private void updateWidget() {
+        xPosWidget.setDouble(steerMotor.getOutputCurrent());
+        yPosWidget.setDouble(driveMotor.getOutputCurrent());
+        posiitonWidget.setDouble(getEncoderPosition());
     }
 
 }

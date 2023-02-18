@@ -5,7 +5,9 @@ import static frc.robot.Constants.DriveConstants.*;
 import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +17,7 @@ public class Drivetrain extends SubsystemBase {
     public double xDriveTarget = 0;
     public double yDriveTarget = 0;
     public double rotationTarget = 0;
+    public PowerDistribution examplePD = new PowerDistribution(1, ModuleType.kRev);
 
     public double xPos = 0;
     public double yPos = 0;
@@ -33,6 +36,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         this.init();
+        examplePD.setSwitchableChannel(true);
     }
 
     public void init() {
@@ -146,10 +150,17 @@ public class Drivetrain extends SubsystemBase {
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
+    private static final GenericEntry rotationWidget=mainTab.add("yaw",0).getEntry();
+    private static final GenericEntry pitchWidget = mainTab.add("pitch", 0).getEntry();
+    private static final GenericEntry rollWidget=mainTab.add("roll",0).getEntry();
 
     private void updateWidget() {
-        xPosWidget.setDouble(xPos);
-        yPosWidget.setDouble(yPos);
+        xPosWidget.setDouble(xDriveTarget);
+        yPosWidget.setDouble(yDriveTarget);
+        rotationWidget.setDouble(ypr[0]);
+        pitchWidget.setDouble(ypr[1]);
+        rollWidget.setDouble(ypr[2]);
+
     }
 
 }
