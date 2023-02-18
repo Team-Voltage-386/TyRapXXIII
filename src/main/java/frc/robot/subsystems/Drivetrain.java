@@ -68,7 +68,7 @@ public class Drivetrain extends SubsystemBase {
                 } else {
                     swerve.targetDrive = 0;
                     swerve.drivePID.reset();
-                    swerve.targetSteer = swerve.angleFromCenter+90;
+                    swerve.targetSteer = swerve.angleFromCenter + 90;// circle lock is add 90, x lock is add 0
                 }
 
                 swerve.drive();
@@ -150,9 +150,9 @@ public class Drivetrain extends SubsystemBase {
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
-    private static final GenericEntry rotationWidget=mainTab.add("yaw",0).getEntry();
+    private static final GenericEntry rotationWidget = mainTab.add("yaw", 0).getEntry();
     private static final GenericEntry pitchWidget = mainTab.add("pitch", 0).getEntry();
-    private static final GenericEntry rollWidget=mainTab.add("roll",0).getEntry();
+    private static final GenericEntry rollWidget = mainTab.add("roll", 0).getEntry();
 
     private void updateWidget() {
         xPosWidget.setDouble(xDriveTarget);
