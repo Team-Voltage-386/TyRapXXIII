@@ -10,7 +10,7 @@ public class PersistentShufflableDouble {
     public PersistentShufflableDouble(double initialValue, String entryName){
         sdtab=Shuffleboard.getTab("persistentdoubles");
         value=initialValue;
-        sdtab.addPersistent(entryName, value).getEntry();
+        ntEntry=sdtab.addPersistent(entryName, value).getEntry();
     }
     public double get(){return value;}
     /**write the value without shuffleboard*/
