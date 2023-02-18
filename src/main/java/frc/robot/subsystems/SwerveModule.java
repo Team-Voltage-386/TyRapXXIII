@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.utils.PID;
+import static frc.robot.utils.mapping.*;
 
 public class SwerveModule {
 
@@ -101,7 +102,7 @@ public class SwerveModule {
 
         steerMotor.set(steerPID.calc(getSwerveHeadingError()));
 
-        driveMotor.set(drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
+        driveMotor.set(mapValue(getSwerveHeadingError(), 0, 180, 1, 0) * drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
     }
 
     public void reset() {
