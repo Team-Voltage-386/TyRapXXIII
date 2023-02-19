@@ -5,6 +5,8 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utils.PersistentShufflableDouble;
+
 import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.mapping.*;
@@ -13,7 +15,7 @@ import static frc.robot.Constants.SmoothingConstants.*;
 public class DriverCommands extends CommandBase {
 
     private Drivetrain driveTrain;
-
+    private PersistentShufflableDouble curvingPower = new PersistentShufflableDouble(1, "CurvingPower");
     private double testingBoostSpeed; // comment out before tryouts
 
     public DriverCommands(Drivetrain DT) {
@@ -36,9 +38,11 @@ public class DriverCommands extends CommandBase {
         updateWidget();
         // HumanDriverControl=Math.abs(kDriver.getRawAxis(kLeftTrigger))<deadband;
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor.get(), 0, 1, driveTrain.xDriveTarget,
-                -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed.get());
+                curveJoystickAxis(-kDriver.getRawAxis(kLeftVertical), curvingPower.get())
+                        * kMaxDriveSpeed.get());
         driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor.get(), 0, 1, driveTrain.yDriveTarget,
-                kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed.get());
+                curveJoystickAxis(kDriver.getRawAxis(kLeftHorizontal), curvingPower.get())
+                        * kMaxDriveSpeed.get());
         driveTrain.rotationTarget = mapValue(1, 0, 1, driveTrain.yDriveTarget,
                 -Math.pow(kDriver.getRawAxis(kRightHorizontal), 3) * kMaxRotSpeed.get());
 
@@ -84,9 +88,9 @@ public class DriverCommands extends CommandBase {
     }
 
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-    private static final GenericEntry xPosWidget = mainTab.add("left horizontal", 0).withPosition(0, 2).withSize(1, 1)
+    private static final GenericEntry xPosWidget = mainTab.add("left vertical", 0).withPosition(0, 2).withSize(1, 1)
             .getEntry();
-    private static final GenericEntry yPosWidget = mainTab.add("left vertical", 0).withPosition(1, 2).withSize(1, 1)
+    private static final GenericEntry yPosWidget = mainTab.add("left horizontal", 0).withPosition(1, 2).withSize(1, 1)
             .getEntry();
     private static final GenericEntry widget3 = mainTab.add("right horizontal", 0).withPosition(2, 2).withSize(1, 1)
             .getEntry();
@@ -97,16 +101,23 @@ public class DriverCommands extends CommandBase {
         widget3.setDouble(kDriver.getRawAxis(kRightHorizontal));
     }
 
-    private void updateShufflables(){
-        if(kMaxDriveSpeed.detectChanges()){
+    private void updateShufflables() {
+        if (kMaxDriveSpeed.detectChanges()) {
             kMaxDriveSpeed.subscribeAndSet();
         }
-        if(kMaxRotSpeed.detectChanges()){
+        if (kMaxRotSpeed.detectChanges()) {
             kMaxRotSpeed.subscribeAndSet();
         }
-        if(kAccelerationSmoothFactor.detectChanges()){
+        if (kAccelerationSmoothFactor.detectChanges()) {
             kAccelerationSmoothFactor.subscribeAndSet();
         }
+        if (curvingPower.detectChanges()) {
+            curvingPower.subscribeAndSet();
+        }
+    }
+
+    private double curveJoystickAxis(double input, double power) {
+        return Math.signum(input) * Math.pow(Math.abs(input), power);
     }
 
 }

@@ -222,13 +222,5 @@
     "properties": {
       "persistent": true
     }
-  },
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/CurvingPower",
-    "type": "double",
-    "value": 1.0,
-    "properties": {
-      "persistent": true
-    }
   }
 ]
