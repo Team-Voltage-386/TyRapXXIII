@@ -94,13 +94,13 @@ public class DriverCommands extends CommandBase {
     private static final GenericEntry leftHorizontalWidget = mainTab.add("left horizontal", 0).withPosition(1, 2)
             .withSize(1, 1)
             .getEntry();
-    private static final GenericEntry widget3 = mainTab.add("right horizontal", 0).withPosition(2, 2).withSize(1, 1)
+    private static final GenericEntry rightHorizontalWidget = mainTab.add("right horizontal", 0).withPosition(2, 2).withSize(1, 1)
             .getEntry();
 
     private void updateWidget() {
         leftVerticalWidget.setDouble(kDriver.getRawAxis(kLeftVertical));
         leftHorizontalWidget.setDouble(kDriver.getRawAxis(kLeftHorizontal));
-        widget3.setDouble(kDriver.getRawAxis(kRightHorizontal));
+        rightHorizontalWidget.setDouble(kDriver.getRawAxis(kRightHorizontal));
     }
 
     private void updateShufflables() {
