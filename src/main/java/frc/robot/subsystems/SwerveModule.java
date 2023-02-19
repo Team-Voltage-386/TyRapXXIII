@@ -32,14 +32,14 @@ public class SwerveModule {
     public int swerveModuleID;
     public static int swerveModuleCount = 0;
     public final ShuffleboardTab mainTab;
-    public final GenericEntry xPosWidget;
-    public final GenericEntry yPosWidget;
+    public final GenericEntry steerMotorCurrentWidget;
+    public final GenericEntry driveMotorCurrentWidget;
+    public final GenericEntry driveMotorSetWidget;
     public final GenericEntry posiitonWidget;
 
     public SwerveModule(int STEERMOTOR, int DRIVEMOTOR, double driveConversion, double[] steerPIDValue,
             double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName) {
         swerveModuleID = swerveModuleCount;
-        swerveModuleCount++;
 
         steerPID = new PIDShufflable(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2],
                 "DTSteer" + swerveModuleID);
@@ -58,14 +58,19 @@ public class SwerveModule {
         this.calcPosition(0, 0);
 
         mainTab = Shuffleboard.getTab("Main");
-        xPosWidget = mainTab.add("steerMotor" + SwerveModuleName, 0).withPosition(5, swerveModuleID).withSize(1, 1)
+        steerMotorCurrentWidget = mainTab.add("steerMotor" + SwerveModuleName, 0).withPosition(5, swerveModuleID)
+                .withSize(1, 1)
                 .getEntry();
-        yPosWidget = mainTab.add("drive motor" + SwerveModuleName, 0).withPosition(6,
+        driveMotorCurrentWidget = mainTab.add("drive motor" + SwerveModuleName, 0).withPosition(6,
                 swerveModuleID).withSize(1, 1)
                 .getEntry();
         posiitonWidget = mainTab.add("orientation" + SwerveModuleName, 0).withPosition(7,
                 swerveModuleID).withSize(1, 1)
                 .getEntry();
+        driveMotorSetWidget = mainTab.add("dmSET" + SwerveModuleName, 0).withPosition(8, swerveModuleID).withSize(1, 1)
+                .getEntry();
+        swerveModuleCount++;
+
         updateShufflables();
     }
 
@@ -101,7 +106,8 @@ public class SwerveModule {
 
         steerMotor.set(steerPID.calc(getSwerveHeadingError()));
 
-        driveMotor.set(mapValue(getSwerveHeadingError(), 0, 180, 1, 0)* drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
+        driveMotor.set(mapValue(getSwerveHeadingError(), 0, 180, 1, 0)
+                * drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
     }
 
     public void reset() {
@@ -112,8 +118,10 @@ public class SwerveModule {
     }
 
     private void updateWidget() {
-        xPosWidget.setDouble(steerMotor.getOutputCurrent());
-        yPosWidget.setDouble(driveMotor.getOutputCurrent());
+        steerMotorCurrentWidget.setDouble(steerMotor.getOutputCurrent());
+        driveMotorCurrentWidget.setDouble(driveMotor.getOutputCurrent());
+        driveMotorSetWidget.setDouble(mapValue(getSwerveHeadingError(), 0, 180, 1, 0)
+                * (drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity())));
         posiitonWidget.setDouble(getEncoderPosition());
     }
 
