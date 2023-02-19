@@ -41,7 +41,7 @@ public class RobotContainer {
   private final Limelight m_ll = new Limelight();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
-  static AutoShuffleBoard AutoValues = new AutoShuffleBoard();
+  
 
   // The robot's auto values are declared here
   Piece StartingPiece = null, SecondPiece = null;
@@ -49,6 +49,7 @@ public class RobotContainer {
   Balancing Balance = null;
   Position StartingPosition =null;
   boolean MartianRock = true;
+  public static AutoShuffleBoard AutoValues;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -58,6 +59,7 @@ public class RobotContainer {
   {
     // Configure the trigger bindings
     configureBindings();
+    AutoValues = new AutoShuffleBoard();
   }
 
   /**
@@ -96,6 +98,7 @@ public class RobotContainer {
     StartingPosition = AutoValues.getStartingPosition();
     Balance = AutoValues.getBalance();
     MartianRock = AutoValues.getMartianRock();
+    AutoValues.updateAutoReady();
     return autoMode.Choice(StartingPiece, FirstPlace, StartingPosition, SecondPiece, SecondPlace, Balance, MartianRock);
   }
 }

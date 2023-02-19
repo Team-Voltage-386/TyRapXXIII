@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants.*;
 
 public class AutoShuffleBoard
@@ -21,6 +22,7 @@ public class AutoShuffleBoard
     //Martian rock is an exception to enums and will be using an integer value
     public final SendableChooser<Integer> MartianRockChooser = new SendableChooser<>();
     //
+    private SimpleWidget AutoReady;
 
     public AutoShuffleBoard()
     {
@@ -39,27 +41,32 @@ public class AutoShuffleBoard
         StartingPositionChooser.addOption("Cable strip side", Position.CABLE);
         StartingPositionChooser.addOption("Chager station", Position.CHARGER);
         StartingPositionChooser.addOption("Clear side", Position.CLEAR);
+        StartingPositionChooser.setDefaultOption("", Position.ERROR);
         Auto.add("Starting location", StartingPositionChooser).withPosition(4, 0).withSize(2, 2);
         
         SecondPieceChooser.addOption("Cone", Piece.CONE);
         SecondPieceChooser.addOption("Cube", Piece.CUBE);
         SecondPieceChooser.addOption("Nothing", Piece.NULL);
+        SecondPieceChooser.setDefaultOption("", Piece.ERROR);
         Auto.add("Second piece", SecondPieceChooser).withPosition(0, 2).withSize(2, 2);
 
         SecondPlaceChooser.addOption("High", Place.HIGH);
         SecondPlaceChooser.addOption("Middle", Place.MID);
         SecondPlaceChooser.addOption("Ground", Place.LOW);
         SecondPlaceChooser.addOption("Don't place", Place.NULL);
+        SecondPlaceChooser.setDefaultOption("", Place.ERROR);
         Auto.add("Second piece place", SecondPlaceChooser).withPosition(2, 2).withSize(2, 2);
 
         BalancingChooser.addOption("Balance", Balancing.BALANCE);
         BalancingChooser.addOption("Don't Balance", Balancing.NORMAL);
+        BalancingChooser.setDefaultOption("", Balancing.ERROR);
         Auto.add("Balanceing", BalancingChooser).withPosition(4, 2).withSize(2, 2);
 
         MartianRockChooser.addOption("Martian Rock Mode", 1);
         MartianRockChooser.setDefaultOption("Normal", 0);
         Auto.add("Martian Rock", MartianRockChooser).withPosition(6, 2).withSize(2, 2);
 
+        AutoReady = Auto.add("Auto Ready", false).withPosition(6, 0).withSize(2, 2);
     }
 
     public Piece getStartingPiece ()
@@ -103,6 +110,14 @@ public class AutoShuffleBoard
 
     public void updateAutoReady()
     {
-        
+        if (!(getMartianRock()||getStartingPiece()==Piece.ERROR||getStartingPlace()==Place.ERROR||getBalance()==Balancing.ERROR||
+        getStartingPosition()==Position.ERROR||getSecondPiece()==Piece.ERROR||getSecondPlace()==Place.ERROR))
+        {
+            SmartDashboard.putBoolean("Auto Ready", true);
+        }
+        else 
+        {
+            SmartDashboard.putBoolean("Auto Ready", false);
+        }
     }
 }

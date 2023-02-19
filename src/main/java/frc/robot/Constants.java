@@ -59,24 +59,28 @@ public final class Constants {
       LOW,//Ground
       MID,//Middle
       HIGH,//Top
-      NULL//No piece
+      NULL,//No piece
+      ERROR//No input
     }
     public enum Piece
     {
       CONE, //Cone
       CUBE, //Cube
-      NULL //Neither cone or cube
+      NULL, //Neither cone or cube
+      ERROR //No input
     }
     public enum Position
     {
       CABLE, //Cable bump side
       CHARGER, //Charging station side
-      CLEAR //Clear side (closest to the enemy loading zone)
+      CLEAR, //Clear side (closest to the enemy loading zone)
+      ERROR //No input
     }
     public enum Balancing
     {
       BALANCE, //Robot will balance
-      NORMAL //Robot won't balance
+      NORMAL, //Robot won't balance
+      ERROR //No input
     }
   }
 
