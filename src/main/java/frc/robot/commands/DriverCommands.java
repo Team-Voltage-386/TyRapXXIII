@@ -53,19 +53,18 @@ public class DriverCommands extends CommandBase {
 
     @Override
     public void execute() {
-        joystickLeftHorizontal.setDouble(truncateDecimal(kDriver.getRawAxis(kLeftHorizontal), 2));
-        joystickLeftVertical.setDouble(truncateDecimal(kDriver.getRawAxis(kLeftVertical), 2));
-        joystickRightHorizontal.setDouble(truncateDecimal(kDriver.getRawAxis(kRightHorizontal), 2));
+        // joystickLeftHorizontal.setDouble(truncateDecimal(kDriver.getRawAxis(kLeftHorizontal), 2));
+        // joystickLeftVertical.setDouble(truncateDecimal(kDriver.getRawAxis(kLeftVertical), 2));
+        // joystickRightHorizontal.setDouble(truncateDecimal(kDriver.getRawAxis(kRightHorizontal), 2));
 
         HumanDriverControl = Math.abs(kDriver.getRawAxis(kLeftTrigger)) < deadband;
 
         if (HumanDriverControl) {
-            // Commented out briefly to test joysticks
-            // driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) *
-            // kMaxDriveSpeed;
-            // driveTrain.xDriveTarget = kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
-            // driveTrain.rotationTarget = -Math.pow(kDriver.getRawAxis(kRightHorizontal),
-            // 3) * kMaxRotSpeed;
+            driveTrain.yDriveTarget = kDriver.getRawAxis(kLeftHorizontal) *
+            kMaxDriveSpeed;
+            driveTrain.xDriveTarget = kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed;
+            driveTrain.rotationTarget = -Math.pow(kDriver.getRawAxis(kRightHorizontal),
+            3) * kMaxRotSpeed;
 
             if (kDriver.getRawButtonPressed(kLeftBumper))
                 driveTrain.setOffset(-0.65, 0);
