@@ -59,7 +59,7 @@ public class AutoDashboard extends Robot
     
         MartianRockChooser.addOption("Martian Rock", true);
         MartianRockChooser.addOption("Normal", false);
-        Auto.add("Martian Rock", MartianRockChooser).withPosition(6, 0).withSize(1, 1);
+        Auto.add("Martian Rock", MartianRockChooser).withPosition(6, 0).withSize(1, 1);   
     }
     //private static final GenericEntry prepared =  Auto.add("Ready", false).withPosition(6, 0).withSize(1, 1);
     public void updateWidget()
