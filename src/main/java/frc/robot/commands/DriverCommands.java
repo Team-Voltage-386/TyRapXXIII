@@ -153,5 +153,4 @@ public class DriverCommands extends CommandBase {
     private double curveJoystickAxis(double input, double power) {
         return Math.signum(input) * Math.pow(Math.abs(input), power);
     }
-
 }
