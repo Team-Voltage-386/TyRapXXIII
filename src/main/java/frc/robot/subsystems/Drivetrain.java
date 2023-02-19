@@ -153,6 +153,7 @@ public class Drivetrain extends SubsystemBase {
     private static final GenericEntry rotationWidget=mainTab.add("yaw",0).getEntry();
     private static final GenericEntry pitchWidget = mainTab.add("pitch", 0).getEntry();
     private static final GenericEntry rollWidget=mainTab.add("roll",0).getEntry();
+    private static final GenericEntry ampsWidget = mainTab.add("Total Amp hours", 0).getEntry();
 
     private void updateWidget() {
         xPosWidget.setDouble(xDriveTarget);
@@ -160,7 +161,6 @@ public class Drivetrain extends SubsystemBase {
         rotationWidget.setDouble(ypr[0]);
         pitchWidget.setDouble(ypr[1]);
         rollWidget.setDouble(ypr[2]);
-
     }
 
 }

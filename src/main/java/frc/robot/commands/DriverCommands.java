@@ -82,5 +82,4 @@ public class DriverCommands extends CommandBase {
         yPosWidget.setDouble(kDriver.getRawAxis(kLeftHorizontal));
         widget3.setDouble(kDriver.getRawAxis(kRightHorizontal));
     }
-
 }
