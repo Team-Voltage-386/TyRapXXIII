@@ -17,7 +17,6 @@ public class Drivetrain extends SubsystemBase {
     public double xDriveTarget = 0;
     public double yDriveTarget = 0;
     public double rotationTarget = 0;
-    public PowerDistribution examplePD = new PowerDistribution(1, ModuleType.kRev);
 
     public double xPos = 0;
     public double yPos = 0;
@@ -36,7 +35,6 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         this.init();
-        examplePD.setSwitchableChannel(true);
     }
 
     public void init() {

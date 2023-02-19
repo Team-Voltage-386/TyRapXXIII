@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -23,13 +24,15 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  private double current;
+  private double totalAmpHours;
+  PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
+
   private Command m_autonomousCommand;
 
   public static Robot inst;
 
   private RobotContainer m_robotContainer;
-
-  PowerDistribution pdh = PowerDistribution(1, ModuleType.kRev);
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -38,6 +41,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    totalAmpHours = 0;
+    current = 0;
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
@@ -58,7 +63,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
@@ -74,7 +78,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     m_robotContainer.getTeleOp().cancel();
     if (m_autonomousCommand != null)
-    m_robotContainer.getAutonomousCommand().cancel();
+      m_robotContainer.getAutonomousCommand().cancel();
   }
 
   @Override
@@ -99,6 +103,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    updateWidget();
   }
 
   @Override
@@ -118,6 +123,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    updateWidget();
   }
 
   @Override
@@ -141,6 +147,17 @@ public class Robot extends TimedRobot {
   public void simulationPeriodic() {
   }
 
-  private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-  private static final 
+  public void updateWidget() {
+    current = pdh.getTotalCurrent();
+    currentWidget.setDouble(current);
+    totalAmpHours = totalAmpHours + current * 0.02 / 3600;
+    totalAmpHoursWidget.setDouble(totalAmpHours);
+
+  }
+
+  private static final ShuffleboardTab powerTab = Shuffleboard.getTab("Power Tab");
+  private static final GenericEntry currentWidget = powerTab.add("Current", 0).withPosition(1, 1).withSize(1, 1)
+      .getEntry();
+  private static final GenericEntry totalAmpHoursWidget = powerTab.add("Total Amp Hours", 0).withPosition(0, 0)
+      .withSize(1, 1).getEntry();
 }
