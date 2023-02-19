@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.utils.PIDShufflable;
+import frc.robot.utils.PersistentShufflableDouble;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -56,29 +58,47 @@ public final class Constants {
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
-    public static final double kMaxRotSpeed = 180; // should be in degrees per second
-    public static final double kMaxDriveSpeed = 4; // should be in meters per second
-
+    // public static final double kMaxRotSpeed = 180; // should be in degrees per
+    // second
+    // public static final double kMaxDriveSpeed = 4; // should be in meters per
+    // second
+    public static PersistentShufflableDouble kMaxRotSpeed = new PersistentShufflableDouble(180, "maxRotationSpeed");
+    public static PersistentShufflableDouble kMaxDriveSpeed = new PersistentShufflableDouble(4, "maxDriveSpeed");
     public static final int kIMUid = 2;
-    public static final double[] kSwerveSteerPID = { 0.01, 0.0, 0.001 };
-    public static final double[] kSwerveDrivePID = { 0.35, 2, 0.01 };
+    public static final double[] kSwerveSteerPID = { 0.006, 0.01, 0.0 }; // 0.01,0.0,0.001
+    public static final double[] kSwerveDrivePID = { 0.3, 2, 1 }; // 0.35,2,0.01
     public static final double kSwerveDriveEncConv = 0.000745;
 
-    // public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv, kSwerveSteerPID,
-    //     kSwerveDrivePID, 24, 0.36, -0.26, 84.1);
-    // public static final SwerveModule RightFront = new SwerveModule(11, 15, kSwerveDriveEncConv, kSwerveSteerPID,
-    //     kSwerveDrivePID, 21, 0.36, 0.26, 213.15);
-    // public static final SwerveModule LeftRear = new SwerveModule(13, 17, kSwerveDriveEncConv, kSwerveSteerPID,
-    //     kSwerveDrivePID, 23, -0.36, -0.26, 126.25);
-    // public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv, kSwerveSteerPID,
-    //     kSwerveDrivePID, 22, -0.36, 0.26, 292);
+    // public static final SwerveModule LeftFront = new SwerveModule(14, 18,
+    // kSwerveDriveEncConv, kSwerveSteerPID,
+    // kSwerveDrivePID, 24, 0.36, -0.26, 84.1);
+    // public static final SwerveModule RightFront = new SwerveModule(11, 15,
+    // kSwerveDriveEncConv, kSwerveSteerPID,
+    // kSwerveDrivePID, 21, 0.36, 0.26, 213.15);
+    // public static final SwerveModule LeftRear = new SwerveModule(13, 17,
+    // kSwerveDriveEncConv, kSwerveSteerPID,
+    // kSwerveDrivePID, 23, -0.36, -0.26, 126.25);
+    // public static final SwerveModule RightRear = new SwerveModule(12, 16,
+    // kSwerveDriveEncConv, kSwerveSteerPID,
+    // kSwerveDrivePID, 22, -0.36, 0.26, 292);
     public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 24, 0.365125, -0.263525, 84.1,"LF");
+        kSwerveDrivePID, 24, 0.365125, -0.263525, 84.1, "LF");
     public static final SwerveModule RightFront = new SwerveModule(11, 15, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 21, 0.365125, 0.263525, 213.15,"RF");
+        kSwerveDrivePID, 21, 0.365125, 0.263525, 213.15, "RF");
     public static final SwerveModule LeftRear = new SwerveModule(13, 17, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 23, -0.365125, -0.263525, 126.25,"LR");
+        kSwerveDrivePID, 23, -0.365125, -0.263525, 126.25, "LR");
     public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 22, -0.365125, 0.263525, 292,"RR");
+        kSwerveDrivePID, 22, -0.365125, 0.263525, 292, "RR");
   }
+
+  public static final class SmoothingConstants {
+    // public static final double kAccelerationSmoothFactor = .2;
+    public static PersistentShufflableDouble kAccelerationSmoothFactor = new PersistentShufflableDouble(.2,
+        "driveAccelSmooth");
+    // public static final double kRotationAccelerationSmoothFactor = .5;
+    public static PersistentShufflableDouble kRotationAccelerationSmoothFactor = new PersistentShufflableDouble(.5,
+        "rotateAccelSmooth");
+
+  }
+
 }
