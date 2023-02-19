@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -19,7 +20,7 @@ public class AutoShuffleBoard
     //Martian rock is an exception to enums and will be using an integer value
     public final SendableChooser<Integer> MartianRockChooser = new SendableChooser<>();
     //
-    
+    public GenericEntry AutoReady;
 
     public AutoShuffleBoard()
     {
@@ -58,6 +59,8 @@ public class AutoShuffleBoard
         MartianRockChooser.addOption("Martian Rock Mode", 1);
         MartianRockChooser.setDefaultOption("Normal", 0);
         Auto.add("Martian Rock", MartianRockChooser).withPosition(6, 2).withSize(2, 2);
+
+        Auto.add("Auto Mode is Ready", false).withPosition(0, 6).withSize(2, 2);
     }
 
     public Piece getStartingPiece ()
@@ -101,6 +104,12 @@ public class AutoShuffleBoard
 
     public void updateAutoReady()
     {
-
+        boolean Ready = false;
+        if (getStartingPiece()!=null && getStartingPlace()!=null && getStartingPosition()!=null && getBalance()!=null && 
+        getSecondPiece()!=null && getSecondPlace()!=null && getMartianRock()==false)
+        {
+            Ready = true;
+        }
+        AutoReady.updateValue(Ready);
     }
 }
