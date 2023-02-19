@@ -65,8 +65,8 @@ public final class Constants {
     public static PersistentShufflableDouble kMaxRotSpeed = new PersistentShufflableDouble(180, "maxRotationSpeed");
     public static PersistentShufflableDouble kMaxDriveSpeed = new PersistentShufflableDouble(4, "maxDriveSpeed");
     public static final int kIMUid = 2;
-    public static final double[] kSwerveSteerPID = { 0.005, 0.0, 0.0 }; // 0.01,0.0,0.001
-    public static final double[] kSwerveDrivePID = { 0.3, 2, 0.0 }; // 0.35,2,0.01
+    public static final double[] kSwerveSteerPID = { 0.006, 0.01, 0.0 }; // 0.01,0.0,0.001
+    public static final double[] kSwerveDrivePID = { 0.3, 2, 1 }; // 0.35,2,0.01
     public static final double kSwerveDriveEncConv = 0.000745;
 
     // public static final SwerveModule LeftFront = new SwerveModule(14, 18,
