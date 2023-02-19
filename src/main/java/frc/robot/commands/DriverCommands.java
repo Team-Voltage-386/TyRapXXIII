@@ -56,7 +56,12 @@ public class DriverCommands extends CommandBase {
         // kMaxDriveSpeed.get();
         // driveTrain.yDriveTarget = (Math.cos((driveJoystickAngle))) * driveMagnitude
         // * kMaxDriveSpeed.get();
-
+        driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
+                .get(), 0, 1, driveTrain.xDriveTarget,
+                -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed.get());
+        driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
+                .get(), 0, 1, driveTrain.yDriveTarget,
+                kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed.get());
         driveTrain.rotationTarget = orientationMultiplier
                 * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
                 * kMaxRotSpeed.get();
