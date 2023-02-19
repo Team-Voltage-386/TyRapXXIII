@@ -49,6 +49,6 @@ public class PersistentShufflableDouble {
 
     /** @return detect changes */
     public boolean detectChanges() {
-        return ntEntry.getDouble(value) == value;
+        return ntEntry.getDouble(value) != value;
     }
 }

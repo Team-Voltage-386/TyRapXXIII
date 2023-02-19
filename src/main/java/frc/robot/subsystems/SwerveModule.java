@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import javax.swing.text.Position;
-
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -9,10 +7,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.utils.PID;
 import frc.robot.utils.PIDShufflable;
-
 import static frc.robot.utils.mapping.*;
+import frc.robot.Constants.DriveConstants;
 
 public class SwerveModule {
 
@@ -40,27 +37,26 @@ public class SwerveModule {
     public final GenericEntry posiitonWidget;
 
     public SwerveModule(int STEERMOTOR, int DRIVEMOTOR, double driveConversion, double[] steerPIDValue,
-            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS,String SwerveModuleName) {
+            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName) {
+        swerveModuleID = swerveModuleCount;
+        swerveModuleCount++;
+
+        steerPID = new PIDShufflable(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2],
+                "DTSteer" + swerveModuleID);
+        drivePID = new PIDShufflable(drivePIDValue[0], drivePIDValue[1], drivePIDValue[2],
+                "DTDrive" + swerveModuleID);
         steerMotor = new CANSparkMax(STEERMOTOR, MotorType.kBrushless);
         driveMotor = new CANSparkMax(DRIVEMOTOR, MotorType.kBrushless);
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);
         driveMotor.getEncoder().setVelocityConversionFactor(driveConversion);
-
         encoder = new CANCoder(encoderID);
-
-        steerPID = new PIDShufflable(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2],"DTSteer");
-        drivePID = new PIDShufflable(drivePIDValue[0], drivePIDValue[1], drivePIDValue[2],"DTDrive");
 
         x = X;
         y = Y;
-
         encoderOffs = ENCOFFS;
 
         this.calcPosition(0, 0);
 
-        swerveModuleID = swerveModuleCount;
-
-        swerveModuleCount++;
         mainTab = Shuffleboard.getTab("Main");
         xPosWidget = mainTab.add("steerMotor" + SwerveModuleName, 0).withPosition(5, swerveModuleID).withSize(1, 1)
                 .getEntry();
@@ -70,6 +66,7 @@ public class SwerveModule {
         posiitonWidget = mainTab.add("orientation" + SwerveModuleName, 0).withPosition(7,
                 swerveModuleID).withSize(1, 1)
                 .getEntry();
+        updateShufflables();
     }
 
     public double getEncoderPosition() {
@@ -104,7 +101,7 @@ public class SwerveModule {
 
         steerMotor.set(steerPID.calc(getSwerveHeadingError()));
 
-        driveMotor.set(mapValue(getSwerveHeadingError(), 0, 180, 1, 0) * drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
+        driveMotor.set(mapValue(getSwerveHeadingError(), 0, 180, 1, 0)* drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
     }
 
     public void reset() {
@@ -120,11 +117,11 @@ public class SwerveModule {
         posiitonWidget.setDouble(getEncoderPosition());
     }
 
-    private void updateShufflables(){
-        if(steerPID.detectChange()){
+    public void updateShufflables() {
+        if (steerPID.detectChange()) {
             steerPID.shuffleUpdatePID();
         }
-        if(drivePID.detectChange()){
+        if (drivePID.detectChange()) {
             drivePID.shuffleUpdatePID();
         }
     }
