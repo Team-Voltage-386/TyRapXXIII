@@ -1,22 +1,27 @@
 package frc.robot.commands.Autonomous;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants.*;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class AutoPossibilities extends CommandBase
 {
-    
-    public static Command Choice (Piece StartingObject, Place StartingPlace, Position StartingLocation, Piece PickUpObject, Place PickedUpScore, Balancing Balance, boolean MartianRock)
+    public AutoPossibilities()
     {
-        if (!MartianRock)
+
+    }
+
+    public Command Choice (Piece StartingObject, Place StartingPlace, Position StartingLocation, Piece PickUpObject, Place PickedUpScore, Balancing Balance, boolean MartianRock)
+    {
+        if (!MartianRock && StartingPlace != null)
         {
             //Martian Rock is false robot will run auto
             return new SequentialCommandGroup(PlaceObject(StartingObject, StartingPlace), BeginMove(StartingLocation, PickUpObject, Balance), 
@@ -24,11 +29,12 @@ public class AutoPossibilities extends CommandBase
             returnRobot(StartingLocation, PickUpObject, Balance), PlaceObject(PickUpObject, PickedUpScore));
         }
         //Martian Rock is true robot won't do anything
-        return null;
+        NullCommand Skip = new NullCommand();
+        return Skip;
     }
 
     //Object place command for auto mode
-    private static Command PlaceObject (Piece option, Place LMH)
+    private Command PlaceObject (Piece option, Place LMH)
     {
         if (LMH != Place.NULL)
         {
@@ -69,11 +75,12 @@ public class AutoPossibilities extends CommandBase
             }
         }
         //Don't do anying (default if piece wasn't selected)
-        return null;
+        NullCommand Skip = new NullCommand();
+        return Skip;
     }
 
     //Command for the first half of the robot's move
-    private static Command BeginMove (Position Starting, Piece pickingUp, Balancing balance)
+    private Command BeginMove (Position Starting, Piece pickingUp, Balancing balance)
     {
         if (Starting != null && balance != null)
         {
@@ -146,10 +153,11 @@ public class AutoPossibilities extends CommandBase
             }
         }
         //Martian Rock the robot does not have a starting position inputed
-        return null;
+        NullCommand Skip = new NullCommand();
+        return Skip;
     }
 
-    private static Command middleMove(Position Starting, Piece PickedUp, Balancing Balance)
+    private Command middleMove(Position Starting, Piece PickedUp, Balancing Balance)
     {
         //Moves robot from piece to balance
         if ((PickedUp != null && PickedUp != Piece.NULL) && Balance == Balancing.BALANCE && Starting != null)
@@ -173,11 +181,12 @@ public class AutoPossibilities extends CommandBase
             }
         }
         //Robot does not need to manuver to balance
-        return null;
+        NullCommand Skip = new NullCommand();
+        return Skip;
     }
 
     //Command for balancing 
-    private static Command autoBalance(Balancing Balance, Position Starting)
+    private Command autoBalance(Balancing Balance, Position Starting)
     {
         if (Balance==Balancing.BALANCE && Starting!=null)
         {
@@ -185,11 +194,12 @@ public class AutoPossibilities extends CommandBase
             //return 
         }
         //Robot won't balance
-        return null;
+        NullCommand Skip = new NullCommand();
+        return Skip;
     }
 
     //Command for robot picking up piece
-    private static Command getPeice (Piece object)
+    private Command getPeice (Piece object)
     {
         if (object==Piece.CONE)
         {
@@ -202,11 +212,12 @@ public class AutoPossibilities extends CommandBase
             //return
         }
         //robot does not pick up a piece 
-        return null;
+        NullCommand Skip = new NullCommand();
+        return Skip;
     }
 
     //Brings robot back to start
-    private static Command returnRobot (Position Starting, Piece pickingUp, Balancing balance)
+    private Command returnRobot (Position Starting, Piece pickingUp, Balancing balance)
     {
         if (Starting != null && balance != null)
         {
@@ -279,6 +290,7 @@ public class AutoPossibilities extends CommandBase
             }
         }
         //Martian Rock the robot does not have a starting position inputed
-        return null;
+        NullCommand Skip = new NullCommand();
+        return Skip;
     }
 }
