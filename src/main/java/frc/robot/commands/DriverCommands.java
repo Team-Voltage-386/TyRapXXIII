@@ -11,6 +11,7 @@ import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.mapping.*;
 import static frc.robot.Constants.SmoothingConstants.*;
+import static frc.robot.utils.Flags.*;
 
 public class DriverCommands extends CommandBase {
 
@@ -42,7 +43,8 @@ public class DriverCommands extends CommandBase {
     public void execute() {
         updateShufflables();
         updateWidget();
-        // driveJoystickAngle = Math.atan2(
+        if(humanDriverMode)
+        {// driveJoystickAngle = Math.atan2(
         // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
         // kDriver.getRawAxis(kLeftHorizontal));// radians, use atan2 to avoid undefined
         // and to use range -pi to pi
@@ -65,7 +67,7 @@ public class DriverCommands extends CommandBase {
         driveTrain.rotationTarget = orientationMultiplier
                 * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
                 * kMaxRotSpeed.get();
-
+}
         // comment out before tryouts
         if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
             testingBoostSpeed += 2;

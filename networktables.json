@@ -230,5 +230,21 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Shuffleboard/persistentshufflabledoubles/driveCurvingPower",
+    "type": "double",
+    "value": 1.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/persistentshufflabledoubles/rotationCurvingPower",
+    "type": "double",
+    "value": 3.0,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

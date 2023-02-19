@@ -4,12 +4,15 @@ import static frc.robot.Constants.DriveConstants.*;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -151,6 +154,15 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
+    public void overridePosition(double x, double y) {
+        xPos = x;
+        yPos = y;
+    }
+
+    public void overrideOrientation(double theta) {
+        IMU.setYaw(theta);
+    }
+
     public double distanceTo(double x, double y) {
         return Math.sqrt(Math.pow(x - xPos, 2) + Math.pow(y - yPos, 2));
     }
@@ -164,8 +176,14 @@ public class Drivetrain extends SubsystemBase {
         return res;
     }
 
+    public double getProcessedheading() {
+        return getRawHeading();
+    }
+
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final ShuffleboardTab speedTab = Shuffleboard.getTab("Speed");
+    private static final ShuffleboardTab odometab = Shuffleboard.getTab("Odometry");
+
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
     private static final GenericEntry rotationWidget = mainTab.add("yaw", 0).getEntry();
@@ -173,6 +191,7 @@ public class Drivetrain extends SubsystemBase {
     private static final GenericEntry rollWidget = mainTab.add("roll", 0).getEntry();
     private static final GenericEntry targetSpeedWidget = speedTab.add("target", 0).getEntry();
     private static final GenericEntry speedWidget = speedTab.add("current", 0).getEntry();
+    private static final Field2d m_field = new Field2d();
     private double targetSpeed = 0;
 
     private void updateWidget() {
@@ -183,6 +202,7 @@ public class Drivetrain extends SubsystemBase {
         rollWidget.setDouble(ypr[2]);
         targetSpeedWidget.setDouble(targetSpeed);
         speedWidget.setDouble(speed);
+        m_field.setRobotPose(new Pose2d(xPos, yPos, new Rotation2d(Math.toRadians(getRawHeading()))));
     }
 
 }

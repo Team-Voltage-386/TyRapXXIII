@@ -101,4 +101,9 @@ public final class Constants {
 
   }
 
+  public static final class LimelightConstants {
+    public static int apriltagpipelineindex = 0;
+    public static int retroreflectivepipelineindex = 0;
+  }
+
 }
