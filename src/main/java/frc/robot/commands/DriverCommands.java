@@ -15,13 +15,18 @@ import static frc.robot.Constants.SmoothingConstants.*;
 public class DriverCommands extends CommandBase {
 
     private Drivetrain driveTrain;
-    private PersistentShufflableDouble curvingPower = new PersistentShufflableDouble(1, "CurvingPower");
+    private PersistentShufflableDouble driveCurvingPower = new PersistentShufflableDouble(1, "driveCurvingPower");
+    private PersistentShufflableDouble rotationCurvingPower = new PersistentShufflableDouble(3, "rotationCurvingPower");
+    private int orientationMultiplier;
+
     private double testingBoostSpeed; // comment out before tryouts
+    private double driveJoystickAngle, driveMagnitude, driveJoystickMagnitude;
 
     public DriverCommands(Drivetrain DT) {
         updateShufflables();
         driveTrain = DT;
         testingBoostSpeed = kMaxDriveSpeed.get(); // comment out before tryouts
+        orientationMultiplier = -1;// switch if red or blue
     }
 
     @Override
@@ -29,6 +34,7 @@ public class DriverCommands extends CommandBase {
         driveTrain.xDriveTarget = 0;
         driveTrain.yDriveTarget = 0;
         driveTrain.rotationTarget = 0;
+        driveMagnitude = 0;
         updateShufflables();
     }
 
@@ -36,15 +42,24 @@ public class DriverCommands extends CommandBase {
     public void execute() {
         updateShufflables();
         updateWidget();
-        // HumanDriverControl=Math.abs(kDriver.getRawAxis(kLeftTrigger))<deadband;
-        driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor.get(), 0, 1, driveTrain.xDriveTarget,
-                curveJoystickAxis(-kDriver.getRawAxis(kLeftVertical), curvingPower.get())
-                        * kMaxDriveSpeed.get());
-        driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor.get(), 0, 1, driveTrain.yDriveTarget,
-                curveJoystickAxis(kDriver.getRawAxis(kLeftHorizontal), curvingPower.get())
-                        * kMaxDriveSpeed.get());
-        driveTrain.rotationTarget = mapValue(1, 0, 1, driveTrain.yDriveTarget,
-                -Math.pow(kDriver.getRawAxis(kRightHorizontal), 3) * kMaxRotSpeed.get());
+        // driveJoystickAngle = Math.atan2(
+        // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
+        // kDriver.getRawAxis(kLeftHorizontal));// radians, use atan2 to avoid undefined
+        // and to use range -pi to pi
+        // driveJoystickMagnitude = Math.sqrt(
+        // Math.pow(kDriver.getRawAxis(kLeftVertical), 2) +
+        // Math.pow(kDriver.getRawAxis(kLeftHorizontal), 2));
+        // driveMagnitude = mapValue(kAccelerationSmoothFactor.get(), 0, 1,
+        // driveMagnitude, driveJoystickMagnitude);
+
+        // driveTrain.xDriveTarget = Math.sin((driveJoystickAngle)) * driveMagnitude *
+        // kMaxDriveSpeed.get();
+        // driveTrain.yDriveTarget = (Math.cos((driveJoystickAngle))) * driveMagnitude
+        // * kMaxDriveSpeed.get();
+
+        driveTrain.rotationTarget = orientationMultiplier
+                * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
+                * kMaxRotSpeed.get();
 
         // comment out before tryouts
         if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
@@ -94,13 +109,23 @@ public class DriverCommands extends CommandBase {
     private static final GenericEntry leftHorizontalWidget = mainTab.add("left horizontal", 0).withPosition(1, 2)
             .withSize(1, 1)
             .getEntry();
-    private static final GenericEntry rightHorizontalWidget = mainTab.add("right horizontal", 0).withPosition(2, 2).withSize(1, 1)
+    private static final GenericEntry rightHorizontalWidget = mainTab.add("right horizontal", 0).withPosition(2, 2)
+            .withSize(1, 1)
             .getEntry();
+    private static final GenericEntry driveVectorOrientWidget = mainTab.add("driveVectorAngle", 0).withPosition(1, 1)
+            .withSize(1, 1).getEntry();
+    private static final GenericEntry driveVectorMagnitudeWidget = mainTab.add("dvMagni", 0).withPosition(2, 1)
+            .withSize(1, 1).getEntry();
+    private static final GenericEntry JoystickVectorMagnitudeWidget = mainTab.add("JSMagni", 0).withPosition(3, 1)
+            .withSize(1, 1).getEntry();
 
     private void updateWidget() {
         leftVerticalWidget.setDouble(kDriver.getRawAxis(kLeftVertical));
         leftHorizontalWidget.setDouble(kDriver.getRawAxis(kLeftHorizontal));
         rightHorizontalWidget.setDouble(kDriver.getRawAxis(kRightHorizontal));
+        driveVectorOrientWidget.setDouble(driveJoystickAngle);
+        driveVectorMagnitudeWidget.setDouble(driveMagnitude);
+        JoystickVectorMagnitudeWidget.setDouble(driveJoystickMagnitude);
     }
 
     private void updateShufflables() {
@@ -113,8 +138,8 @@ public class DriverCommands extends CommandBase {
         if (kAccelerationSmoothFactor.detectChanges()) {
             kAccelerationSmoothFactor.subscribeAndSet();
         }
-        if (curvingPower.detectChanges()) {
-            curvingPower.subscribeAndSet();
+        if (driveCurvingPower.detectChanges()) {
+            driveCurvingPower.subscribeAndSet();
         }
     }
 

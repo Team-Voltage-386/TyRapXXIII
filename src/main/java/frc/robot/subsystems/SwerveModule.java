@@ -120,7 +120,7 @@ public class SwerveModule {
     private void updateWidget() {
         steerMotorCurrentWidget.setDouble(steerMotor.getOutputCurrent());
         driveMotorCurrentWidget.setDouble(driveMotor.getOutputCurrent());
-        driveMotorSetWidget.setDouble(mapValue(getSwerveHeadingError(), 0, 180, 1, 0)
+        driveMotorSetWidget.setDouble(mapValue(Math.abs(getSwerveHeadingError()), 0, 180, 1, 0)
                 * (drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity())));
         posiitonWidget.setDouble(getEncoderPosition());
     }
