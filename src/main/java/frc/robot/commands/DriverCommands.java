@@ -88,15 +88,15 @@ public class DriverCommands extends CommandBase {
     }
 
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-    private static final GenericEntry xPosWidget = mainTab.add("left vertical", 0).withPosition(0, 2).withSize(1, 1)
+    private static final GenericEntry leftVerticalWidget = mainTab.add("left vertical", 0).withPosition(0, 2).withSize(1, 1)
             .getEntry();
-    private static final GenericEntry yPosWidget = mainTab.add("left horizontal", 0).withPosition(1, 2).withSize(1, 1)
+    private static final GenericEntry leftHorizontalWidget = mainTab.add("left horizontal", 0).withPosition(1, 2).withSize(1, 1)
             .getEntry();
     private static final GenericEntry widget3 = mainTab.add("right horizontal", 0).withPosition(2, 2).withSize(1, 1)
             .getEntry();
 
     private void updateWidget() {
-        xPosWidget.setDouble(kDriver.getRawAxis(kLeftVertical));
+        leftVerticalWidget.setDouble(kDriver.getRawAxis(kLeftVertical));
         yPosWidget.setDouble(kDriver.getRawAxis(kLeftHorizontal));
         widget3.setDouble(kDriver.getRawAxis(kRightHorizontal));
     }
