@@ -9,7 +9,7 @@ public class PID {
 
     public double lastPV;
 
-    private long lastTime = 0;
+    protected long lastTime = 0;
 
     public PID(double P, double I, double D) {
         p = P;
@@ -25,7 +25,8 @@ public class PID {
 
     public double calc(double pv) {
         long time = System.currentTimeMillis();
-        double timeStep = (time - lastTime) / 1000;
+        double timeStep = (time - lastTime);
+        timeStep /= 1000;
         if (timeStep > 0.5)
             timeStep = 0;
         integralAcc += pv * timeStep;

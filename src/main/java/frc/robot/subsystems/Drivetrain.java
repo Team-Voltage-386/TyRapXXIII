@@ -17,6 +17,7 @@ public class Drivetrain extends SubsystemBase {
     public double xDriveTarget = 0;
     public double yDriveTarget = 0;
     public double rotationTarget = 0;
+    public double speed = 0;
     public PowerDistribution examplePD = new PowerDistribution(1, ModuleType.kRev);
 
     public double xPos = 0;
@@ -55,6 +56,8 @@ public class Drivetrain extends SubsystemBase {
                     double x = xDriveTarget;
                     double y = yDriveTarget;
 
+                    targetSpeed = Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2));
+
                     double r = ((2 * Math.PI * swerve.distFromCenter) / 360) * rotationTarget; // rotation speed
                     double rAngle = swerve.angleFromCenter + angle + 90;
                     x += r * Math.cos(Math.toRadians(rAngle));
@@ -72,6 +75,7 @@ public class Drivetrain extends SubsystemBase {
                 }
 
                 swerve.drive();
+                swerve.updateShufflables();
             }
 
             wasEnabled = true;
@@ -122,15 +126,28 @@ public class Drivetrain extends SubsystemBase {
             double xAdd = 0;
             double yAdd = 0;
 
+            double xSpeed = 0;
+            double ySpeed = 0;
+
             for (SwerveModule swerve : modules) {
                 double aRad = Math.toRadians(angle + swerve.getEncoderPosition());
                 double vel = swerve.driveMotor.getEncoder().getVelocity();
                 xAdd += deltaT * (Math.cos(aRad) * vel);
                 yAdd += deltaT * (Math.sin(aRad) * vel);
+                xSpeed += Math.cos(aRad) * vel;
+                ySpeed += Math.sin(aRad) * vel;
             }
 
-            xPos += xAdd / modules.length;
-            yPos += yAdd / modules.length;
+            xAdd /= modules.length;
+            yAdd /= modules.length;
+            xSpeed /= modules.length;
+            ySpeed /= modules.length;
+
+            xPos += xAdd;
+            yPos += yAdd;
+
+            speed = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+
         }
     }
 
@@ -148,11 +165,15 @@ public class Drivetrain extends SubsystemBase {
     }
 
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
+    private static final ShuffleboardTab speedTab = Shuffleboard.getTab("Speed");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
     private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
     private static final GenericEntry rotationWidget = mainTab.add("yaw", 0).getEntry();
     private static final GenericEntry pitchWidget = mainTab.add("pitch", 0).getEntry();
     private static final GenericEntry rollWidget = mainTab.add("roll", 0).getEntry();
+    private static final GenericEntry targetSpeedWidget = speedTab.add("target", 0).getEntry();
+    private static final GenericEntry speedWidget = speedTab.add("current", 0).getEntry();
+    private double targetSpeed = 0;
 
     private void updateWidget() {
         xPosWidget.setDouble(xDriveTarget);
@@ -160,7 +181,8 @@ public class Drivetrain extends SubsystemBase {
         rotationWidget.setDouble(ypr[0]);
         pitchWidget.setDouble(ypr[1]);
         rollWidget.setDouble(ypr[2]);
-
+        targetSpeedWidget.setDouble(targetSpeed);
+        speedWidget.setDouble(speed);
     }
 
 }
