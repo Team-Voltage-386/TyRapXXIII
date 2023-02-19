@@ -41,7 +41,7 @@ public class RobotContainer {
   private final Limelight m_ll = new Limelight();
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
-  AutoShuffleBoard AutoValues = new AutoShuffleBoard();
+  static AutoShuffleBoard AutoValues = new AutoShuffleBoard();
 
   // The robot's auto values are declared here
   Piece StartingPiece = null, SecondPiece = null;
