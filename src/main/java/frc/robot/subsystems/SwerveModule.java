@@ -9,9 +9,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.utils.PIDShufflable;
 import frc.robot.utils.PIDShufflableLinked;
+import frc.robot.utils.PersistentShufflableDouble;
 
 import static frc.robot.utils.mapping.*;
-import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.DriveConstants;
 
 public class SwerveModule {
 
@@ -39,12 +40,12 @@ public class SwerveModule {
     public final GenericEntry driveMotorSetWidget;
     public final GenericEntry posiitonWidget;
 
-    public SwerveModule(int STEERMOTOR, int DRIVEMOTOR, double driveConversion, double[] steerPIDValue,
-            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName) {
+    public SwerveModule(int STEERMOTOR, int DRIVEMOTOR, double driveConversion, PersistentShufflableDouble[] steerPIDPSD,
+            PersistentShufflableDouble[] drivePIDPSD, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName) {
         swerveModuleID = swerveModuleCount;
 
-        steerPID = new PIDShufflableLinked(steerPPSD, steerIPSD, steerDPSD);
-        drivePID = new PIDShufflableLinked(drivePPSD, driveIPSD, driveDPSD);
+        steerPID = new PIDShufflableLinked(steerPIDPSD[0], steerPIDPSD[1], steerPIDPSD[2]);
+        drivePID = new PIDShufflableLinked(drivePIDPSD[0], drivePIDPSD[1], drivePIDPSD[2]);
         steerMotor = new CANSparkMax(STEERMOTOR, MotorType.kBrushless);
         driveMotor = new CANSparkMax(DRIVEMOTOR, MotorType.kBrushless);
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);

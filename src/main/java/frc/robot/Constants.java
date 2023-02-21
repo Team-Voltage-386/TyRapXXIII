@@ -68,26 +68,33 @@ public final class Constants {
     public static final double[] kSwerveSteerPID = { 0.006, 0.01, 0.0 }; // 0.01,0.0,0.001
     public static final double[] kSwerveDrivePID = { 0.3, 2, 1 }; // 0.35,2,0.01
     public static final double kSwerveDriveEncConv = 0.000745;
-    public static final PersistentShufflableDouble steerPPSD = new PersistentShufflableDouble(kSwerveSteerPID[0],
-        "swrvsteerP", "SwervePID");
-    public static final PersistentShufflableDouble steerIPSD = new PersistentShufflableDouble(kSwerveSteerPID[1],
-        "swrvsteerI", "SwervePID");
-    public static final PersistentShufflableDouble steerDPSD = new PersistentShufflableDouble(kSwerveSteerPID[2],
-        "swrvsteerD", "SwervePID");
-    public static final PersistentShufflableDouble drivePPSD = new PersistentShufflableDouble(kSwerveDrivePID[0],
-        "swrvdriveP", "SwervePID");
-    public static final PersistentShufflableDouble driveIPSD = new PersistentShufflableDouble(kSwerveDrivePID[1],
-        "swrvdriveI", "SwervePID");
-    public static final PersistentShufflableDouble driveDPSD = new PersistentShufflableDouble(kSwerveDrivePID[1],
-        "swrvdriveD", "SwervePID");
-    public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 24, 0.365125, -0.263525, 84.1, "LF");
-    public static final SwerveModule RightFront = new SwerveModule(11, 15, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 21, 0.365125, 0.263525, 213.15, "RF");
-    public static final SwerveModule LeftRear = new SwerveModule(13, 17, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 23, -0.365125, -0.263525, 126.25, "LR");
-    public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv, kSwerveSteerPID,
-        kSwerveDrivePID, 22, -0.365125, 0.263525, 292, "RR");
+    public static final PersistentShufflableDouble[] steerPIDPSDs = {
+        new PersistentShufflableDouble(kSwerveSteerPID[0],
+            "swrvsteerP", "SwervePID"),
+        new PersistentShufflableDouble(kSwerveSteerPID[1],
+            "swrvsteerI", "SwervePID"),
+        new PersistentShufflableDouble(kSwerveSteerPID[2],
+            "swrvsteerD", "SwervePID") };
+    public static final PersistentShufflableDouble[] drivePIDPSDs = {
+        new PersistentShufflableDouble(kSwerveDrivePID[0],
+            "swrvdriveP", "SwervePID"),
+        new PersistentShufflableDouble(kSwerveDrivePID[1],
+            "swrvdriveI", "SwervePID"),
+        new PersistentShufflableDouble(kSwerveDrivePID[1],
+            "swrvdriveD", "SwervePID") };
+
+    public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv,
+        steerPIDPSDs,
+        drivePIDPSDs, 24, 0.365125, -0.263525, 84.1, "LF");
+    public static final SwerveModule RightFront = new SwerveModule(11, 15, kSwerveDriveEncConv,
+        steerPIDPSDs,
+        drivePIDPSDs, 21, 0.365125, 0.263525, 213.15, "RF");
+    public static final SwerveModule LeftRear = new SwerveModule(13, 17, kSwerveDriveEncConv,
+        steerPIDPSDs,
+        drivePIDPSDs, 23, -0.365125, -0.263525, 126.25, "LR");
+    public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv,
+        steerPIDPSDs,
+        drivePIDPSDs, 22, -0.365125, 0.263525, 292, "RR");
   }
 
   public static final class SmoothingConstants {
