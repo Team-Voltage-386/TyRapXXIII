@@ -9,11 +9,14 @@ public class PersistentShufflableDouble {
     public ShuffleboardTab sdtab;
     private double value;
     private GenericEntry ntEntry;
-
+    
     public PersistentShufflableDouble(double initialValue, String entryName) {
-        sdtab = Shuffleboard.getTab("persistentshufflabledoubles");
         value = initialValue;
-        ntEntry = sdtab.addPersistent(entryName, value).getEntry();
+        ntEntry = Shuffleboard.getTab("persistentshufflabledoubles").addPersistent(entryName, value).getEntry();
+    }
+    public PersistentShufflableDouble(double initialValue,String entryName,String tabName){
+        value = initialValue;
+        ntEntry=Shuffleboard.getTab(tabName).addPersistent(entryName, value).getEntry();
     }
 
     public double get() {
