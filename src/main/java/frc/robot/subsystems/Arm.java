@@ -92,7 +92,7 @@ public class Arm extends SubsystemBase {
     public double[] getArmAngles() {
         double[] result = {
             ShoulderEncoder.getDistance() + ShoulderAngleOffset,
-            ElbowEncoder.getDistance() + ElbowAngleOffset };// update to utilize encoders
+            ElbowEncoder.getDistance() + ElbowAngleOffset };// update to utilize absolute encoders
         return result;
     }
 
