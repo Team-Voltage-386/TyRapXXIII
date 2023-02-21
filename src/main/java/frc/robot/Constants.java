@@ -102,6 +102,8 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
+  public static final PersistentShufflableDouble armDeadband = new PersistentShufflableDouble(.5, "armThreshhold");
+
     public static final double[] kArmUpperPID = { .01, 0.0, 0.0 };
     public static final double[] kArmLowerPID = { .01, 0.0, 0.0 };
 
