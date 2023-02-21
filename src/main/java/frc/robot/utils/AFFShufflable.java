@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import java.security.KeyStore.Entry;
+
 import edu.wpi.first.networktables.GenericSubscriber;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -13,16 +15,13 @@ public class AFFShufflable extends PIDShufflable {
     private static GenericSubscriber fUpdater;
     private static GenericSubscriber sUpdater;
 
-    public AFFShufflable(double P, double I, double D, double F, double S, String TabName) {
-        super(P, I, D, TabName);
+    public AFFShufflable(double P, double I, double D, double F, double S, String EntryName) {
+        super(P, I, D, EntryName);
         f = F;
         s = S;
-        lastTime = System.currentTimeMillis();
 
-        pidObjectCount++;
-        super.pidTab = Shuffleboard.getTab(TabName);
-        fUpdater = super.pidTab.addPersistent("f", f).withPosition(super.pidObjectCount, 3).getEntry();
-        sUpdater = super.pidTab.addPersistent("s", s).withPosition(super.pidObjectCount, 4).getEntry();
+        fUpdater = super.pidTab.addPersistent("f/g", f).withPosition(super.pidObjectCount, 3).getEntry();
+        sUpdater = super.pidTab.addPersistent("sf", s).withPosition(super.pidObjectCount, 4).getEntry();
         shuffleUpdatePID();
     }
 
