@@ -8,16 +8,18 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.utils.PIDShufflable;
+import frc.robot.utils.PIDShufflableLinked;
+
 import static frc.robot.utils.mapping.*;
-import frc.robot.Constants.DriveConstants;
+import static frc.robot.Constants.DriveConstants.*;
 
 public class SwerveModule {
 
     public final CANSparkMax steerMotor;
     public final CANSparkMax driveMotor;
     public final CANCoder encoder;
-    public final PIDShufflable steerPID;
-    public final PIDShufflable drivePID;
+    public final PIDShufflableLinked steerPID;
+    public final PIDShufflableLinked drivePID;
     public final double x;
     public final double y;
     public final double encoderOffs;
@@ -41,10 +43,8 @@ public class SwerveModule {
             double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName) {
         swerveModuleID = swerveModuleCount;
 
-        steerPID = new PIDShufflable(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2],
-                "DTSteer" + swerveModuleID);
-        drivePID = new PIDShufflable(drivePIDValue[0], drivePIDValue[1], drivePIDValue[2],
-                "DTDrive" + swerveModuleID);
+        steerPID = new PIDShufflableLinked(steerPPSD, steerIPSD, steerDPSD);
+        drivePID = new PIDShufflableLinked(drivePPSD, driveIPSD, driveDPSD);
         steerMotor = new CANSparkMax(STEERMOTOR, MotorType.kBrushless);
         driveMotor = new CANSparkMax(DRIVEMOTOR, MotorType.kBrushless);
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);
