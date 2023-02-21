@@ -14,6 +14,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+//Stuff to work on based on mechanical discussion: the gripper should always be closed when in cone mode and 
+//always be open in cube mode. There should be enough power while picking up the cone to force open the gripper. 
+//The encoder used for the gripper rotation will be a hall-effect sensor read off of the PLG motor. Mechanical 
+//mentioned that belt slipping may be a problem, but TBD. When the robot is is possession of a cone, the current 
+//should be consistently higher than normal current. There will probably be a sweet spot to determine whether
+//the robot is in possession of a game piece. Values for holding speed for cubes and cones and picking up speed 
+//will need to be determined experimentally
+
 public class GripperSubsystem extends SubsystemBase {
     // Will need to update with correct constants/CAN IDs
     private CANSparkMax gripperMotor1 = new CANSparkMax(1, MotorType.kBrushless);
@@ -22,9 +30,9 @@ public class GripperSubsystem extends SubsystemBase {
     private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 3);
     private Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
-    private double releaseSpeed = 0.1; // wheel speed when releasing a piece
-    private double closeSpeed = -0.1; // wheel speed when holding a piece
-    private double intakeSpeed = 0.2; // wheel speed when capturing a piece
+    private double releaseSpeed = 0.05; // wheel speed when releasing a piece
+    private double closeSpeed = -0.05; // wheel speed when holding a piece
+    private double intakeSpeed = 0.1; // wheel speed when capturing a piece
 
     private double holdingCurrent = 10; // Current spike that determines whether the robot is in possession of a game
                                         // piece
@@ -35,15 +43,14 @@ public class GripperSubsystem extends SubsystemBase {
     }
 
     public void releaseGripper() {
-        // open pneumatics
+        // might not need to open the pneumatics to release
         doubleSolenoid.set(Value.kForward);
         // move wheels to drop object
         gripperMotor1.set(releaseSpeed);
         gripperMotor2.set(releaseSpeed);
     }
 
-    public void closeGripper() {
-        // close pneumatics
+    public void holdGripper() {
         doubleSolenoid.set(Value.kReverse);
         // move wheels to suck in game piece
         gripperMotor1.set(closeSpeed);
@@ -79,6 +86,14 @@ public class GripperSubsystem extends SubsystemBase {
         }
     }
 
+    //This will probably be used to close the gripper when entering cone mode
+    public void closeGripper() {
+        doubleSolenoid.set(Value.kForward);
+    }
+
+    public void openGripper() {
+        doubleSolenoid.set(Value.kReverse);
+    }
     @Override
     public void periodic() {
 
