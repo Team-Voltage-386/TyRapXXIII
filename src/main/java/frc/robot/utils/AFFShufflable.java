@@ -63,7 +63,6 @@ public class AFFShufflable extends PIDShufflable {
         super.shuffleUpdatePID();
         f = fUpdater.getDouble(f);
         s = sUpdater.getDouble(s);
-        super.reset();
     }
 
     public boolean detectChange() {
