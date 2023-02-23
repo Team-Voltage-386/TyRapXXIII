@@ -34,15 +34,15 @@ public class Arm extends SubsystemBase {
     public double ShoulderTarget;
     public double ElbowTarget;
 
-    public double ShoulderAngleOffset;//move to constants
+    public double ShoulderAngleOffset;// move to constants
     public double ElbowAngleOffset;
 
-    private TalonSRX ShoulderMotor; //change to cansparkmax
-    private Encoder ShoulderEncoder; //change to absolute encoder
+    private TalonSRX ShoulderMotor; // change to cansparkmax
+    private Encoder ShoulderEncoder; // change to absolute encoder
 
-    private TalonSRX ElbowMotor; //change to cansparkmax
-    private Encoder ElbowEncoder; //change to absolute encoder
-    //change angle offsets and arm segment lengths in constants
+    private TalonSRX ElbowMotor; // change to cansparkmax
+    private Encoder ElbowEncoder; // change to absolute encoder
+    // change angle offsets and arm segment lengths in constants
 
     public double[][] targetSequence;
     public int sequenceIndex;
@@ -84,11 +84,11 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         // the arm ALWAYS tries to meet its target angles
+        executeSequence();
+        // add a filter of target angles
+        ArmDrive();
         updateWidgets();
         updateShufflables();
-        executeSequence();
-        ArmDrive();
-
     }
 
     /**
@@ -125,16 +125,17 @@ public class Arm extends SubsystemBase {
     /**
      * @return double[][] of coordinates of the endpoint of each arm segment
      *         relative to origin, 1d double[] is xy coordinates
-     * @param spatialArmAngles could be used for either current arm spatial angles or target angles in global space
+     * @param spatialArmAngles could be used for either current arm spatial angles
+     *                         or target angles in global space
      */
     public double[][] forwardKinematics(double[] spatialArmAngles, double[] armLengths) {
         double[][] result = new double[spatialArmAngles.length][2];
         for (int i = 0; i < spatialArmAngles.length; i++) {
             result[i][0] = armLengths[i] * Math.cos(Math.toRadians(spatialArmAngles[i]));
             result[i][1] = armLengths[i] * Math.sin(Math.toRadians(spatialArmAngles[i]));
-            if(i>0){
-                result[i][0]=result[i][0]+result[i-1][0];
-                result[i][1]=result[i][1]+result[i-1][1];
+            if (i > 0) {
+                result[i][0] = result[i][0] + result[i - 1][0];
+                result[i][1] = result[i][1] + result[i - 1][1];
             }
         }
         return result;
@@ -190,8 +191,10 @@ public class Arm extends SubsystemBase {
         targetSequence = TargetSequence;
     }
 
-    /**@deprecated
-     * alternative to arm drive, but arm P is not proportional and only constant
+    /**
+     * @deprecated
+     *             alternative to arm drive, but arm P is not proportional and only
+     *             constant
      */
     public void ArmBangBang() {
         ElbowMotor.set(TalonSRXControlMode.PercentOutput, safeZoneDrive(
@@ -203,10 +206,12 @@ public class Arm extends SubsystemBase {
                         kShoulderSafezone));
     }
 
-    /**@deprecated
-     * a method to feed in target values instead of setting in subsystem, delete other armdrives and arm drive alternatives
+    /**
+     * @deprecated
+     *             a method to feed in target values instead of setting in
+     *             subsystem, delete other armdrives and arm drive alternatives
      * @param shoulder is pv of shoulder
-     * @param elbow is pv of elbow
+     * @param elbow    is pv of elbow
      */
     public void JoystickDriveRawArm(double shoulder, double elbow) {
         ShoulderMotor.set(TalonSRXControlMode.PercentOutput,
@@ -215,8 +220,10 @@ public class Arm extends SubsystemBase {
                 safeZoneDrive(bangbangdrive(elbow, kElbowMaxPercent), getLocalArmAngles()[1], kElbowSafezone));
     }
 
-    
-    /** input PID output, @return pid output so that current motor angle complies to safe range of angles */
+    /**
+     * input PID output, @return pid output so that current motor angle complies to
+     * safe range of angles
+     */
     public double safeZoneDrive(double pv, double motorAngle, double[] safeZone) {
         if (motorAngle >= safeZone[1] && pv > 0)
             return 0;
@@ -224,7 +231,11 @@ public class Arm extends SubsystemBase {
             return 0;
         return pv;
     }
-    /**@return given original percent output, cap @param output to maximum magnitude of 1 */
+
+    /**
+     * @return given original percent output, cap @param output to maximum magnitude
+     *         of 1
+     */
     public double capPercent(double output) {
         if (Math.abs(output) > 1) {
             return 1 * Math.signum(output);
@@ -232,8 +243,10 @@ public class Arm extends SubsystemBase {
         return output;
     }
 
-    /**@deprecated
-     * like PID but worse, given pv use exactly maximum motor output percent
+    /**
+     * @deprecated
+     *             like PID but worse, given pv use exactly maximum motor output
+     *             percent
      */
     public double bangbangdrive(double pv, double motorMaxPercent) {
         if (Math.abs(pv) > kArmMotorDeadband)
@@ -249,8 +262,8 @@ public class Arm extends SubsystemBase {
      * coordinates)
      * inverse kinematics
      * 
-     * @param targetX hand target x coordinate
-     * @param targetY hand target y coordinate
+     * @param targetX  hand target x coordinate
+     * @param targetY  hand target y coordinate
      * @param stowable stowable configuration allows arm to fold neatly in, not
      *                 stowable potentially allows for better pickup of game pieces
      * 
@@ -278,7 +291,8 @@ public class Arm extends SubsystemBase {
     }
 
     // the default mode
-    /**alternative to armIKdrive where stowable is true by default
+    /**
+     * alternative to armIKdrive where stowable is true by default
      * set target angles based off of spatial coordinates from the shoulder (XY
      * coordinates)
      * 
