@@ -83,34 +83,80 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         // the arm ALWAYS tries to meet its target angles
-        ArmDrive();
         updateWidgets();
         updateShufflables();
         executeSequence();
+        ArmDrive();
+
     }
 
-    public double[] getArmAngles() {
+    /**
+     * 
+     * @return double[] of current local arm angles in degrees, indeces 0=shoulder
+     *         angle
+     *         1=elbow angle, where arm angles are angles of elevation from local
+     *         horizon (angle of depression is negative)
+     */
+    public double[] getLocalArmAngles() {
         double[] result = {
-            ShoulderEncoder.getDistance() + ShoulderAngleOffset,
-            ElbowEncoder.getDistance() + ElbowAngleOffset };// update to utilize absolute encoders
+                ShoulderEncoder.getDistance() + ShoulderAngleOffset,
+                ElbowEncoder.getDistance() + ElbowAngleOffset };// update to utilize absolute encoders
         return result;
     }
 
-    // drive to target value always
+    /**
+     * 
+     * @return double[] of current spatial arm angles in degrees, indeces 0=shoulder
+     *         angle 1=elbow angle, where arm angles are angles of elevation from
+     *         global horizon (angle of depression is negative)
+     */
+    public double[] getSpatialArmAngles(double[] localArmAngles) {
+        double[] result = new double[localArmAngles.length];
+        for (int i = 0; i < localArmAngles.length; i++) {
+            result[i] = localArmAngles[i];
+            if (i > 0) {
+                result[i] = result[i] + result[i - 1];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @return double[][] of coordinates of the endpoint of each arm segment
+     *         relative to origin, 1d double[] is xy coordinates
+     * @param spatialArmAngles could be used for either current arm spatial angles or target angles in global space
+     */
+    public double[][] forwardKinematics(double[] spatialArmAngles, double[] armLengths) {
+        double[][] result = new double[spatialArmAngles.length][2];
+        for (int i = 0; i < spatialArmAngles.length; i++) {
+            result[i][0] = armLengths[i] * Math.cos(Math.toRadians(spatialArmAngles[i]));
+            result[i][1] = armLengths[i] * Math.sin(Math.toRadians(spatialArmAngles[i]));
+            if(i>0){
+                result[i][0]=result[i][0]+result[i-1][0];
+                result[i][1]=result[i][1]+result[i-1][1];
+            }
+        }
+        return result;
+
+    }
+
+    /** drive motors to the target angles using PIDF */
     public void ArmDrive() {
         ElbowMotor.set(TalonSRXControlMode.PercentOutput,
                 capPercent(safeZoneDrive(
-                        ElbowFeedForward.calc(ElbowTarget - getArmAngles()[1], (getArmAngles()[0] + getArmAngles()[1])),
-                        getArmAngles()[1], kElbowSafezone)));
+                        ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
+                                (getLocalArmAngles()[0] + getLocalArmAngles()[1])),
+                        getLocalArmAngles()[1], kElbowSafezone)));
         ShoulderMotor
                 .set(TalonSRXControlMode.PercentOutput,
                         capPercent(
                                 safeZoneDrive(
-                                        ShoulderFeedForward.calc(ShoulderTarget - getArmAngles()[0],
-                                                (getArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
-                                        getArmAngles()[0], kShoulderSafezone)));
+                                        ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
+                                                (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
+                                        getLocalArmAngles()[0], kShoulderSafezone)));
     }
 
+    /** cycle through current sequence of angle targets */
     public void executeSequence() {
         if (targetSequence == null) {
             sequenceIndex = 0;
@@ -126,33 +172,50 @@ public class Arm extends SubsystemBase {
         }
     }
 
+    /**
+     * 
+     * @return if both arm angles are at target values
+     */
     public boolean atTargets() {
-        return Math.abs(getArmAngles()[0] - ShoulderTarget) < armDeadband.get()
-                && Math.abs(getArmAngles()[1] - ElbowTarget) < armDeadband.get();
+        return Math.abs(getLocalArmAngles()[0] - ShoulderTarget) < armDeadband.get()
+                && Math.abs(getLocalArmAngles()[1] - ElbowTarget) < armDeadband.get();
     }
 
+    /**
+     * setter method for arm angle target sequence, each array of double[] within
+     * double[][] is a pair of arm angle targets 0=shoulder 1=elbow
+     */
     public void setSequence(double[][] TargetSequence) {
         targetSequence = TargetSequence;
     }
 
-    // bang-bang to target value always
+    /**@deprecated
+     * alternative to arm drive, but arm P is not proportional and only constant
+     */
     public void ArmBangBang() {
         ElbowMotor.set(TalonSRXControlMode.PercentOutput, safeZoneDrive(
-                bangbangdrive(ElbowTarget - getArmAngles()[1], kElbowMaxPercent), getArmAngles()[1], kElbowSafezone));
+                bangbangdrive(ElbowTarget - getLocalArmAngles()[1], kElbowMaxPercent), getLocalArmAngles()[1],
+                kElbowSafezone));
         ShoulderMotor.set(TalonSRXControlMode.PercentOutput,
-                safeZoneDrive(bangbangdrive(ShoulderTarget - getArmAngles()[0], kShoulderMaxPercent), getArmAngles()[0],
+                safeZoneDrive(bangbangdrive(ShoulderTarget - getLocalArmAngles()[0], kShoulderMaxPercent),
+                        getLocalArmAngles()[0],
                         kShoulderSafezone));
     }
 
+    /**@deprecated
+     * a method to feed in target values instead of setting in subsystem, delete other armdrives and arm drive alternatives
+     * @param shoulder is pv of shoulder
+     * @param elbow is pv of elbow
+     */
     public void JoystickDriveRawArm(double shoulder, double elbow) {
         ShoulderMotor.set(TalonSRXControlMode.PercentOutput,
-                safeZoneDrive(bangbangdrive(shoulder, kShoulderMaxPercent), getArmAngles()[0], kShoulderSafezone));
+                safeZoneDrive(bangbangdrive(shoulder, kShoulderMaxPercent), getLocalArmAngles()[0], kShoulderSafezone));
         ElbowMotor.set(TalonSRXControlMode.PercentOutput,
-                safeZoneDrive(bangbangdrive(elbow, kElbowMaxPercent), getArmAngles()[1], kElbowSafezone));
+                safeZoneDrive(bangbangdrive(elbow, kElbowMaxPercent), getLocalArmAngles()[1], kElbowSafezone));
     }
 
-    // filter PID and motor drive values to be within safe zone (PID goes in, safe
-    // number goes out)
+    
+    /** input PID output, @return pid output so that current motor angle complies to safe range of angles */
     public double safeZoneDrive(double pv, double motorAngle, double[] safeZone) {
         if (motorAngle >= safeZone[1] && pv > 0)
             return 0;
@@ -160,7 +223,7 @@ public class Arm extends SubsystemBase {
             return 0;
         return pv;
     }
-
+    /**@return given original percent output, cap @param output to maximum magnitude of 1 */
     public double capPercent(double output) {
         if (Math.abs(output) > 1) {
             return 1 * Math.signum(output);
@@ -168,7 +231,9 @@ public class Arm extends SubsystemBase {
         return output;
     }
 
-    // like PID but just constant drive
+    /**@deprecated
+     * like PID but worse, given pv use exactly maximum motor output percent
+     */
     public double bangbangdrive(double pv, double motorMaxPercent) {
         if (Math.abs(pv) > kArmMotorDeadband)
             return motorMaxPercent * Math.signum(pv);
@@ -183,8 +248,8 @@ public class Arm extends SubsystemBase {
      * coordinates)
      * inverse kinematics
      * 
-     * @param targetX
-     * @param targetY
+     * @param targetX hand target x coordinate
+     * @param targetY hand target y coordinate
      * @param stowable stowable configuration allows arm to fold neatly in, not
      *                 stowable potentially allows for better pickup of game pieces
      * 
@@ -212,7 +277,7 @@ public class Arm extends SubsystemBase {
     }
 
     // the default mode
-    /**
+    /**alternative to armIKdrive where stowable is true by default
      * set target angles based off of spatial coordinates from the shoulder (XY
      * coordinates)
      * 
@@ -241,18 +306,21 @@ public class Arm extends SubsystemBase {
             .getEntry();
 
     public void updateWidgets() {
-        shoulderAngleWidget.setDouble(getArmAngles()[0]);
-        elbowAngleWidget.setDouble(getArmAngles()[1]);
+        shoulderAngleWidget.setDouble(getLocalArmAngles()[0]);
+        elbowAngleWidget.setDouble(getLocalArmAngles()[1]);
         shoulderTargetWidget.setDouble(ShoulderTarget);
         elbowTargetWidget.setDouble(ElbowTarget);
         shoulderRawWidget.setDouble(ShoulderEncoder.getRaw());
         elbowRawWidget.setDouble(ElbowEncoder.getRaw());
         elbowDrivePercentWidget.setDouble(safeZoneDrive(
-                ElbowFeedForward.calc(ElbowTarget - getArmAngles()[1], getArmAngles()[0] + getArmAngles()[1]),
-                getArmAngles()[1], kElbowSafezone));
+                ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
+                        getLocalArmAngles()[0] + getLocalArmAngles()[1]),
+                getLocalArmAngles()[1], kElbowSafezone));
         shoulderDrivePercentageWidget
-                .setDouble(safeZoneDrive(ShoulderFeedForward.calc(ShoulderTarget - getArmAngles()[0], getArmAngles()[0],
-                        0 * ElbowFeedForward.getLoad()), getArmAngles()[0], kShoulderSafezone));
+                .setDouble(safeZoneDrive(
+                        ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0], getLocalArmAngles()[0],
+                                0 * ElbowFeedForward.getLoad()),
+                        getLocalArmAngles()[0], kShoulderSafezone));
     }
 
     public void updateShufflables() {
