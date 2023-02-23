@@ -34,14 +34,15 @@ public class Arm extends SubsystemBase {
     public double ShoulderTarget;
     public double ElbowTarget;
 
-    public double ShoulderAngleOffset;
+    public double ShoulderAngleOffset;//move to constants
     public double ElbowAngleOffset;
 
-    private TalonSRX ShoulderMotor;
-    private Encoder ShoulderEncoder;
+    private TalonSRX ShoulderMotor; //change to cansparkmax
+    private Encoder ShoulderEncoder; //change to absolute encoder
 
-    private TalonSRX ElbowMotor;
-    private Encoder ElbowEncoder;
+    private TalonSRX ElbowMotor; //change to cansparkmax
+    private Encoder ElbowEncoder; //change to absolute encoder
+    //change angle offsets and arm segment lengths in constants
 
     public double[][] targetSequence;
     public int sequenceIndex;
