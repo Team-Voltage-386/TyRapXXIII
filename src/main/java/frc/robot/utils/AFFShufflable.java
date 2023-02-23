@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class AFFShufflable extends PIDShufflable {
     public double f;// f is maximum torque the motor fights
-    public double s;// static from feedforward
-    public double load;// total load on this arm bit
+    public double s;// static force to overcome from feedforward
+    
+    public double load;// total load on this arm segment
 
     // this next block of stuff is just shuffleboard Implementation
     private static GenericSubscriber fUpdater;

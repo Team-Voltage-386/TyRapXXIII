@@ -77,12 +77,12 @@ public class Arm extends SubsystemBase {
     }
 
     @Override
+    // This method will be called once per scheduler run
+
     public void periodic() {
         limitLogic();
-        // This method will be called once per scheduler run
-        // the arm ALWAYS tries to meet its target angles
         executeSequence();
-        // add a filter of target angles
+        // add a filter of target angles here
         ArmDrive();
         updateWidgets();
         updateShufflables();
@@ -153,17 +153,17 @@ public class Arm extends SubsystemBase {
                                 getLocalArmAngles()[1], kElbowSafezone),
                         -1.0, 1.0));
         ShoulderMotor.set(
-                clamp(
+                clampShoulderByLimits(clamp(
                         safeZoneDrive(
                                 ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
                                         (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
                                 getLocalArmAngles()[0], kShoulderSafezone),
-                        -1.0, 1.0));
+                        -1.0, 1.0)));
     }
 
     /** cycle through current sequence of angle targets */
     public void executeSequence() {
-        if (targetSequence!=null && sequenceIndex >= targetSequence.length) {
+        if (targetSequence != null && sequenceIndex >= targetSequence.length) {
             targetSequence = null;
         }
         if (targetSequence == null) {
