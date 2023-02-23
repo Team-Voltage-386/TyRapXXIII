@@ -70,18 +70,18 @@ public final class Constants {
     public static final double kSwerveDriveEncConv = 0.000745;
     public static final PersistentShufflableDouble[] steerPIDPSDs = {
         new PersistentShufflableDouble(kSwerveSteerPID[0],
-            "swrvsteerP", "SwervePID"),
+            "swrvSteerP", "SwervePID"),
         new PersistentShufflableDouble(kSwerveSteerPID[1],
-            "swrvsteerI", "SwervePID"),
+            "swrvSteerI", "SwervePID"),
         new PersistentShufflableDouble(kSwerveSteerPID[2],
-            "swrvsteerD", "SwervePID") };
+            "swrvSteerD", "SwervePID") };
     public static final PersistentShufflableDouble[] drivePIDPSDs = {
         new PersistentShufflableDouble(kSwerveDrivePID[0],
-            "swrvdriveP", "SwervePID"),
+            "swrvDriveP", "SwervePID"),
         new PersistentShufflableDouble(kSwerveDrivePID[1],
-            "swrvdriveI", "SwervePID"),
+            "swrvDriveI", "SwervePID"),
         new PersistentShufflableDouble(kSwerveDrivePID[1],
-            "swrvdriveD", "SwervePID") };
+            "swrvDriveD", "SwervePID") };
 
     public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv,
         steerPIDPSDs,
