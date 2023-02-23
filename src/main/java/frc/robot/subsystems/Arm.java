@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.networktables.GenericPublisher;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
@@ -27,6 +28,9 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import static frc.robot.utils.mapping.*;
 
@@ -36,14 +40,11 @@ public class Arm extends SubsystemBase {
     public double ShoulderTarget;
     public double ElbowTarget;
 
-    public double ShoulderAngleOffset;// move to constants
-    public double ElbowAngleOffset;
+    private CANSparkMax ShoulderMotor; // change to cansparkmax
+    private DutyCycleEncoder ShoulderEncoder; // change to absolute encoder
 
-    private TalonSRX ShoulderMotor; // change to cansparkmax
-    private Encoder ShoulderEncoder; // change to absolute encoder
-
-    private TalonSRX ElbowMotor; // change to cansparkmax
-    private Encoder ElbowEncoder; // change to absolute encoder
+    private CANSparkMax ElbowMotor; // change to cansparkmax
+    private DutyCycleEncoder ElbowEncoder; // change to absolute encoder
     // change angle offsets and arm segment lengths in constants
 
     public double[][] targetSequence;
@@ -51,28 +52,32 @@ public class Arm extends SubsystemBase {
 
     /** Creates a new Arm. */
     public Arm() {
-        ShoulderMotor = new TalonSRX(kShoulderMotorID);
-        ShoulderEncoder = new Encoder(kShoulderEncoderIDA, kShoulderEncoderIDB);// , false, EncodingType.k4X)
-        ElbowMotor = new TalonSRX(kElbowMotorID);
-        ElbowEncoder = new Encoder(kElbowEncoderIDA, kElbowEncoderIDB);// , false, EncodingType.k4X
-        ShoulderAngleOffset = kShoulderOffset;
-        ElbowAngleOffset = kElbowOffset;
+        // ShoulderMotor = new TalonSRX(kShoulderMotorID);
+        // ShoulderEncoder = new Encoder(kShoulderEncoderIDA, kShoulderEncoderIDB);// ,
+        // false, EncodingType.k4X)
+        // ElbowMotor = new TalonSRX(kElbowMotorID);
+        // ElbowEncoder = new Encoder(kElbowEncoderIDA, kElbowEncoderIDB);// , false,
+        // EncodingType.k4X
+        ShoulderMotor = new CANSparkMax(kShoulderMotorID, MotorType.kBrushless);
+        ElbowMotor = new CANSparkMax(kElbowMotorID, MotorType.kBrushless);
+        ShoulderEncoder = new DutyCycleEncoder(kShoulderEncoderIDA);// update encoder ID's
+        ElbowEncoder = new DutyCycleEncoder(kElbowEncoderIDA);
 
         // ArmUpperEncoder.setReverseDirection(true);
         // ArmUpperMotor.setInverted(true);
         // ArmLowerEncoder.setReverseDirection(true);
         // ArmLowerMotor.setInverted(InvertType.InvertMotorOutput);
 
-        ShoulderEncoder.setDistancePerPulse(kShoulderEncoderConversion);
-        ElbowEncoder.setDistancePerPulse(kElbowEncoderConversion);
-        ShoulderTarget = ShoulderAngleOffset;
-        ElbowTarget = ElbowAngleOffset;
+        ShoulderEncoder.setDistancePerRotation(kShoulderEncoderConversion);
+        ElbowEncoder.setDistancePerRotation(kElbowEncoderConversion);
+        ShoulderTarget = kShoulderOffset;
+        ElbowTarget = kElbowOffset;
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
-        ShoulderMotor.setNeutralMode(NeutralMode.Brake);
-        ShoulderMotor.setNeutralMode(NeutralMode.Brake);
-        ShoulderMotor.setInverted(true);
-        ElbowMotor.setInverted(true);
+        ShoulderMotor.setIdleMode(IdleMode.kBrake);
+        ShoulderMotor.setIdleMode(IdleMode.kBrake);
+        // ShoulderMotor.setInverted(true);
+        // ElbowMotor.setInverted(true);
 
         ShoulderFeedForward = new AFFShufflable(0, 0, 0, 0, 0, "ShoulderPID");
         ElbowFeedForward = new AFFShufflable(0, 0, 0, 0, 0, "ElbowPID");
@@ -102,8 +107,8 @@ public class Arm extends SubsystemBase {
      */
     public double[] getLocalArmAngles() {
         double[] result = {
-                ShoulderEncoder.getDistance() + ShoulderAngleOffset,
-                ElbowEncoder.getDistance() + ElbowAngleOffset };// update to utilize absolute encoders
+                ShoulderEncoder.getDistance() + kShoulderOffset,
+                ElbowEncoder.getDistance() + kElbowOffset };// update to utilize absolute encoders
         return result;
     }
 
@@ -146,13 +151,13 @@ public class Arm extends SubsystemBase {
 
     /** drive motors to the target angles using PIDF */
     public void ArmDrive() {
-        ElbowMotor.set(TalonSRXControlMode.PercentOutput,
+        ElbowMotor.set(
                 clamp(safeZoneDrive(
                         ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
                                 (getLocalArmAngles()[0] + getLocalArmAngles()[1])),
                         getLocalArmAngles()[1], kElbowSafezone), -1.0, 1.0));
         ShoulderMotor
-                .set(TalonSRXControlMode.PercentOutput,
+                .set(
                         clamp(
                                 safeZoneDrive(
                                         ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
@@ -213,10 +218,10 @@ public class Arm extends SubsystemBase {
      *             constant
      */
     public void ArmBangBang() {
-        ElbowMotor.set(TalonSRXControlMode.PercentOutput, safeZoneDrive(
+        ElbowMotor.set(safeZoneDrive(
                 bangbangdrive(ElbowTarget - getLocalArmAngles()[1], kElbowMaxPercent), getLocalArmAngles()[1],
                 kElbowSafezone));
-        ShoulderMotor.set(TalonSRXControlMode.PercentOutput,
+        ShoulderMotor.set(
                 safeZoneDrive(bangbangdrive(ShoulderTarget - getLocalArmAngles()[0], kShoulderMaxPercent),
                         getLocalArmAngles()[0],
                         kShoulderSafezone));
@@ -230,9 +235,9 @@ public class Arm extends SubsystemBase {
      * @param elbow    is pv of elbow
      */
     public void JoystickDriveRawArm(double shoulder, double elbow) {
-        ShoulderMotor.set(TalonSRXControlMode.PercentOutput,
+        ShoulderMotor.set(
                 safeZoneDrive(bangbangdrive(shoulder, kShoulderMaxPercent), getLocalArmAngles()[0], kShoulderSafezone));
-        ElbowMotor.set(TalonSRXControlMode.PercentOutput,
+        ElbowMotor.set(
                 safeZoneDrive(bangbangdrive(elbow, kElbowMaxPercent), getLocalArmAngles()[1], kElbowSafezone));
     }
 
@@ -343,8 +348,8 @@ public class Arm extends SubsystemBase {
         elbowAngleWidget.setDouble(getLocalArmAngles()[1]);
         shoulderTargetWidget.setDouble(ShoulderTarget);
         elbowTargetWidget.setDouble(ElbowTarget);
-        shoulderRawWidget.setDouble(ShoulderEncoder.getRaw());
-        elbowRawWidget.setDouble(ElbowEncoder.getRaw());
+        shoulderRawWidget.setDouble(ShoulderEncoder.getAbsolutePosition());
+        elbowRawWidget.setDouble(ElbowEncoder.getAbsolutePosition());
         elbowDrivePercentWidget.setDouble(safeZoneDrive(
                 ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
                         getLocalArmAngles()[0] + getLocalArmAngles()[1]),
