@@ -28,6 +28,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import static frc.robot.utils.mapping.*;
+
 public class Arm extends SubsystemBase {
     public AFFShufflable ShoulderFeedForward;
     public AFFShufflable ElbowFeedForward;
@@ -61,8 +63,8 @@ public class Arm extends SubsystemBase {
         // ArmLowerEncoder.setReverseDirection(true);
         // ArmLowerMotor.setInverted(InvertType.InvertMotorOutput);
 
-        ShoulderEncoder.setDistancePerPulse(kArmUpperEncoderConversion);
-        ElbowEncoder.setDistancePerPulse(kArmLowerEncoderConversion);
+        ShoulderEncoder.setDistancePerPulse(kShoulderEncoderConversion);
+        ElbowEncoder.setDistancePerPulse(kElbowEncoderConversion);
         ShoulderTarget = ShoulderAngleOffset;
         ElbowTarget = ElbowAngleOffset;
         ShoulderEncoder.reset();
@@ -145,17 +147,18 @@ public class Arm extends SubsystemBase {
     /** drive motors to the target angles using PIDF */
     public void ArmDrive() {
         ElbowMotor.set(TalonSRXControlMode.PercentOutput,
-                capPercent(safeZoneDrive(
+                clamp(safeZoneDrive(
                         ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
                                 (getLocalArmAngles()[0] + getLocalArmAngles()[1])),
-                        getLocalArmAngles()[1], kElbowSafezone)));
+                        getLocalArmAngles()[1], kElbowSafezone), -1.0, 1.0));
         ShoulderMotor
                 .set(TalonSRXControlMode.PercentOutput,
-                        capPercent(
+                        clamp(
                                 safeZoneDrive(
                                         ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
                                                 (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
-                                        getLocalArmAngles()[0], kShoulderSafezone)));
+                                        getLocalArmAngles()[0], kShoulderSafezone),
+                                -1, 1));
     }
 
     /** cycle through current sequence of angle targets */
@@ -174,6 +177,19 @@ public class Arm extends SubsystemBase {
         }
     }
 
+    // //old turret tyrapXX logic
+    // public void limitLogic(){
+    // if (!getLimitSwitch()) {
+    // rightLimit = false;
+    // leftLimit = false;
+    // } else if (turretMotor.getMotorOutputPercent() > 0 && getLimitSwitch() &&
+    // leftLimit == false) {
+    // rightLimit = true;
+    // } else if (turretMotor.getMotorOutputPercent() < 0 && getLimitSwitch() &&
+    // rightLimit == false) {
+    // leftLimit = true;
+    // }
+    // }
     /**
      * 
      * @return if both arm angles are at target values
@@ -233,6 +249,8 @@ public class Arm extends SubsystemBase {
     }
 
     /**
+     * @deprecated, use mapping utils clamp
+     * 
      * @return given original percent output, cap @param output to maximum magnitude
      *         of 1
      */
@@ -272,13 +290,13 @@ public class Arm extends SubsystemBase {
                                                                               // position //stow means it will stow
                                                                               // nicely so by default TRUE
         double r = Math.sqrt(squareOf(targetY) + squareOf(targetX));
-        if (r < kArmLowerLength + kArmUpperLength && r > Math.abs(kArmLowerLength - kArmUpperLength)) {// check for
-                                                                                                       // geometrically
-                                                                                                       // possible
-                                                                                                       // triangle
-            double phi1 = Math.acos((squareOf(kArmUpperLength) + squareOf(kArmLowerLength) - squareOf(r))
-                    / (2 * kArmUpperLength * kArmLowerLength));
-            double phi2 = Math.asin(kArmLowerLength * Math.sin(phi1) / r);
+        if (r < kElbowLength + kShoulderLength && r > Math.abs(kElbowLength - kShoulderLength)) {// check for
+                                                                                                 // geometrically
+                                                                                                 // possible
+                                                                                                 // triangle
+            double phi1 = Math.acos((squareOf(kShoulderLength) + squareOf(kElbowLength) - squareOf(r))
+                    / (2 * kShoulderLength * kElbowLength));
+            double phi2 = Math.asin(kElbowLength * Math.sin(phi1) / r);
             // double phi3=Math.PI-(phi1+phi2);
             if (!stowable) {
                 ShoulderTarget = Math.toDegrees(phi1 - Math.atan(targetY / targetX));
