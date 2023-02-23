@@ -4,31 +4,16 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.AFFShufflable;
-import frc.robot.utils.PID;
-import frc.robot.utils.PersistentShufflableDouble;
 
 import static frc.robot.Constants.ArmConstants.*;
 
-import javax.swing.plaf.TreeUI;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -136,7 +121,8 @@ public class Arm extends SubsystemBase {
 
     /**
      * @return double[][] of coordinates of the endpoint of each arm segment
-     *         relative to origin, 1d double[] is xy coordinates
+     *         relative to origin, 1dimension double[] is xy coordinates;
+     *         example - result[1][0] is the elbow x coordinate
      * @param spatialArmAngles could be used for either current arm spatial angles
      *                         or target angles in global space
      */
@@ -154,36 +140,40 @@ public class Arm extends SubsystemBase {
 
     }
 
-    /** drive motors to the target angles using PIDF; use subsystem ElbowTarget and ShoulderTarget which are local targets */
+    /**
+     * drive motors to the target angles using PIDF; use subsystem ElbowTarget and
+     * ShoulderTarget which are local targets
+     */
     public void ArmDrive() {
         ElbowMotor.set(
-                clamp(safeZoneDrive(
-                        ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
-                                (getLocalArmAngles()[0] + getLocalArmAngles()[1])),
-                        getLocalArmAngles()[1], kElbowSafezone), -1.0, 1.0));
-        ShoulderMotor
-                .set(
-                        clamp(
-                                safeZoneDrive(
-                                        ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
-                                                (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
-                                        getLocalArmAngles()[0], kShoulderSafezone),
-                                -1.0, 1.0));
+                clamp(
+                        safeZoneDrive(
+                                ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
+                                        (getLocalArmAngles()[0] + getLocalArmAngles()[1])),
+                                getLocalArmAngles()[1], kElbowSafezone),
+                        -1.0, 1.0));
+        ShoulderMotor.set(
+                clamp(
+                        safeZoneDrive(
+                                ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
+                                        (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
+                                getLocalArmAngles()[0], kShoulderSafezone),
+                        -1.0, 1.0));
     }
 
     /** cycle through current sequence of angle targets */
     public void executeSequence() {
+        if (targetSequence!=null && sequenceIndex >= targetSequence.length) {
+            targetSequence = null;
+        }
         if (targetSequence == null) {
             sequenceIndex = 0;
         } else {
+            if (atTargets()) {
+                sequenceIndex++;
+            }
             ShoulderTarget = targetSequence[sequenceIndex][0];
             ElbowTarget = targetSequence[sequenceIndex][1];
-        }
-        if (atTargets()) {
-            sequenceIndex++;
-        }
-        if (sequenceIndex >= targetSequence.length) {
-            targetSequence = null;
         }
     }
 
@@ -209,13 +199,13 @@ public class Arm extends SubsystemBase {
      * @param pv what motor output will be, percent mode
      * @return proccessed pv based off of limit switches
      */
-    public double clampShoulderByLimits(double pv){
-        double out=pv;
-        if(shoulderUpperLimit){
-            out = clamp(out,-1,0);
+    public double clampShoulderByLimits(double pv) {
+        double out = pv;
+        if (shoulderUpperLimit) {
+            out = clamp(out, -1, 0);
         }
-        if(shoulderLowerLimit){
-            out = clamp(out,0,1);
+        if (shoulderLowerLimit) {
+            out = clamp(out, 0, 1);
         }
         return out;
     }
@@ -321,8 +311,8 @@ public class Arm extends SubsystemBase {
      * 
      */
     public void ArmIKSet(double targetX, double targetY, boolean stowable) {// where x and y are relative to shoulder
-                                                                              // position //stow means it will stow
-                                                                              // nicely so by default TRUE
+                                                                            // position //stow means it will stow
+                                                                            // nicely so by default TRUE
         double r = Math.sqrt(squareOf(targetY) + squareOf(targetX));
         if (r < kElbowLength + kShoulderLength && r > Math.abs(kElbowLength - kShoulderLength)) {// check for
                                                                                                  // geometrically
