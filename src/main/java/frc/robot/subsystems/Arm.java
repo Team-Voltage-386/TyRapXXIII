@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.networktables.GenericPublisher;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
@@ -43,6 +44,8 @@ public class Arm extends SubsystemBase {
     private CANSparkMax ShoulderMotor; // change to cansparkmax
     private DutyCycleEncoder ShoulderEncoder; // change to absolute encoder
 
+    private DigitalInput ShoulderLimitSwitch;
+
     private CANSparkMax ElbowMotor; // change to cansparkmax
     private DutyCycleEncoder ElbowEncoder; // change to absolute encoder
     // change angle offsets and arm segment lengths in constants
@@ -62,7 +65,7 @@ public class Arm extends SubsystemBase {
         ElbowMotor = new CANSparkMax(kElbowMotorID, MotorType.kBrushless);
         ShoulderEncoder = new DutyCycleEncoder(kShoulderEncoderIDA);// update encoder ID's
         ElbowEncoder = new DutyCycleEncoder(kElbowEncoderIDA);
-
+        ShoulderLimitSwitch = new DigitalInput(kShoulderLimitSwitch);
         // ArmUpperEncoder.setReverseDirection(true);
         // ArmUpperMotor.setInverted(true);
         // ArmLowerEncoder.setReverseDirection(true);
@@ -163,7 +166,7 @@ public class Arm extends SubsystemBase {
                                         ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
                                                 (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
                                         getLocalArmAngles()[0], kShoulderSafezone),
-                                -1, 1));
+                                -1.0, 1.0));
     }
 
     /** cycle through current sequence of angle targets */

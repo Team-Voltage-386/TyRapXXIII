@@ -127,6 +127,8 @@ public final class Constants {
     public static final double kShoulderOffset = -90.0; // degrees offset
     public static final double kElbowOffset = 0.0; // degrees offset
 
+    public static final int kShoulderLimitSwitch = 0;
+
     public static double squareOf(double i) {
       return Math.pow(i, 2);
     }
