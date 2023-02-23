@@ -45,6 +45,7 @@ public class Arm extends SubsystemBase {
     private DutyCycleEncoder ShoulderEncoder; // change to absolute encoder
 
     private DigitalInput ShoulderLimitSwitch;
+    public boolean shoulderUpperLimit, shoulderLowerLimit;
 
     private CANSparkMax ElbowMotor; // change to cansparkmax
     private DutyCycleEncoder ElbowEncoder; // change to absolute encoder
@@ -92,6 +93,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        limitLogic();
         // This method will be called once per scheduler run
         // the arm ALWAYS tries to meet its target angles
         executeSequence();
@@ -152,7 +154,7 @@ public class Arm extends SubsystemBase {
 
     }
 
-    /** drive motors to the target angles using PIDF */
+    /** drive motors to the target angles using PIDF; use subsystem ElbowTarget and ShoulderTarget which are local targets */
     public void ArmDrive() {
         ElbowMotor.set(
                 clamp(safeZoneDrive(
@@ -185,26 +187,50 @@ public class Arm extends SubsystemBase {
         }
     }
 
-    // //old turret tyrapXX logic
-    // public void limitLogic(){
-    // if (!getLimitSwitch()) {
-    // rightLimit = false;
-    // leftLimit = false;
-    // } else if (turretMotor.getMotorOutputPercent() > 0 && getLimitSwitch() &&
-    // leftLimit == false) {
-    // rightLimit = true;
-    // } else if (turretMotor.getMotorOutputPercent() < 0 && getLimitSwitch() &&
-    // rightLimit == false) {
-    // leftLimit = true;
-    // }
-    // }
+    // old turret tyrapXX logic
+    /** put in periodic, run shoulder limit logic */
+    public void limitLogic() {
+        if (!getShoulderLimitSwitch()) {
+            shoulderUpperLimit = false;
+            shoulderLowerLimit = false;
+        } else if (ShoulderMotor.getAppliedOutput() > 0 && getShoulderLimitSwitch() && // check if it is
+                                                                                       // getAppliedOutput or
+                                                                                       // getOutputCurrent
+                shoulderLowerLimit == false) {
+            shoulderUpperLimit = true;
+        } else if (ShoulderMotor.getAppliedOutput() < 0 && getShoulderLimitSwitch() &&
+                shoulderUpperLimit == false) {
+            shoulderLowerLimit = true;
+        }
+    }
+
+    /**
+     * 
+     * @param pv what motor output will be, percent mode
+     * @return proccessed pv based off of limit switches
+     */
+    public double clampShoulderByLimits(double pv){
+        double out=pv;
+        if(shoulderUpperLimit){
+            out = clamp(out,-1,0);
+        }
+        if(shoulderLowerLimit){
+            out = clamp(out,0,1);
+        }
+        return out;
+    }
+
+    public boolean getShoulderLimitSwitch() {
+        return ShoulderLimitSwitch.get();
+    }
+
     /**
      * 
      * @return if both arm angles are at target values
      */
     public boolean atTargets() {
-        return Math.abs(getLocalArmAngles()[0] - ShoulderTarget) < armDeadband.get()
-                && Math.abs(getLocalArmAngles()[1] - ElbowTarget) < armDeadband.get();
+        return Math.abs(getLocalArmAngles()[0] - ShoulderTarget) < armThreshold.get()
+                && Math.abs(getLocalArmAngles()[1] - ElbowTarget) < armThreshold.get();
     }
 
     /**
@@ -294,7 +320,7 @@ public class Arm extends SubsystemBase {
      *                 stowable potentially allows for better pickup of game pieces
      * 
      */
-    public void ArmIKDrive(double targetX, double targetY, boolean stowable) {// where x and y are relative to shoulder
+    public void ArmIKSet(double targetX, double targetY, boolean stowable) {// where x and y are relative to shoulder
                                                                               // position //stow means it will stow
                                                                               // nicely so by default TRUE
         double r = Math.sqrt(squareOf(targetY) + squareOf(targetX));
@@ -325,8 +351,8 @@ public class Arm extends SubsystemBase {
      * @param targetX
      * @param targetY
      */
-    public void ArmIKDrive(double targetX, double targetY) {
-        ArmIKDrive(targetX, targetY, true);
+    public void ArmIKSet(double targetX, double targetY) {
+        ArmIKSet(targetX, targetY, true);
     }
 
     private ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
@@ -369,8 +395,8 @@ public class Arm extends SubsystemBase {
             ElbowFeedForward.shuffleUpdatePID();
         if (ShoulderFeedForward.detectChange())
             ShoulderFeedForward.shuffleUpdatePID();
-        if (armDeadband.detectChanges())
-            armDeadband.subscribeAndSet();
+        if (armThreshold.detectChanges())
+            armThreshold.subscribeAndSet();
     }
 
 }
