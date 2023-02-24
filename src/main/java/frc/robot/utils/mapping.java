@@ -17,6 +17,19 @@ public class mapping {
     }
 
     /**
+     * 
+     * @param angle degree measure from 0 to 360
+     * @return degree measure from -180 to 180
+     */
+    public static double armAnglesIncludeDepression(double angle){
+        double result=angle;
+        while(result>180){
+            result-=360;
+        }
+        return result;
+    }
+
+    /**
      * clamp the input to between min and max
      * 
      * @param input

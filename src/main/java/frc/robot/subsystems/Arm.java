@@ -97,8 +97,8 @@ public class Arm extends SubsystemBase {
      */
     public double[] getLocalArmAngles() {
         double[] result = {
-                ShoulderEncoder.getDistance() + kShoulderOffset,
-                ElbowEncoder.getDistance() + kElbowOffset };// update to utilize absolute encoders
+                armAnglesIncludeDepression(ShoulderEncoder.getDistance()) + kShoulderOffset,
+                armAnglesIncludeDepression(ElbowEncoder.getDistance()) + kElbowOffset };// update to utilize absolute encoders
         return result;
     }
 
@@ -345,21 +345,21 @@ public class Arm extends SubsystemBase {
         ArmIKSet(targetX, targetY, true);
     }
 
-    private ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-    private GenericPublisher shoulderAngleWidget = mainTab.add("ShoulderAngle", 0.0).withPosition(0, 3).withSize(1, 1)
+    private ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
+    private GenericPublisher shoulderAngleWidget = armTab.add("ShoulderAngle", 0.0).withPosition(0, 3).withSize(1, 1)
             .getEntry();
-    private GenericPublisher elbowAngleWidget = mainTab.add("elbowAngle", 0.0).withPosition(1, 3).withSize(1, 1)
+    private GenericPublisher elbowAngleWidget = armTab.add("elbowAngle", 0.0).withPosition(1, 3).withSize(1, 1)
             .getEntry();
-    private GenericPublisher shoulderTargetWidget = mainTab.add("shouldertarget", 0.0).withPosition(2, 3).withSize(1, 1)
+    private GenericPublisher shoulderTargetWidget = armTab.add("shouldertarget", 0.0).withPosition(2, 3).withSize(1, 1)
             .getEntry();
-    private GenericPublisher elbowTargetWidget = mainTab.add("elbowTarget", 0.0).withPosition(3, 3).withSize(1, 1)
+    private GenericPublisher elbowTargetWidget = armTab.add("elbowTarget", 0.0).withPosition(3, 3).withSize(1, 1)
             .getEntry();
-    private GenericPublisher shoulderRawWidget = mainTab.add("shoulderRaw", 0.0).withPosition(4, 3).withSize(1, 1)
+    private GenericPublisher shoulderRawWidget = armTab.add("shoulderRaw", 0.0).withPosition(4, 3).withSize(1, 1)
             .getEntry();
-    private GenericPublisher elbowRawWidget = mainTab.add("elbowRaw", 0.0).withPosition(5, 3).withSize(1, 1).getEntry();
-    private GenericPublisher shoulderDrivePercentageWidget = mainTab.add("ShoulderDrive", 0.0).withPosition(6, 3)
+    private GenericPublisher elbowRawWidget = armTab.add("elbowRaw", 0.0).withPosition(5, 3).withSize(1, 1).getEntry();
+    private GenericPublisher shoulderDrivePercentageWidget = armTab.add("ShoulderDrive", 0.0).withPosition(6, 3)
             .withSize(1, 1).getEntry();
-    private GenericPublisher elbowDrivePercentWidget = mainTab.add("elbowDrive", 0.0).withPosition(7, 3).withSize(1, 1)
+    private GenericPublisher elbowDrivePercentWidget = armTab.add("elbowDrive", 0.0).withPosition(7, 3).withSize(1, 1)
             .getEntry();
 
     public void updateWidgets() {
@@ -369,15 +369,8 @@ public class Arm extends SubsystemBase {
         elbowTargetWidget.setDouble(ElbowTarget);
         shoulderRawWidget.setDouble(ShoulderEncoder.getAbsolutePosition());
         elbowRawWidget.setDouble(ElbowEncoder.getAbsolutePosition());
-        elbowDrivePercentWidget.setDouble(safeZoneDrive(
-                ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
-                        getLocalArmAngles()[0] + getLocalArmAngles()[1]),
-                getLocalArmAngles()[1], kElbowSafezone));
-        shoulderDrivePercentageWidget
-                .setDouble(safeZoneDrive(
-                        ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0], getLocalArmAngles()[0],
-                                0 * ElbowFeedForward.getLoad()),
-                        getLocalArmAngles()[0], kShoulderSafezone));
+        elbowDrivePercentWidget.setDouble(ElbowMotor.getAppliedOutput());
+        shoulderDrivePercentageWidget.setDouble(ShoulderMotor.getAppliedOutput());
     }
 
     public void updateShufflables() {
