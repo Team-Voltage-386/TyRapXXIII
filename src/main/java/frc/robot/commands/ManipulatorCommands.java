@@ -35,10 +35,12 @@ public class ManipulatorCommands extends CommandBase {
     if (kManipulator.getRawButtonPressed(kLeftOptions)) 
     {
       Flags.ConeMode = false;
+      Hand.ChangeMode();
     }
     if (kManipulator.getRawButtonPressed(kRightOptions)) 
     {
       Flags.ConeMode = true;
+      Hand.ChangeMode();
     }
 
     //Rotator
