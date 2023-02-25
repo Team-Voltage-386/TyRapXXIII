@@ -102,34 +102,46 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final PersistentShufflableDouble armThreshold = new PersistentShufflableDouble(.5, "armThreshhold");
+    public static final PersistentShufflableDouble PSDShoulderMaxPercentage = new PersistentShufflableDouble(.1,
+        "armMaxSpeed", "Arm");
+        public static final PersistentShufflableDouble PSDElbowMaxPercentage = new PersistentShufflableDouble(.1,
+        "armMaxSpeed", "Arm");
+    public static final PersistentShufflableDouble armThreshold = new PersistentShufflableDouble(.5, "armThreshhold",
+        "Arm");
 
-    public static final double[] kArmShoulderPID = { .01, 0.0, 0.0 };
-    public static final double[] kArmElbowPID = { .01, 0.0, 0.0 };
+    public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+    public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-    public static final double[] kShoulderSafezone = { -90, 0 };// lower limit is index 0, upper limit is index 1
-    public static final double[] kElbowSafezone = { -45, 90 };// lowe limit is index 0, upper limit is index 1
+    public static final double[] kShoulderSafezone = { -150, 0 };// lower limit is index 0, upper limit is index 1
+    public static final double[] kElbowSafezone = { 0, 90 };// lowe limit is index 0, upper limit is index 1
     public static final double kArmMotorDeadband = .1;
-    public static final double kShoulderMaxPercent = .5;
-    public static final double kElbowMaxPercent = .3;
-    public static final double kShoulderLength = .3;// meters
-    public static final double kElbowLength = .4;// meters, the superior measuring system
-    public static final double kShoulderEncoderConversion = 360 / (44.4);// 360 degrees per rotation times one rotation
-                                                                         // per 44.4 pulses
-    public static final double kElbowEncoderConversion = 360 / (44.4);// 360 degrees per rotation times one rotation
-                                                                      // per 44.4 pulses
+    public static final double kShoulderLength = 0.762;// meters //30 in
+    // notes: the origin point is 48 inches off the ground
+    // safe volume within robot frame is relatively small, just above the platform
+    // no need to have elbow go negative angles
+    // actuate elbow first
+    public static final double kElbowLength = 0.762;// meters, the superior measuring system //30 in
+    public static final double kArmLengths[] = { kShoulderLength, kElbowLength };
+    public static final double kShoulderEncoderConversion = 360;// 360 degrees per rotation
+    public static final double kElbowEncoderConversion = 360;// 360 degrees per rotation
     public static final int kShoulderMotorID = 31;
     public static final int kElbowMotorID = 32;
     public static final int kShoulderEncoderPin = 1;
     public static final int kElbowEncoderPin = 0;
-    public static final double kShoulderOffset = -90.0; // degrees offset
-    public static final double kElbowOffset = 0.0; // degrees offset
-
+    public static final PersistentShufflableDouble PSDShoulderOffset = new PersistentShufflableDouble(96,
+        "shoulderOffset", "Arm"); // degrees offset
+    public static final PersistentShufflableDouble PSDElbowOffset = new PersistentShufflableDouble(-124, "elbowOffset",
+        "Arm"); // degrees offset
+    public static final double kShoulderMiddleAngleThreshold = -45;// the angle that is between the two limit switches
+                                                                   // for the shoulder
     public static final int kShoulderLimitSwitch = 2;
 
     public static double squareOf(double i) {
       return Math.pow(i, 2);
     }
 
+    public static final class ArmSequences {
+
+    }
   }
 }

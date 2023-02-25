@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class AFFShufflable extends PIDShufflable {
     public double f;// f is maximum torque the motor fights
     public double s;// static force to overcome from feedforward
-    
+
     public double load;// total load on this arm segment
 
     // this next block of stuff is just shuffleboard Implementation
@@ -21,8 +21,18 @@ public class AFFShufflable extends PIDShufflable {
         f = F;
         s = S;
 
-        fUpdater = super.pidTab.addPersistent("f/g", f).withPosition(super.pidObjectCount, 3).getEntry();
-        sUpdater = super.pidTab.addPersistent("sf", s).withPosition(super.pidObjectCount, 4).getEntry();
+        fUpdater = super.pidTab.addPersistent(EntryName + "fg", f).withPosition(super.pidObjectCount-1, 3).getEntry();
+        sUpdater = super.pidTab.addPersistent(EntryName + "sf", s).withPosition(super.pidObjectCount-1, 4).getEntry();
+        shuffleUpdatePID();
+    }
+
+    public AFFShufflable(double P, double I, double D, double F, double S, String EntryName, String TabName) {
+        super(P, I, D, EntryName, TabName);
+        f = F;
+        s = S;
+
+        fUpdater = super.pidTab.addPersistent(EntryName + "fg", f).withPosition(super.pidObjectCount-1, 3).getEntry();
+        sUpdater = super.pidTab.addPersistent(EntryName + "sf", s).withPosition(super.pidObjectCount-1, 4).getEntry();
         shuffleUpdatePID();
     }
 

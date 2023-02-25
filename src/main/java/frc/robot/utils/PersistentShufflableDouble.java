@@ -16,6 +16,13 @@ public class PersistentShufflableDouble {
         ntEntry = sdtab.addPersistent(entryName, value).getEntry();
     }
 
+    public PersistentShufflableDouble(double initialValue, String entryName, String TabName) {
+        sdtab = Shuffleboard.getTab(TabName);
+        value = initialValue;
+        ntEntry = sdtab.addPersistent(entryName, value).getEntry();
+
+    }
+
     public double get() {
         return value;
     }

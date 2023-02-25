@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +21,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import static frc.robot.utils.mapping.*;
 
+import java.util.Map;
+
 public class Arm extends SubsystemBase {
     public AFFShufflable ShoulderFeedForward;
     public AFFShufflable ElbowFeedForward;
@@ -29,7 +32,7 @@ public class Arm extends SubsystemBase {
     private CANSparkMax ShoulderMotor; // change to cansparkmax
     private DutyCycleEncoder ShoulderEncoder; // change to absolute encoder
 
-    private DigitalInput ShoulderLimitSwitch;
+    private DigitalInput ShoulderLimitSwitch; // LIMIT READING TRUE MEANS SWTICH NOT HIT
     public boolean shoulderUpperLimit, shoulderLowerLimit;
 
     private CANSparkMax ElbowMotor; // change to cansparkmax
@@ -37,6 +40,7 @@ public class Arm extends SubsystemBase {
     // change angle offsets and arm segment lengths in constants
 
     public double[][] targetSequence;
+    public double[][] fkCoords;
     public int sequenceIndex;
 
     /** Creates a new Arm. */
@@ -59,17 +63,17 @@ public class Arm extends SubsystemBase {
 
         ShoulderEncoder.setDistancePerRotation(kShoulderEncoderConversion);
         ElbowEncoder.setDistancePerRotation(kElbowEncoderConversion);
-        ShoulderTarget = kShoulderOffset;
-        ElbowTarget = kElbowOffset;
+        ShoulderTarget = -70;
+        ElbowTarget = 110;
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
-        ShoulderMotor.setIdleMode(IdleMode.kBrake);
+        ElbowMotor.setIdleMode(IdleMode.kBrake);
         ShoulderMotor.setIdleMode(IdleMode.kBrake);
         // ShoulderMotor.setInverted(true);
         // ElbowMotor.setInverted(true);
 
-        ShoulderFeedForward = new AFFShufflable(0, 0, 0, 0, 0, "ShoulderPID");
-        ElbowFeedForward = new AFFShufflable(0, 0, 0, 0, 0, "ElbowPID");
+        ShoulderFeedForward = new AFFShufflable(.0001, 0, 0, 0, 0, "ShoulderPIDF", "ArmFF");
+        ElbowFeedForward = new AFFShufflable(.0001, 0, 0, 0, 0, "ElbowPIDF", "ArmFF");
 
         targetSequence = null;
         sequenceIndex = 0;
@@ -81,9 +85,10 @@ public class Arm extends SubsystemBase {
 
     public void periodic() {
         limitLogic();
+        fkCoords = forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths);
         executeSequence();
         // add a filter of target angles here
-        // ArmDrive();//the only line that will drive the arm motors is this one
+        ArmDrive();// the only line that will drive the arm motors is this one
         updateWidgets();
         updateShufflables();
     }
@@ -97,9 +102,10 @@ public class Arm extends SubsystemBase {
      */
     public double[] getLocalArmAngles() {
         double[] result = {
-                armAnglesIncludeDepression(ShoulderEncoder.getDistance()) + kShoulderOffset,
-                armAnglesIncludeDepression(ElbowEncoder.getDistance()) + kElbowOffset };// update to utilize absolute
-                                                                                        // encoders
+                armAnglesIncludeDepression(ShoulderEncoder.getDistance()) - PSDShoulderOffset.get(),
+                armAnglesIncludeDepression(ElbowEncoder.getDistance()) - PSDElbowOffset.get() };// update to utilize
+                                                                                                // absolute
+        // encoders
         return result;
     }
 
@@ -152,14 +158,15 @@ public class Arm extends SubsystemBase {
                                 ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
                                         (getLocalArmAngles()[0] + getLocalArmAngles()[1])),
                                 getLocalArmAngles()[1], kElbowSafezone),
-                        -1.0, 1.0));
+                        -PSDShoulderMaxPercentage.get(), PSDShoulderMaxPercentage.get()));// replace 1.0 with maximum
+                                                                                          // percentage
         ShoulderMotor.set(
                 clampShoulderByLimits(clamp(
                         safeZoneDrive(
                                 ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
                                         (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
                                 getLocalArmAngles()[0], kShoulderSafezone),
-                        -1.0, 1.0)));
+                        -PSDElbowMaxPercentage.get(), PSDElbowMaxPercentage.get())));
     }
 
     /** cycle through current sequence of angle targets */
@@ -184,12 +191,11 @@ public class Arm extends SubsystemBase {
         if (!getShoulderLimitSwitch()) {
             shoulderUpperLimit = false;
             shoulderLowerLimit = false;
-        } else if (ShoulderMotor.getAppliedOutput() > 0 && getShoulderLimitSwitch() && // check if it is
-                                                                                       // getAppliedOutput or
-                                                                                       // getOutputCurrent
+            // TEMPORARY LOGIC, will be problematic if shouldertarget==getlocalarmangles[0]
+        } else if (getLocalArmAngles()[0] > kShoulderMiddleAngleThreshold && getShoulderLimitSwitch() &&
                 shoulderLowerLimit == false) {
             shoulderUpperLimit = true;
-        } else if (ShoulderMotor.getAppliedOutput() < 0 && getShoulderLimitSwitch() &&
+        } else if (getLocalArmAngles()[0] < kShoulderMiddleAngleThreshold && getShoulderLimitSwitch() &&
                 shoulderUpperLimit == false) {
             shoulderLowerLimit = true;
         }
@@ -211,8 +217,12 @@ public class Arm extends SubsystemBase {
         return out;
     }
 
+    /**
+     * 
+     * @return true IF HITTING limit switch, false if not at limit switch
+     */
     public boolean getShoulderLimitSwitch() {
-        return ShoulderLimitSwitch.get();
+        return !ShoulderLimitSwitch.get();
     }
 
     /**
@@ -239,10 +249,10 @@ public class Arm extends SubsystemBase {
      */
     public void ArmBangBang() {
         ElbowMotor.set(safeZoneDrive(
-                bangbangdrive(ElbowTarget - getLocalArmAngles()[1], kElbowMaxPercent), getLocalArmAngles()[1],
+                bangbangdrive(ElbowTarget - getLocalArmAngles()[1], PSDElbowMaxPercentage.get()), getLocalArmAngles()[1],
                 kElbowSafezone));
         ShoulderMotor.set(
-                safeZoneDrive(bangbangdrive(ShoulderTarget - getLocalArmAngles()[0], kShoulderMaxPercent),
+                safeZoneDrive(bangbangdrive(ShoulderTarget - getLocalArmAngles()[0], PSDShoulderMaxPercentage.get()),
                         getLocalArmAngles()[0],
                         kShoulderSafezone));
     }
@@ -256,9 +266,9 @@ public class Arm extends SubsystemBase {
      */
     public void JoystickDriveRawArm(double shoulder, double elbow) {
         ShoulderMotor.set(
-                safeZoneDrive(bangbangdrive(shoulder, kShoulderMaxPercent), getLocalArmAngles()[0], kShoulderSafezone));
+                safeZoneDrive(bangbangdrive(shoulder, PSDShoulderMaxPercentage.get()), getLocalArmAngles()[0], kShoulderSafezone));
         ElbowMotor.set(
-                safeZoneDrive(bangbangdrive(elbow, kElbowMaxPercent), getLocalArmAngles()[1], kElbowSafezone));
+                safeZoneDrive(bangbangdrive(elbow, PSDElbowMaxPercentage.get()), getLocalArmAngles()[1], kElbowSafezone));
     }
 
     /**
@@ -301,9 +311,11 @@ public class Arm extends SubsystemBase {
     // when all arm angles are zeroed, the arm sticks straight out to the right
     // positive theta is counter clockwise, negative theta is clockwise
     /**
-     * set target angles based off of spatial coordinates from the shoulder (XY
-     * coordinates)
-     * inverse kinematics
+     * @deprecated (by Juan)
+     *             set target angles based off of spatial coordinates from the
+     *             shoulder (XY
+     *             coordinates)
+     *             inverse kinematics
      * 
      * @param targetX  hand target x coordinate
      * @param targetY  hand target y coordinate
@@ -335,9 +347,11 @@ public class Arm extends SubsystemBase {
 
     // the default mode
     /**
-     * alternative to armIKdrive where stowable is true by default
-     * set target angles based off of spatial coordinates from the shoulder (XY
-     * coordinates)
+     * @deprecated (by Juan)
+     *             alternative to armIKdrive where stowable is true by default
+     *             set target angles based off of spatial coordinates from the
+     *             shoulder (XY
+     *             coordinates)
      * 
      * @param targetX
      * @param targetY
@@ -355,15 +369,40 @@ public class Arm extends SubsystemBase {
             .getEntry();
     private GenericPublisher elbowTargetWidget = armTab.add("elbowTarget", 0.0).withPosition(3, 3).withSize(1, 1)
             .getEntry();
+    // raw angle widgets
     private GenericPublisher shoulderRawWidget = armTab.add("shoulderRaw", 0.0).withPosition(4, 0).withSize(1, 1)
             .getEntry();
     private GenericPublisher elbowRawWidget = armTab.add("elbowRaw", 0.0).withPosition(5, 0).withSize(1, 1).getEntry();
+    // motor percentages
     private GenericPublisher shoulderDrivePercentageWidget = armTab.add("ShoulderDrive", 0.0).withPosition(6, 3)
             .withSize(1, 1).getEntry();
     private GenericPublisher elbowDrivePercentWidget = armTab.add("elbowDrive", 0.0).withPosition(7, 3).withSize(1, 1)
             .getEntry();
+    private GenericPublisher shoulderDriveAmpsWidget = armTab.add("ShoulderAmps", 0.0).getEntry();
+    private GenericPublisher elbowDriveAmpsWidget = armTab.add("ElbowAMps", 0.0).getEntry();
+    private GenericPublisher shoulderTemperatureWidget = armTab.add("ShoulderTemp", 0.0).getEntry();
+    private GenericPublisher elbowTemperatureWidget = armTab.add("ElbowTemp", 0.0).getEntry();
+    // these are shoulder limit switch widgets
     private GenericPublisher shoulderLimitWidget = armTab.add("shoulderLimit", false).withPosition(2, 0).withSize(1, 1)
             .getEntry();
+    private GenericPublisher shoulderUpperLimitWidget = armTab.add("upperLimit", false)
+            .withWidget(BuiltInWidgets.kBooleanBox)
+            .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(0, 1)
+            .withSize(1, 1)
+            .getEntry();
+    private GenericPublisher shoulderLowerLimitWidget = armTab.add("lowerLimit", false)
+            .withWidget(BuiltInWidgets.kBooleanBox)
+            .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(1, 1)
+            .withSize(1, 1)
+            .getEntry();
+    // these are FK coordinate widgets
+    private GenericPublisher shoulderXWidget = armTab.add("elbowX", 0.0).withPosition(5, 1).withSize(1, 1)
+            .getEntry();
+    private GenericPublisher shoulderYWidget = armTab.add("elbowY", 0.0).withPosition(6, 1).withSize(1, 1)
+            .getEntry();
+    private GenericPublisher elbowXWidget = armTab.add("handX", 0.0).withPosition(5, 2).withSize(1, 1)
+            .getEntry();
+    private GenericPublisher elbowYWidget = armTab.add("handY", 0.0).withPosition(6, 2).withSize(1, 1).getEntry();
 
     public void updateWidgets() {
         shoulderAngleWidget.setDouble(getLocalArmAngles()[0]);
@@ -374,7 +413,19 @@ public class Arm extends SubsystemBase {
         elbowRawWidget.setDouble(ElbowEncoder.getAbsolutePosition());
         elbowDrivePercentWidget.setDouble(ElbowMotor.getAppliedOutput());
         shoulderDrivePercentageWidget.setDouble(ShoulderMotor.getAppliedOutput());
+        elbowDriveAmpsWidget.setDouble(ElbowMotor.getOutputCurrent());
+        shoulderDriveAmpsWidget.setDouble(ShoulderMotor.getOutputCurrent());
+        elbowTemperatureWidget.setDouble(ElbowMotor.getMotorTemperature());
+        shoulderTemperatureWidget.setDouble(ShoulderMotor.getMotorTemperature());
+
         shoulderLimitWidget.setBoolean(ShoulderLimitSwitch.get());
+        shoulderUpperLimitWidget.setBoolean(shoulderUpperLimit);
+        shoulderLowerLimitWidget.setBoolean(shoulderLowerLimit);
+        shoulderXWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[0][0]);
+        shoulderYWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[0][1]);
+        elbowXWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[1][0]);
+        elbowYWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[1][1]);
+
     }
 
     public void updateShufflables() {
@@ -384,6 +435,14 @@ public class Arm extends SubsystemBase {
             ShoulderFeedForward.shuffleUpdatePID();
         if (armThreshold.detectChanges())
             armThreshold.subscribeAndSet();
+        if (PSDElbowOffset.detectChanges())
+            PSDElbowOffset.subscribeAndSet();
+        if (PSDShoulderOffset.detectChanges())
+            PSDShoulderOffset.subscribeAndSet();
+        if (PSDShoulderMaxPercentage.detectChanges())
+            PSDShoulderMaxPercentage.subscribeAndSet();
+        if (PSDElbowMaxPercentage.detectChanges())
+            PSDElbowMaxPercentage.subscribeAndSet();
     }
 
 }

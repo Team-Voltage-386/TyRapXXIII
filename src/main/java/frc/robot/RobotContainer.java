@@ -33,8 +33,9 @@ public class RobotContainer {
   public final Drivetrain m_driveTrain = new Drivetrain();
   private final Arm m_Arm = new Arm();
   private final Limelight m_ll = new Limelight();
+
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
-  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands();
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
