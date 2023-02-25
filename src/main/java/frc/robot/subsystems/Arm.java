@@ -49,8 +49,8 @@ public class Arm extends SubsystemBase {
         // EncodingType.k4X
         ShoulderMotor = new CANSparkMax(kShoulderMotorID, MotorType.kBrushless);
         ElbowMotor = new CANSparkMax(kElbowMotorID, MotorType.kBrushless);
-        ShoulderEncoder = new DutyCycleEncoder(kShoulderEncoderIDA);// update encoder ID's
-        ElbowEncoder = new DutyCycleEncoder(kElbowEncoderIDA);
+        ShoulderEncoder = new DutyCycleEncoder(kShoulderEncoderPin);// update encoder ID's
+        ElbowEncoder = new DutyCycleEncoder(kElbowEncoderPin);
         ShoulderLimitSwitch = new DigitalInput(kShoulderLimitSwitch);
         // ArmUpperEncoder.setReverseDirection(true);
         // ArmUpperMotor.setInverted(true);
@@ -83,7 +83,7 @@ public class Arm extends SubsystemBase {
         limitLogic();
         executeSequence();
         // add a filter of target angles here
-        ArmDrive();
+        // ArmDrive();//the only line that will drive the arm motors is this one
         updateWidgets();
         updateShufflables();
     }
@@ -98,7 +98,8 @@ public class Arm extends SubsystemBase {
     public double[] getLocalArmAngles() {
         double[] result = {
                 armAnglesIncludeDepression(ShoulderEncoder.getDistance()) + kShoulderOffset,
-                armAnglesIncludeDepression(ElbowEncoder.getDistance()) + kElbowOffset };// update to utilize absolute encoders
+                armAnglesIncludeDepression(ElbowEncoder.getDistance()) + kElbowOffset };// update to utilize absolute
+                                                                                        // encoders
         return result;
     }
 
@@ -346,20 +347,22 @@ public class Arm extends SubsystemBase {
     }
 
     private ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
-    private GenericPublisher shoulderAngleWidget = armTab.add("ShoulderAngle", 0.0).withPosition(0, 3).withSize(1, 1)
+    private GenericPublisher shoulderAngleWidget = armTab.add("ShoulderAngle", 0.0).withPosition(0, 0).withSize(1, 1)
             .getEntry();
-    private GenericPublisher elbowAngleWidget = armTab.add("elbowAngle", 0.0).withPosition(1, 3).withSize(1, 1)
+    private GenericPublisher elbowAngleWidget = armTab.add("elbowAngle", 0.0).withPosition(1, 0).withSize(1, 1)
             .getEntry();
     private GenericPublisher shoulderTargetWidget = armTab.add("shouldertarget", 0.0).withPosition(2, 3).withSize(1, 1)
             .getEntry();
     private GenericPublisher elbowTargetWidget = armTab.add("elbowTarget", 0.0).withPosition(3, 3).withSize(1, 1)
             .getEntry();
-    private GenericPublisher shoulderRawWidget = armTab.add("shoulderRaw", 0.0).withPosition(4, 3).withSize(1, 1)
+    private GenericPublisher shoulderRawWidget = armTab.add("shoulderRaw", 0.0).withPosition(4, 0).withSize(1, 1)
             .getEntry();
-    private GenericPublisher elbowRawWidget = armTab.add("elbowRaw", 0.0).withPosition(5, 3).withSize(1, 1).getEntry();
+    private GenericPublisher elbowRawWidget = armTab.add("elbowRaw", 0.0).withPosition(5, 0).withSize(1, 1).getEntry();
     private GenericPublisher shoulderDrivePercentageWidget = armTab.add("ShoulderDrive", 0.0).withPosition(6, 3)
             .withSize(1, 1).getEntry();
     private GenericPublisher elbowDrivePercentWidget = armTab.add("elbowDrive", 0.0).withPosition(7, 3).withSize(1, 1)
+            .getEntry();
+    private GenericPublisher shoulderLimitWidget = armTab.add("shoulderLimit", false).withPosition(2, 0).withSize(1, 1)
             .getEntry();
 
     public void updateWidgets() {
@@ -371,6 +374,7 @@ public class Arm extends SubsystemBase {
         elbowRawWidget.setDouble(ElbowEncoder.getAbsolutePosition());
         elbowDrivePercentWidget.setDouble(ElbowMotor.getAppliedOutput());
         shoulderDrivePercentageWidget.setDouble(ShoulderMotor.getAppliedOutput());
+        shoulderLimitWidget.setBoolean(ShoulderLimitSwitch.get());
     }
 
     public void updateShufflables() {

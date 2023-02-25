@@ -120,14 +120,12 @@ public final class Constants {
                                                                       // per 44.4 pulses
     public static final int kShoulderMotorID = 31;
     public static final int kElbowMotorID = 32;
-    public static final int kShoulderEncoderIDA = 9;
-    public static final int kShoulderEncoderIDB = 8;
-    public static final int kElbowEncoderIDA = 7;
-    public static final int kElbowEncoderIDB = 6;
+    public static final int kShoulderEncoderPin = 1;
+    public static final int kElbowEncoderPin = 0;
     public static final double kShoulderOffset = -90.0; // degrees offset
     public static final double kElbowOffset = 0.0; // degrees offset
 
-    public static final int kShoulderLimitSwitch = 0;
+    public static final int kShoulderLimitSwitch = 2;
 
     public static double squareOf(double i) {
       return Math.pow(i, 2);
