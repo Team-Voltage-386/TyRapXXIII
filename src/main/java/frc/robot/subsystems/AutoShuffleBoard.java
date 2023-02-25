@@ -9,9 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants.*;
 
-public class AutoShuffleBoard
-{
-    //Initialization of all shuffleboard auto options
+public class AutoShuffleBoard {
+    // Initialization of all shuffleboard auto options
     private static final ShuffleboardTab Auto = Shuffleboard.getTab("Auto");
     public final SendableChooser<Piece> StartingPieceChooser = new SendableChooser<>();
     public final SendableChooser<Place> StartingPlaceChooser = new SendableChooser<>();
@@ -19,14 +18,13 @@ public class AutoShuffleBoard
     public final SendableChooser<Piece> SecondPieceChooser = new SendableChooser<>();
     public final SendableChooser<Place> SecondPlaceChooser = new SendableChooser<>();
     public final SendableChooser<Balancing> BalancingChooser = new SendableChooser<>();
-    //Martian rock is an exception to enums and will be using an integer value
+    // Martian rock is an exception to enums and will be using an integer value
     public final SendableChooser<Integer> MartianRockChooser = new SendableChooser<>();
     //
     private SimpleWidget AutoReady;
 
-    public AutoShuffleBoard()
-    {
-        //Adds all of the auto options to the auto shuffleboard
+    public AutoShuffleBoard() {
+        // Adds all of the auto options to the auto shuffleboard
         StartingPieceChooser.addOption("Cone", Piece.CONE);
         StartingPieceChooser.addOption("Cube", Piece.CUBE);
         StartingPieceChooser.addOption("Nothing", Piece.NULL);
@@ -37,13 +35,13 @@ public class AutoShuffleBoard
         StartingPlaceChooser.addOption("Ground", Place.LOW);
         StartingPlaceChooser.addOption("Don't place", Place.NULL);
         Auto.add("Starting place", StartingPlaceChooser).withPosition(2, 0).withSize(2, 2);
-            
+
         StartingPositionChooser.addOption("Cable strip side", Position.CABLE);
         StartingPositionChooser.addOption("Chager station", Position.CHARGER);
         StartingPositionChooser.addOption("Clear side", Position.CLEAR);
         StartingPositionChooser.setDefaultOption("", Position.ERROR);
         Auto.add("Starting location", StartingPositionChooser).withPosition(4, 0).withSize(2, 2);
-        
+
         SecondPieceChooser.addOption("Cone", Piece.CONE);
         SecondPieceChooser.addOption("Cube", Piece.CUBE);
         SecondPieceChooser.addOption("Nothing", Piece.NULL);
@@ -69,54 +67,44 @@ public class AutoShuffleBoard
         AutoReady = Auto.add("Auto Ready", false).withPosition(6, 0).withSize(2, 2);
     }
 
-    public Piece getStartingPiece ()
-    {
+    public Piece getStartingPiece() {
         return StartingPieceChooser.getSelected();
     }
 
-    public Place getStartingPlace ()
-    {
+    public Place getStartingPlace() {
         return StartingPlaceChooser.getSelected();
     }
 
-    public Piece getSecondPiece ()
-    {
+    public Piece getSecondPiece() {
         return SecondPieceChooser.getSelected();
     }
 
-    public Place getSecondPlace ()
-    {
+    public Place getSecondPlace() {
         return SecondPlaceChooser.getSelected();
     }
 
-    public Balancing getBalance ()
-    {
+    public Balancing getBalance() {
         return BalancingChooser.getSelected();
     }
 
-    public Position getStartingPosition ()
-    {
+    public Position getStartingPosition() {
         return StartingPositionChooser.getSelected();
     }
 
-    public boolean getMartianRock ()
-    {
-        if (MartianRockChooser.getSelected()==1)
-        {
+    public boolean getMartianRock() {
+        if (MartianRockChooser.getSelected() == 1) {
             return true;
         }
         return false;
     }
 
-    public void updateAutoReady()
-    {
-        if (!(getMartianRock()||getStartingPiece()==Piece.ERROR||getStartingPlace()==Place.ERROR||getBalance()==Balancing.ERROR||
-        getStartingPosition()==Position.ERROR||getSecondPiece()==Piece.ERROR||getSecondPlace()==Place.ERROR))
-        {
+    public void updateAutoReady() {
+        if (!(getMartianRock() || getStartingPiece() == Piece.ERROR || getStartingPlace() == Place.ERROR ||
+                getBalance() == Balancing.ERROR || getStartingPosition() == Position.ERROR
+                || getSecondPiece() == Piece.ERROR ||
+                getSecondPlace() == Place.ERROR)) {
             SmartDashboard.putBoolean("Auto Ready", true);
-        }
-        else 
-        {
+        } else {
             SmartDashboard.putBoolean("Auto Ready", false);
         }
     }

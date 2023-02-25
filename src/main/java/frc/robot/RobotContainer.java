@@ -98,7 +98,6 @@ public class RobotContainer {
     StartingPosition = AutoValues.getStartingPosition();
     Balance = AutoValues.getBalance();
     MartianRock = AutoValues.getMartianRock();
-    AutoValues.updateAutoReady();
     return autoMode.Choice(StartingPiece, FirstPlace, StartingPosition, SecondPiece, SecondPlace, Balance, MartianRock);
   }
 }
