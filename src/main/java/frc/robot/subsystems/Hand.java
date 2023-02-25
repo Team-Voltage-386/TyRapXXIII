@@ -45,7 +45,7 @@ public class Hand extends SubsystemBase {
         return false;
     }
 
-    public void RotateArm()
+    public void RotateHand()
     {
         if (handPosition == 1);
         {
@@ -64,4 +64,6 @@ public class Hand extends SubsystemBase {
             pastHandPosition = handPosition;
         }  
     }
+
+
 }

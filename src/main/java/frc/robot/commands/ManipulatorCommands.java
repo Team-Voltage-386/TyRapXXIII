@@ -53,7 +53,7 @@ public class ManipulatorCommands extends CommandBase {
       }
       else
       {
-        HandControls.RotateArm();
+        HandControls.RotateHand();
       }
     }
     if (kManipulator.getRawButtonPressed(kLeftBumper)) 
@@ -65,7 +65,7 @@ public class ManipulatorCommands extends CommandBase {
       }
       else 
       {
-        HandControls.RotateArm();
+        HandControls.RotateHand();
       }
     }
   }
