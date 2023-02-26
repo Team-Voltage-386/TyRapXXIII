@@ -2,10 +2,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -52,9 +55,9 @@ public class Hand extends SubsystemBase {
     }
 
 
-    public void Positioning()
+    public double getPositioning()
     {
-        System.out.println(HandRotationalMotor.getSelectedSensorPosition());
+        return (HandRotationalMotor.getSelectedSensorPosition());
     }
 
     public static void ChangeMode ()
@@ -132,5 +135,13 @@ public class Hand extends SubsystemBase {
 
     ShuffleboardTab HandTab = Shuffleboard.getTab("Hand Variables");
 
-    private GenericPublisher HandWidget = HandTab.add("ShoulderAngle", 0.0).withPosition(0, 0).withSize(1, 1) .getEntry();
+    private GenericPublisher HandWidget = HandTab.add("Hand Position", 0.0).withPosition(0, 0).withSize(1, 1) .getEntry();
+    private GenericPublisher HandLimitWidget = HandTab.add("Magnetic limit", false).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(0, 1).withSize(1, 1).getEntry();
+
+
+    private void updateWidgets()
+    {
+        HandWidget.setDouble(getPositioning());
+        HandLimitWidget.setBoolean(getHandLimitSwitch());
+    }
 }

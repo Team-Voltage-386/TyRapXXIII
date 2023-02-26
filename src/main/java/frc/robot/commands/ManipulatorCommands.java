@@ -44,7 +44,6 @@ public class ManipulatorCommands extends CommandBase {
     }
 
     //Rotator
-    HandControls.Positioning();
     if (kManipulator.getRawButtonPressed(kRightBumper) && Flags.canRotate) 
     {
       Hand.handPosition ++;
