@@ -56,8 +56,10 @@ public final class Constants {
   }
 
   public static final class HandConstants{
-    public static PersistentShufflableDouble kCubeIntakeSpeed = new PersistentShufflableDouble(0.05, "CubeIntakeSpeed");
-    public static PersistentShufflableDouble kConeIntakeSpeed = new PersistentShufflableDouble(0.04, "ConeIntakeSpeed");
+    // public static PersistentShufflableDouble kCubeIntakeSpeed = new PersistentShufflableDouble(0.0, "CubeIntakeSpeed");
+    // public static PersistentShufflableDouble kConeIntakeSpeed = new PersistentShufflableDouble(0.0, "ConeIntakeSpeed");
+    public static double kConeIntakeSpeed = 0.12;
+    public static double kCubeIntakeSpeed = 0.04;
     public static final int kRightPickupID = 33;
     public static final int kLeftPickupID = 34;
 
