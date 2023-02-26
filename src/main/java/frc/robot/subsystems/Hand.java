@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HandConstants;
-import frc.robot.utils.Flags;
+import static frc.robot.utils.Flags.*;
 
 public class Hand extends SubsystemBase {
     /*handPosition is which of the three possible possitions the hand is in
@@ -47,11 +47,10 @@ public class Hand extends SubsystemBase {
     }
 
     @Override
-    // This method will be called once per scheduler run
-
     public void periodic() 
     {
         updateWidgets();
+        System.out.println(getPositioning());
     }
 
 
@@ -62,11 +61,11 @@ public class Hand extends SubsystemBase {
 
     public static void ChangeMode ()
     {
-        if (Flags.ConeMode)
+        if (ConeMode)
         {
             pcmCompressor.set(Value.kForward);
         }
-        if (!Flags.ConeMode)
+        if (!ConeMode)
         {
             pcmCompressor.set(Value.kReverse);
         }
@@ -121,11 +120,6 @@ public class Hand extends SubsystemBase {
     public boolean getHandLimitSwitch()
     {
         return !HandLimitSwitch.get();
-    }
-
-    public void setRotation(double power)
-    {
-        HandRotationalMotor.set(ControlMode.PercentOutput, power);
     }
 
     public void setLimitClear()
