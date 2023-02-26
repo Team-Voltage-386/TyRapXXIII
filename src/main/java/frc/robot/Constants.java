@@ -103,9 +103,9 @@ public final class Constants {
 
   public static final class ArmConstants {
     public static final PersistentShufflableDouble PSDShoulderMaxPercentage = new PersistentShufflableDouble(.1,
-        "armMaxSpeed", "Arm");
-        public static final PersistentShufflableDouble PSDElbowMaxPercentage = new PersistentShufflableDouble(.1,
-        "armMaxSpeed", "Arm");
+        "ShoulderMaxSpeed", "Arm");
+    public static final PersistentShufflableDouble PSDElbowMaxPercentage = new PersistentShufflableDouble(.1,
+        "ElbowMaxSpeed", "Arm");
     public static final PersistentShufflableDouble armThreshold = new PersistentShufflableDouble(.5, "armThreshhold",
         "Arm");
 
@@ -128,6 +128,8 @@ public final class Constants {
     public static final int kElbowMotorID = 32;
     public static final int kShoulderEncoderPin = 1;
     public static final int kElbowEncoderPin = 0;
+    public static final double kShoulderEncOffset = -141.2;
+    public static final double kElbowEncOffset = 112;
     public static final PersistentShufflableDouble PSDShoulderOffset = new PersistentShufflableDouble(96,
         "shoulderOffset", "Arm"); // degrees offset
     public static final PersistentShufflableDouble PSDElbowOffset = new PersistentShufflableDouble(-124, "elbowOffset",

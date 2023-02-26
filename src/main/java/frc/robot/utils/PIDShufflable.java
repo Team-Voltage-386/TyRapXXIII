@@ -15,7 +15,7 @@ public class PIDShufflable extends PID {
 
     public PIDShufflable(double P, double I, double D, String PIDName) {
         super(P, I, D);
-        super.lastTime = System.currentTimeMillis();
+        lastTime = System.currentTimeMillis();
 
         pidTab = Shuffleboard.getTab("PIDTuning");
         name = PIDName;
@@ -26,7 +26,7 @@ public class PIDShufflable extends PID {
     }
     public PIDShufflable(double P, double I, double D, String PIDName, String TabName){
         super(P, I, D);
-        super.lastTime = System.currentTimeMillis();
+        lastTime = System.currentTimeMillis();
         pidTab = Shuffleboard.getTab(TabName);
         name = PIDName;
         pUpdater = pidTab.addPersistent(PIDName + "_p", p).withPosition(pidObjectCount, 0).withSize(1, 1).getEntry();

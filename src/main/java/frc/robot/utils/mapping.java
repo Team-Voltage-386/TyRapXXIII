@@ -21,10 +21,10 @@ public class mapping {
      * @param angle degree measure from 0 to 360
      * @return degree measure from -180 to 180
      */
-    public static double armAnglesIncludeDepression(double angle){
-        double result=angle;
-        while(result>180){
-            result-=360;
+    public static double armAnglesIncludeDepression(double angle) {
+        double result = angle;
+        if (result > 180) {
+            result -= 360;
         }
         return result;
     }
@@ -40,7 +40,7 @@ public class mapping {
      *         same thing and has the exact same code
      */
     public static double clamp(double input, double min, double max) {
-        return Math.min(Math.max(input, min),max);
+        return Math.min(Math.max(input, min), max);
     }
 
 }

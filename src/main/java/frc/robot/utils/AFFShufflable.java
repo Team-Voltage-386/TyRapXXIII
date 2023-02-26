@@ -50,7 +50,6 @@ public class AFFShufflable extends PIDShufflable {
      */
     public double calc(double pv, double SpatialAngle, double extraload) {
         double result = super.calc(pv) + f * Math.cos(Math.toRadians(SpatialAngle)) + Math.signum(pv) * s + extraload;
-        super.lastPV = pv;
         return result;
     }
 

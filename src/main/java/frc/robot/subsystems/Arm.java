@@ -64,13 +64,9 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder.setDistancePerRotation(kShoulderEncoderConversion);
         ElbowEncoder.setDistancePerRotation(kElbowEncoderConversion);
         ShoulderTarget = -70;
-        ElbowTarget = 110;
+        ElbowTarget = 45;
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
-        ElbowMotor.setIdleMode(IdleMode.kBrake);
-        ShoulderMotor.setIdleMode(IdleMode.kBrake);
-        // ShoulderMotor.setInverted(true);
-        // ElbowMotor.setInverted(true);
 
         ShoulderFeedForward = new AFFShufflable(.0001, 0, 0, 0, 0, "ShoulderPIDF", "ArmFF");
         ElbowFeedForward = new AFFShufflable(.0001, 0, 0, 0, 0, "ElbowPIDF", "ArmFF");
@@ -102,9 +98,11 @@ public class Arm extends SubsystemBase {
      */
     public double[] getLocalArmAngles() {
         double[] result = {
-                armAnglesIncludeDepression(ShoulderEncoder.getDistance()) - PSDShoulderOffset.get(),
-                armAnglesIncludeDepression(ElbowEncoder.getDistance()) - PSDElbowOffset.get() };// update to utilize
-                                                                                                // absolute
+                armAnglesIncludeDepression(ShoulderEncoder.getAbsolutePosition() * 360
+                        - kShoulderEncOffset),
+                armAnglesIncludeDepression(ElbowEncoder.getAbsolutePosition() * 360 - kElbowEncOffset) };// update to
+                                                                                                         // utilize
+        // absolute
         // encoders
         return result;
     }
@@ -249,7 +247,8 @@ public class Arm extends SubsystemBase {
      */
     public void ArmBangBang() {
         ElbowMotor.set(safeZoneDrive(
-                bangbangdrive(ElbowTarget - getLocalArmAngles()[1], PSDElbowMaxPercentage.get()), getLocalArmAngles()[1],
+                bangbangdrive(ElbowTarget - getLocalArmAngles()[1], PSDElbowMaxPercentage.get()),
+                getLocalArmAngles()[1],
                 kElbowSafezone));
         ShoulderMotor.set(
                 safeZoneDrive(bangbangdrive(ShoulderTarget - getLocalArmAngles()[0], PSDShoulderMaxPercentage.get()),
@@ -266,9 +265,11 @@ public class Arm extends SubsystemBase {
      */
     public void JoystickDriveRawArm(double shoulder, double elbow) {
         ShoulderMotor.set(
-                safeZoneDrive(bangbangdrive(shoulder, PSDShoulderMaxPercentage.get()), getLocalArmAngles()[0], kShoulderSafezone));
+                safeZoneDrive(bangbangdrive(shoulder, PSDShoulderMaxPercentage.get()), getLocalArmAngles()[0],
+                        kShoulderSafezone));
         ElbowMotor.set(
-                safeZoneDrive(bangbangdrive(elbow, PSDElbowMaxPercentage.get()), getLocalArmAngles()[1], kElbowSafezone));
+                safeZoneDrive(bangbangdrive(elbow, PSDElbowMaxPercentage.get()), getLocalArmAngles()[1],
+                        kElbowSafezone));
     }
 
     /**
