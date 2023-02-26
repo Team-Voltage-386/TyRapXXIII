@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.apriltag;
 
 
@@ -142,6 +143,19 @@ public final class Constants {
 
     public static double squareOf(double i){
       return Math.pow(i,2);
+    }
+
+    public static final class GripperConstants {
+      public static final int kArmRotationID = 2;
+      public static final int kSolenoidForward = 0;
+      public static final int kSolenoidReverse = 1;
+      public static final int kDoubleSolenoidModule = 0;
+
+      public static final int kRightPickupID = 33;
+      public static final int kLeftPickupID = 34;
+
+      public static PersistentShufflableDouble kConeIntakeSpeed = new PersistentShufflableDouble(0, "Cone Intake Speed");
+      public static PersistentShufflableDouble kConeHoldingSpeed = new PersistentShufflableDouble(0, "Cone Holding Speed");
     }
 
   }

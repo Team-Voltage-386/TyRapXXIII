@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import static frc.robot.Constants.GripperConstants.*;
+
 //Stuff to work on based on mechanical discussion: the gripper should always be closed when in cone mode and 
 //always be open in cube mode. There should be enough power while picking up the cone to force open the gripper. 
 //The encoder used for the gripper rotation will be a hall-effect sensor read off of the PLG motor. Mechanical 
@@ -24,10 +26,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GripperSubsystem extends SubsystemBase {
     // Will need to update with correct constants/CAN IDs
-    private CANSparkMax gripperMotor1 = new CANSparkMax(1, MotorType.kBrushless);
-    private CANSparkMax gripperMotor2 = new CANSparkMax(1, MotorType.kBrushless);
+    private CANSparkMax gripperMotor1 = new CANSparkMax(kRightPickupID, MotorType.kBrushless);
+    private CANSparkMax gripperMotor2 = new CANSparkMax(kLeftPickupID, MotorType.kBrushless);
     private PneumaticsControlModule pcm = new PneumaticsControlModule();
-    private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 3);
+    private DoubleSolenoid doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, kSolenoidForward, kSolenoidReverse);
     private Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
     private double releaseSpeed = 0.05; // wheel speed when releasing a piece
@@ -96,7 +98,7 @@ public class GripperSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic() {
-
+        updateWidgets();
     }
 
     public void updateWidgets() {
