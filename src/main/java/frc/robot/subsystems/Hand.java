@@ -4,8 +4,10 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -35,6 +37,7 @@ public class Hand extends SubsystemBase {
         pcmCompressor = new DoubleSolenoid(HandConstants.kDoubleSolenoidModule, PneumaticsModuleType.CTREPCM, HandConstants.kSolenoidForward, HandConstants.kSolenoidReverse);
         HandRotationalMotor = new TalonSRX(HandConstants.kHandRotator);
         HandLimitSwitch = new DigitalInput(HandConstants.kHandLimitSwitch);
+        HandRotationalMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
         
     }
 
@@ -69,19 +72,34 @@ public class Hand extends SubsystemBase {
         if (handPosition == 1);
         {
             pastHandPosition = handPosition;
-
+            while (!getHandLimitSwitch())
+            {
+                //code to move
+            }
         }
         if (handPosition == 0 && pastHandPosition == 1);
         {
             pastHandPosition = handPosition;
+            while (!getHandLimitSwitch())
+            {
+                //code to move
+            }
         }
         if (handPosition == 0 && pastHandPosition == -1);
         {
             pastHandPosition = handPosition;
+            while (!getHandLimitSwitch())
+            {
+                //code to move
+            }
         }
         if (handPosition == -1);
         {
             pastHandPosition = handPosition;
+            while (!getHandLimitSwitch())
+            {
+                //code to move
+            }
         }  
     }
 
@@ -98,6 +116,6 @@ public class Hand extends SubsystemBase {
 
     public void setLimitClear()
     {
-        getHandLimitSwitch();
+        System.out.println(getHandLimitSwitch());
     }
 }
