@@ -150,21 +150,24 @@ public class Arm extends SubsystemBase {
      * ShoulderTarget which are local targets
      */
     public void ArmDrive() {
+        double elbowErr = ElbowTarget - getLocalArmAngles()[1];
+        if (Math.abs(elbowErr) > 15)
+            ElbowFeedForward.integralAcc = 0;
         ElbowMotor.set(
                 clamp(
                         safeZoneDrive(
-                                ElbowFeedForward.calc(ElbowTarget - getLocalArmAngles()[1],
+                                ElbowFeedForward.calc(elbowErr,
                                         (getLocalArmAngles()[0] + getLocalArmAngles()[1])),
                                 getLocalArmAngles()[1], kElbowSafezone),
-                        -PSDShoulderMaxPercentage.get(), PSDShoulderMaxPercentage.get()));// replace 1.0 with maximum
-                                                                                          // percentage
+                        -PSDElbowMaxPercentage.get(), PSDElbowMaxPercentage.get()));// replace 1.0 with maximum
+                                                                                    // percentage
         ShoulderMotor.set(
                 clampShoulderByLimits(clamp(
                         safeZoneDrive(
                                 ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
                                         (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
                                 getLocalArmAngles()[0], kShoulderSafezone),
-                        -PSDElbowMaxPercentage.get(), PSDElbowMaxPercentage.get())));
+                        -PSDShoulderMaxPercentage.get(), PSDShoulderMaxPercentage.get())));
     }
 
     /** cycle through current sequence of angle targets */
