@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+
+import com.ctre.phoenix.motorcontrol.MotorCommutation;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
@@ -16,12 +21,15 @@ public class Hand extends SubsystemBase {
      *if handPosition = 1 it it rotated to the right */
     public static int handPosition = 0;
     static int pastHandPosition = 0;
-
     static DoubleSolenoid pcmCompressor; 
+    static CANSparkMax RPickup;
+    static CANSparkMax LPickup;
 
     public Hand()
     {
         pcmCompressor = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
+        RPickup = new CANSparkMax(33, MotorType.kBrushless);
+        LPickup = new CANSparkMax(34, MotorType.kBrushless);
     }
 
     public static void ChangeMode ()
@@ -30,9 +38,20 @@ public class Hand extends SubsystemBase {
         {
             pcmCompressor.set(Value.kForward);
         }
-        if (!Flags.ConeMode)
+        else
         {
             pcmCompressor.set(Value.kReverse);
+        }
+    }
+
+    public static void GrabCubeToggle() {
+        if(Flags.CubeisGrabbed) {
+            RPickup.set(0.05);
+            LPickup.set(0.05);
+        }
+        else {
+            RPickup.set(-0.05);
+            LPickup.set(-0.05);
         }
     }
 

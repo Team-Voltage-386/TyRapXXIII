@@ -43,6 +43,12 @@ public class ManipulatorCommands extends CommandBase {
       Hand.ChangeMode();
     }
 
+    //Cube picker-upper
+
+    if(kManipulator.getRawButtonPressed(kY)) {
+      Hand.GrabCubeToggle();
+    }
+
     //Rotator
     if (kManipulator.getRawButtonPressed(kRightBumper)) 
     {
