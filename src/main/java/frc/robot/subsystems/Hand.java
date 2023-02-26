@@ -27,6 +27,10 @@ public class Hand extends SubsystemBase {
     static DoubleSolenoid pcmCompressor; 
     static CANSparkMax RPickup;
     static CANSparkMax LPickup;
+    private static final ShuffleboardTab HandTab = Shuffleboard.getTab("Hand Tab");
+    private static final GenericEntry Mode = HandTab.add("ConeMode", true).getEntry();
+    private static final GenericEntry CurrentR = HandTab.add("CurrentR", 0.0).getEntry();
+    private static final GenericEntry CurrentL = HandTab.add("CurrentL", 0.0).getEntry();
 
     public Hand()
     {
@@ -109,15 +113,14 @@ public class Hand extends SubsystemBase {
         }  
     }
 
-    @Override
-    public void periodic() {
+    public static void updateWidget() {
         Mode.setBoolean(Flags.ConeMode);
-        CurrentR.setDouble(RPickup.getOutputCurrent());
-        CurrentL.setDouble(LPickup.getOutputCurrent());
-    }
+        System.out.println(Flags.ConeMode);
 
-    private static final ShuffleboardTab HandTab = Shuffleboard.getTab("Hand Tab");
-    private static final GenericEntry Mode = HandTab.add("ConeMode", true).getEntry();
-    private static final GenericEntry CurrentR = HandTab.add("CurrentR", 0.0).getEntry();
-    private static final GenericEntry CurrentL = HandTab.add("CurrentL", 0.0).getEntry();
+        CurrentR.setDouble(RPickup.getOutputCurrent());
+        System.out.println(RPickup.getOutputCurrent());
+        
+        CurrentL.setDouble(LPickup.getOutputCurrent());
+        System.out.println(LPickup.getOutputCurrent());
+    }
 }
