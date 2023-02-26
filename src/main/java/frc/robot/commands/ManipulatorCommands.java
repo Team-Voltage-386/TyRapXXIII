@@ -69,6 +69,9 @@ public class ManipulatorCommands extends CommandBase {
         HandControls.RotateHand();
       }
     }
+
+    //Test Motor
+    HandControls.setLimitClear();
   }
 
   // Called once the command ends or is interrupted.

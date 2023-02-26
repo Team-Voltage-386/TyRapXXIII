@@ -8,14 +8,13 @@ import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HandConstants;
 import frc.robot.utils.Flags;
 
 public class Hand extends SubsystemBase {
-    //The talon motor is ID 2
-
     /*handPosition is which of the three possible possitions the hand is in
      *if handPosition = -1 it is rotated to the left
      *if handPosition = 0 it is centered and can be retracted
@@ -23,19 +22,25 @@ public class Hand extends SubsystemBase {
     public static int handPosition = 0;
     static int pastHandPosition = 0;
 
+    //Declaration of motors and pnumatics
     static DoubleSolenoid pcmCompressor; 
-    static TalonSRX RotationalMotor;
+    static TalonSRX HandRotationalMotor;
+
+    //Limit declaration
+    private DigitalInput HandLimitSwitch; // LIMIT READING TRUE MEANS SWTICH NOT HIT
+    public boolean HandHitLimit; // HandHitLimit WILL READ TRUE WHEN IT HITS THE LIMIT
 
     public Hand()
     {
         pcmCompressor = new DoubleSolenoid(HandConstants.kDoubleSolenoidModule, PneumaticsModuleType.CTREPCM, HandConstants.kSolenoidForward, HandConstants.kSolenoidReverse);
-        RotationalMotor = new TalonSRX(HandConstants.kArmRotator);
+        HandRotationalMotor = new TalonSRX(HandConstants.kHandRotator);
+        HandLimitSwitch = new DigitalInput(HandConstants.kHandLimitSwitch);
         
     }
 
     public void Positioning()
     {
-        System.out.println(RotationalMotor.getSelectedSensorPosition());
+        System.out.println(HandRotationalMotor.getSelectedSensorPosition());
     }
 
     public static void ChangeMode ()
@@ -80,5 +85,19 @@ public class Hand extends SubsystemBase {
         }  
     }
 
+    //Returns true when the limit switch hits its limit
+    public boolean getHandLimitSwitch()
+    {
+        return !HandLimitSwitch.get();
+    }
 
+    public void setRotation(double power)
+    {
+        HandRotationalMotor.set(ControlMode.PercentOutput, power);
+    }
+
+    public void setLimitClear()
+    {
+        getHandLimitSwitch();
+    }
 }

@@ -61,7 +61,8 @@ public final class Constants {
     public static final int kSolenoidForward = 0;
     public static final int kSolenoidReverse = 1;
 
-    public static final int kArmRotator = 2;
+    public static final int kHandRotator = 2;
+    public static final int kHandLimitSwitch = 3;
   } 
 
   /** Can IDs, PID values, ect. */
