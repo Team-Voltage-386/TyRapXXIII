@@ -63,7 +63,7 @@ public class Arm extends SubsystemBase {
 
         ShoulderEncoder.setDistancePerRotation(kShoulderEncoderConversion);
         ElbowEncoder.setDistancePerRotation(kElbowEncoderConversion);
-        ShoulderTarget = -70;
+        ShoulderTarget = -90;
         ElbowTarget = 45;
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
@@ -151,8 +151,11 @@ public class Arm extends SubsystemBase {
      */
     public void ArmDrive() {
         double elbowErr = ElbowTarget - getLocalArmAngles()[1];
+        double shouldErr = ShoulderTarget - getLocalArmAngles()[0];
         if (Math.abs(elbowErr) > 15)
             ElbowFeedForward.integralAcc = 0;
+        if (Math.abs(shouldErr) > 15)
+            ShoulderFeedForward.integralAcc = 0;
         ElbowMotor.set(
                 clamp(
                         safeZoneDrive(
@@ -164,7 +167,8 @@ public class Arm extends SubsystemBase {
         ShoulderMotor.set(
                 clampShoulderByLimits(clamp(
                         safeZoneDrive(
-                                ShoulderFeedForward.calc(ShoulderTarget - getLocalArmAngles()[0],
+                                ShoulderFeedForward.calc(
+                                        shouldErr,
                                         (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
                                 getLocalArmAngles()[0], kShoulderSafezone),
                         -PSDShoulderMaxPercentage.get(), PSDShoulderMaxPercentage.get())));
@@ -231,8 +235,8 @@ public class Arm extends SubsystemBase {
      * @return if both arm angles are at target values
      */
     public boolean atTargets() {
-        return Math.abs(getLocalArmAngles()[0] - ShoulderTarget) < armThreshold.get()
-                && Math.abs(getLocalArmAngles()[1] - ElbowTarget) < armThreshold.get();
+        return Math.abs(getLocalArmAngles()[0] - ShoulderTarget) < kArmTolerance
+                && Math.abs(getLocalArmAngles()[1] - ElbowTarget) < kArmTolerance;
     }
 
     /**
@@ -437,8 +441,8 @@ public class Arm extends SubsystemBase {
             ElbowFeedForward.shuffleUpdatePID();
         if (ShoulderFeedForward.detectChange())
             ShoulderFeedForward.shuffleUpdatePID();
-        if (armThreshold.detectChanges())
-            armThreshold.subscribeAndSet();
+        if (PSDArmTolerace.detectChanges())
+            PSDArmTolerace.subscribeAndSet();
         if (PSDElbowOffset.detectChanges())
             PSDElbowOffset.subscribeAndSet();
         if (PSDShoulderOffset.detectChanges())

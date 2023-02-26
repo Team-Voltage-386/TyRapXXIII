@@ -106,9 +106,9 @@ public final class Constants {
         "ShoulderMaxSpeed", "Arm");
     public static final PersistentShufflableDouble PSDElbowMaxPercentage = new PersistentShufflableDouble(.1,
         "ElbowMaxSpeed", "Arm");
-    public static final PersistentShufflableDouble armThreshold = new PersistentShufflableDouble(.5, "armThreshhold",
+    public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5, "armThreshhold",
         "Arm");
-
+    public static final double kArmTolerance =1;
     public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
     public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
