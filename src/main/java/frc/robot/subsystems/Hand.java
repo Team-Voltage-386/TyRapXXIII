@@ -50,7 +50,6 @@ public class Hand extends SubsystemBase {
     public void periodic() 
     {
         updateWidgets();
-        System.out.println(getPositioning());
     }
 
 
@@ -88,6 +87,10 @@ public class Hand extends SubsystemBase {
             while (!getHandLimitSwitch())
             {
                 //code to move
+                while (getPositioning()<80)
+                {
+                    HandRotationalMotor.set(ControlMode.PercentOutput, 0.5);
+                }
             }
         }
         if (handPosition == 0 && pastHandPosition == 1);
@@ -96,6 +99,10 @@ public class Hand extends SubsystemBase {
             while (!getHandLimitSwitch())
             {
                 //code to move
+                while (getPositioning()>5)
+                {
+                    HandRotationalMotor.set(ControlMode.PercentOutput, -0.5);
+                }
             }
         }
         if (handPosition == 0 && pastHandPosition == -1);
@@ -104,6 +111,10 @@ public class Hand extends SubsystemBase {
             while (!getHandLimitSwitch())
             {
                 //code to move
+                while (getPositioning()<5)
+                {
+                    HandRotationalMotor.set(ControlMode.PercentOutput, 0.5);
+                }
             }
         }
         if (handPosition == -1);
@@ -112,6 +123,10 @@ public class Hand extends SubsystemBase {
             while (!getHandLimitSwitch())
             {
                 //code to move
+                while (getPositioning()>-80)
+                {
+                    HandRotationalMotor.set(ControlMode.PercentOutput, -0.5);
+                }
             }
         }  
     }
