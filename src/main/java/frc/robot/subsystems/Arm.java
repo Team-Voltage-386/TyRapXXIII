@@ -63,8 +63,8 @@ public class Arm extends SubsystemBase {
 
         ShoulderEncoder.setDistancePerRotation(kShoulderEncoderConversion);
         ElbowEncoder.setDistancePerRotation(kElbowEncoderConversion);
-        ShoulderTarget = -90;
-        ElbowTarget = 45;
+        ShoulderTarget = 0;
+        ElbowTarget = 0;
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
