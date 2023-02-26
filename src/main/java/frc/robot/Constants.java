@@ -55,6 +55,15 @@ public final class Constants {
     public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
   }
 
+  public static final class HandConstants
+  {
+    public static final int kDoubleSolenoidModule = 0;
+    public static final int kSolenoidForward = 0;
+    public static final int kSolenoidReverse = 1;
+
+    public static final int kArmRotator = 2;
+  } 
+
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
