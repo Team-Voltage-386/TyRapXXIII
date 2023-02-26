@@ -27,9 +27,10 @@ public class Hand extends SubsystemBase {
 
     public Hand()
     {
-        pcmCompressor = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
-        RPickup = new CANSparkMax(33, MotorType.kBrushless);
-        LPickup = new CANSparkMax(34, MotorType.kBrushless);
+        pcmCompressor = new DoubleSolenoid(HandConstants.kDoubleSolenoidModule, PneumaticsModuleType.CTREPCM, HandConstants.kSolenoidForward, HandConstants.kSolenoidReverse);
+        RPickup = new CANSparkMax(HandConstants.kRightPickupID, MotorType.kBrushless);
+        LPickup = new CANSparkMax(HandConstants.kLeftPickupID, MotorType.kBrushless);
+        Flags.IntakeDirection = false;
     }
 
     public static void ChangeMode ()
@@ -44,12 +45,12 @@ public class Hand extends SubsystemBase {
         }
     }
 
-    public static void GrabCubeToggle() {
-        if(Flags.CubeisGrabbed) {
+    public static void IntakeMotorControl(boolean intake) {
+        if(intake) {
             RPickup.set(0.05);
             LPickup.set(0.05);
         }
-        else {
+        if(!intake) {
             RPickup.set(-0.05);
             LPickup.set(-0.05);
         }

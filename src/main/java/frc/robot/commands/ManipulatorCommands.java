@@ -46,7 +46,10 @@ public class ManipulatorCommands extends CommandBase {
     //Cube picker-upper
 
     if(kManipulator.getRawButtonPressed(kY)) {
-      Hand.GrabCubeToggle();
+      Hand.IntakeMotorControl(true);
+    }
+    if(kManipulator.getRawButtonPressed(kA)) {
+      Hand.IntakeMotorControl(false);
     }
 
     //Rotator

@@ -55,6 +55,17 @@ public final class Constants {
     public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
   }
 
+  public static final class HandConstants{
+    public static PersistentShufflableDouble kCubeIntakeSpeed = new PersistentShufflableDouble(0.05, "CubeIntakeSpeed");
+    public static PersistentShufflableDouble kConeIntakeSpeed = new PersistentShufflableDouble(0.04, "ConeIntakeSpeed");
+    public static final int kRightPickupID = 33;
+    public static final int kLeftPickupID = 34;
+
+    public static final int kDoubleSolenoidModule = 0;
+    public static final int kSolenoidForward = 0;
+    public static final int kSolenoidReverse = 1;
+  }
+
   /** Can IDs, PID values, ect. */
   public static final class DriveConstants {
 
@@ -100,5 +111,4 @@ public final class Constants {
         "rotateAccelSmooth");
 
   }
-
 }
