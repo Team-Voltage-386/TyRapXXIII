@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.AFFShufflable;
+import frc.robot.utils.PersistentShufflableDouble;
 
 import static frc.robot.Constants.ArmConstants.*;
 
@@ -21,6 +22,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import static frc.robot.utils.mapping.*;
 
+import java.beans.PersistenceDelegate;
 import java.util.Map;
 
 public class Arm extends SubsystemBase {
@@ -43,6 +45,8 @@ public class Arm extends SubsystemBase {
     public double[][] fkCoords;
     public int keyPointIndex,sequenceIndex;
 
+    public PersistentShufflableDouble PSDInitialShoulderTarget, PSDInitialElbowTarget;
+
     /** Creates a new Arm. */
     public Arm() {
         // ShoulderMotor = new TalonSRX(kShoulderMotorID);
@@ -63,8 +67,11 @@ public class Arm extends SubsystemBase {
 
         ShoulderEncoder.setDistancePerRotation(kShoulderEncoderConversion);
         ElbowEncoder.setDistancePerRotation(kElbowEncoderConversion);
-        ShoulderTarget = 0;
-        ElbowTarget = 0;
+        PSDInitialShoulderTarget = new PersistentShufflableDouble(0, "shoulderTargPSD","Arm");
+        PSDInitialElbowTarget = new PersistentShufflableDouble(0, "ElbowTargPSD","Arm");
+        updateShufflables();
+        ShoulderTarget = PSDInitialShoulderTarget.get();
+        ElbowTarget = PSDInitialElbowTarget.get();
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
@@ -448,6 +455,8 @@ public class Arm extends SubsystemBase {
             PSDShoulderMaxPercentage.subscribeAndSet();
         if (PSDElbowMaxPercentage.detectChanges())
             PSDElbowMaxPercentage.subscribeAndSet();
+        if(PSDInitialElbowTarget.detectChanges()) PSDInitialElbowTarget.subscribeAndSet();
+        if(PSDInitialShoulderTarget.detectChanges()) PSDInitialShoulderTarget.subscribeAndSet();
     }
 
 }

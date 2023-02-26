@@ -112,8 +112,8 @@ public final class Constants {
     public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
     public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-    public static final double[] kShoulderSafezone = { -150, 0 };// lower limit is index 0, upper limit is index 1
-    public static final double[] kElbowSafezone = { 0, 90 };// lowe limit is index 0, upper limit is index 1
+    public static final double[] kShoulderSafezone = { -120, 20 };// lower limit is index 0, upper limit is index 1
+    public static final double[] kElbowSafezone = { -10, 120 };// lowe limit is index 0, upper limit is index 1
     public static final double kArmMotorDeadband = .1;
     public static final double kShoulderLength = 0.762;// meters //30 in
     // notes: the origin point is 48 inches off the ground
