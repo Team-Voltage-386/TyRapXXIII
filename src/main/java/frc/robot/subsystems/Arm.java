@@ -38,10 +38,10 @@ public class Arm extends SubsystemBase {
     private CANSparkMax ElbowMotor; // change to cansparkmax
     private DutyCycleEncoder ElbowEncoder; // change to absolute encoder
     // change angle offsets and arm segment lengths in constants
-
+    public double[][] keyPointSequence;
     public double[][] targetSequence;
     public double[][] fkCoords;
-    public int sequenceIndex;
+    public int keyPointIndex,sequenceIndex;
 
     /** Creates a new Arm. */
     public Arm() {
@@ -100,10 +100,7 @@ public class Arm extends SubsystemBase {
         double[] result = {
                 armAnglesIncludeDepression(ShoulderEncoder.getAbsolutePosition() * 360
                         - kShoulderEncOffset),
-                armAnglesIncludeDepression(ElbowEncoder.getAbsolutePosition() * 360 - kElbowEncOffset) };// update to
-                                                                                                         // utilize
-        // absolute
-        // encoders
+                armAnglesIncludeDepression(ElbowEncoder.getAbsolutePosition() * 360 - kElbowEncOffset) };
         return result;
     }
 
