@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -10,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,6 +42,15 @@ public class Hand extends SubsystemBase {
         HandRotationalMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
         
     }
+
+    @Override
+    // This method will be called once per scheduler run
+
+    public void periodic() 
+    {
+        updateWidgets();
+    }
+
 
     public void Positioning()
     {
@@ -118,4 +129,8 @@ public class Hand extends SubsystemBase {
     {
         System.out.println(getHandLimitSwitch());
     }
+
+    ShuffleboardTab HandTab = Shuffleboard.getTab("Hand Variables");
+
+    private GenericPublisher HandWidget = HandTab.add("ShoulderAngle", 0.0).withPosition(0, 0).withSize(1, 1) .getEntry();
 }
