@@ -27,8 +27,8 @@ public class Hand extends SubsystemBase {
      *if handPosition = 0 it is centered and can be retracted
      *if handPosition = 1 it it rotated clockwise */
     
-     public static int handPosition = 0;
-     static int pastHandPosition = 0;
+    int handPosition;
+    int pastHandPosition;
 
     //Declaration of motors and pnumatics
     static DoubleSolenoid pcmCompressor; 
@@ -44,6 +44,8 @@ public class Hand extends SubsystemBase {
         HandRotationalMotor = new TalonSRX(kHandRotator);
         HandLimitSwitch = new DigitalInput(kHandLimitSwitch);
         HandRotationalMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+        pastHandPosition = 0;
+        handPosition = 0;
         
     }
 
@@ -71,7 +73,7 @@ public class Hand extends SubsystemBase {
         }
     }
 
-    public static boolean canRetract()
+    public boolean canRetract()
     {
         if (handPosition==0)
         {
@@ -80,57 +82,79 @@ public class Hand extends SubsystemBase {
         return false;
     }
 
-    public void RotateHand()
+    public void RotateHand(boolean isRightBumper)
     {
         System.out.println("Rotate Hand ran");
-        if (handPosition == 1);
+        if (isRightBumper)
         {
-            pastHandPosition = handPosition;
-            while (!getHandLimitSwitch())
+            handPosition ++;
+        }
+        else
+        {
+            handPosition--;
+        }
+        if (handPosition>1 || handPosition<-1)
+        {
+            if (handPosition > 1)
             {
-                //code to move
-                while (getPositioning()<80)
-                {
-                    HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-                }
+                handPosition = 1;
+            }
+            if (handPosition < -1)
+            {
+                handPosition = -1;
             }
         }
-        if (handPosition == 0 && pastHandPosition == 1);
+        else
         {
-            pastHandPosition = handPosition;
-            while (!getHandLimitSwitch())
+            if (handPosition == 1);
             {
-                //code to move
-                while (getPositioning()>5)
+                pastHandPosition = handPosition;
+                while (!getHandLimitSwitch())
                 {
-                    HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+                    //code to move
+                    while (getPositioning()<80)
+                    {
+                        HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+                    }
                 }
             }
+            if (handPosition == 0 && pastHandPosition == 1);
+            {
+                pastHandPosition = handPosition;
+                while (!getHandLimitSwitch())
+                {
+                    //code to move
+                    while (getPositioning()>5)
+                    {
+                        HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+                    }
+                }
+            }
+            if (handPosition == 0 && pastHandPosition == -1);
+            {
+                pastHandPosition = handPosition;
+                while (!getHandLimitSwitch())
+                {
+                    //code to move
+                    while (getPositioning()<5)
+                    {
+                        HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+                    }
+                }
+            }
+            if (handPosition == -1);
+            {
+                pastHandPosition = handPosition;
+                while (!getHandLimitSwitch())
+                {
+                    //code to move
+                    while (getPositioning()>-80)
+                    {
+                        HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+                    }
+                }
+            }  
         }
-        if (handPosition == 0 && pastHandPosition == -1);
-        {
-            pastHandPosition = handPosition;
-            while (!getHandLimitSwitch())
-            {
-                //code to move
-                while (getPositioning()<5)
-                {
-                    HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-                }
-            }
-        }
-        if (handPosition == -1);
-        {
-            pastHandPosition = handPosition;
-            while (!getHandLimitSwitch())
-            {
-                //code to move
-                while (getPositioning()>-80)
-                {
-                    HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-                }
-            }
-        }  
     }
 
     //Returns true when the limit switch hits its limit
@@ -141,7 +165,7 @@ public class Hand extends SubsystemBase {
 
     public void setLimitClear()
     {
-        System.out.println(getHandLimitSwitch());
+        
     }
 
     ShuffleboardTab HandTab = Shuffleboard.getTab("Hand Variables");

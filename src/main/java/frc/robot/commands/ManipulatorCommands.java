@@ -46,27 +46,11 @@ public class ManipulatorCommands extends CommandBase {
     //Rotator
     if (kManipulator.getRawButtonPressed(kRightBumper) && Flags.canRotate) 
     {
-      Hand.handPosition ++;
-      if (Hand.handPosition > 1)
-      {
-        Hand.handPosition = 1;
-      }
-      else
-      {
-        HandControls.RotateHand();
-      }
+      HandControls.RotateHand(true);
     }
     if (kManipulator.getRawButtonPressed(kLeftBumper) && Flags.canRotate) 
     {
-      Hand.handPosition --;
-      if (Hand.handPosition < -1)
-      {
-        Hand.handPosition = -1;
-      }
-      else 
-      {
-        HandControls.RotateHand();
-      }
+      HandControls.RotateHand(false);
     }
 
     //Test Motor
