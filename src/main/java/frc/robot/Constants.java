@@ -63,6 +63,8 @@ public final class Constants {
 
     public static final int kHandRotator = 2;
     public static final int kHandLimitSwitch = 3;
+    
+    public static final double kRotationSpeed = 0.1;
   } 
 
   /** Can IDs, PID values, ect. */
