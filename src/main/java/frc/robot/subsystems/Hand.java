@@ -39,21 +39,25 @@ public class Hand extends SubsystemBase {
         LPickup = new CANSparkMax(HandConstants.kLeftPickupID, MotorType.kBrushless);
         Flags.IntakeDirection = false;
         Flags.ConeMode = true;
-        // RPickup.setSmartCurrentLimit(1,2);
-        // LPickup.setSmartCurrentLimit(1,2);
+        
     }
 
     public static void ChangeMode ()
     {
-        if (Flags.ConeMode)
+        if (!Flags.ConeMode)
         {
+            RPickup.setSmartCurrentLimit(35,15);
+            LPickup.setSmartCurrentLimit(35,15);
             pcmCompressor.set(Value.kForward);
             RPickup.set(kConeIntakeSpeed);
             LPickup.set(kConeIntakeSpeed);
             Flags.ConeMode = false;
+            
         }
         else
         {
+            RPickup.setSmartCurrentLimit(5,10);
+            LPickup.setSmartCurrentLimit(5,10);
             pcmCompressor.set(Value.kReverse);
             RPickup.set(kCubeIntakeSpeed);
             LPickup.set(kCubeIntakeSpeed);
