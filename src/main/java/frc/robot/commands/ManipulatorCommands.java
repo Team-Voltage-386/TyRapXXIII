@@ -25,45 +25,40 @@ public class ManipulatorCommands extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Hand.updateWidget();
-    //Mode switcher
-    if (kManipulator.getRawButtonPressed(kLeftOptions)) 
-    {
+    // Mode switcher
+    if (kManipulator.getRawButtonPressed(kLeftOptions)) {
       Flags.ConeMode = false;
       Hand.ChangeMode();
     }
-    if (kManipulator.getRawButtonPressed(kRightOptions)) 
-    {
+    if (kManipulator.getRawButtonPressed(kRightOptions)) {
       Flags.ConeMode = true;
       Hand.ChangeMode();
     }
 
-    //Cube picker-upper
+    // Cube picker-upper
 
-    if(kManipulator.getRawButtonPressed(kY)) {
+    if (kManipulator.getRawButtonPressed(kY)) {
       Hand.IntakeMotorControl(true);
     }
-    if(kManipulator.getRawButtonPressed(kA)) {
+    if (kManipulator.getRawButtonPressed(kA)) {
       Hand.IntakeMotorControl(false);
     }
 
-    //Rotator
-    if (kManipulator.getRawButtonPressed(kRightBumper) && Flags.canRotate) 
-    {
+    // Rotator
+    if (kManipulator.getRawButtonPressed(kRightBumper) && Flags.canRotate) {
       HandControls.RotateHand(true);
     }
-    if (kManipulator.getRawButtonPressed(kLeftBumper) && Flags.canRotate) 
-    {
+    if (kManipulator.getRawButtonPressed(kLeftBumper) && Flags.canRotate) {
       HandControls.RotateHand(false);
     }
 
-    //Test Motor
+    // Test Motor
     HandControls.setLimitClear();
   }
 
