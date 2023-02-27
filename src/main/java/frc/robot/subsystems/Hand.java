@@ -30,6 +30,7 @@ public class Hand extends SubsystemBase {
     int handPosition;
     int pastHandPosition;
 
+    boolean handTurningClockwise;
     double targHandPos = 0;
 
     //Declaration of motors and pnumatics
@@ -87,26 +88,25 @@ public class Hand extends SubsystemBase {
 
     private void setHandMotor() {
         pastHandPosition = handPosition;
-        if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 80) 
+        if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) 
         {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
         } 
-        else if (handPosition == 0 && pastHandPosition == 1 && !getHandLimitSwitch() && getPositioning() > 5) 
-        {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        }
-        else if (handPosition == 0 && pastHandPosition == -1 && !getHandLimitSwitch() && getPositioning() < -5) 
+        else if (handPosition == 0 && handTurningClockwise && !getHandLimitSwitch() && getPositioning() > 0) 
         {
             HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
         }
-        else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -80) 
+        else if (handPosition == 0 && !handTurningClockwise && !getHandLimitSwitch() && getPositioning() < 0) 
         {
             HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+        }
+        else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) 
+        {
+            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
         }
         else 
         {
             HandRotationalMotor.set(ControlMode.PercentOutput, 0);
-            pastHandPosition=handPosition;
         }
     }
 
@@ -116,10 +116,12 @@ public class Hand extends SubsystemBase {
         if (isRightBumper)
         {
             handPosition ++;
+            handTurningClockwise=false;
         }
         else
         {
             handPosition--;
+            handTurningClockwise=true;
         }
         if (handPosition>1 || handPosition<-1)
         {
@@ -150,11 +152,13 @@ public class Hand extends SubsystemBase {
     private GenericPublisher HandWidget = HandTab.add("Hand Position", 0.0).withPosition(0, 0).withSize(1, 1) .getEntry();
     private GenericPublisher HandLimitWidget = HandTab.add("Magnetic limit", false).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(0, 1).withSize(1, 1).getEntry();
     private GenericPublisher HandRotateWidget = HandTab.add("Hand Mode", -11).withPosition(0, 2).withSize(1, 1) .getEntry();
+    private GenericPublisher HandRotatedWidget = HandTab.add("Past Hand Mode", -11).withPosition(0, 3).withSize(1, 1) .getEntry();
 
     private void updateWidgets()
     {
         HandWidget.setDouble(getPositioning());
         HandLimitWidget.setBoolean(getHandLimitSwitch());
         HandRotateWidget.setInteger(handPosition);
+        HandRotatedWidget.setInteger(pastHandPosition);
     }
 }
