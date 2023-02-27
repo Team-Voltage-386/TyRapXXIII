@@ -6,8 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.utils.ArmKeyframe;
 import frc.robot.utils.PIDShufflable;
 import frc.robot.utils.PersistentShufflableDouble;
+import frc.robot.utils.ArmKeyframe.flaggingStates;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -106,9 +108,11 @@ public final class Constants {
         "ShoulderMaxSpeed", "Arm");
     public static final PersistentShufflableDouble PSDElbowMaxPercentage = new PersistentShufflableDouble(.1,
         "ElbowMaxSpeed", "Arm");
+        public static final PersistentShufflableDouble PSDStowPressVelocity = new PersistentShufflableDouble(-.05,
+        "StowVelocity", "Arm");
     public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5, "armThreshhold",
         "Arm");
-    public static final double kArmTolerance =1;
+    public static final double kArmTolerance = 1;
     public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
     public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
@@ -143,7 +147,38 @@ public final class Constants {
     }
 
     public static final class ArmSequences {
+      public static final double[] anglesStowed = { -115.2, 100 };
+      public static final double[] anglesIntermediary = { -115, 120 };
+      public static final double[] anglesPickupGround = { -84, 62.5 };
+      public static final double[] anglesConeMid = { -46, 88.5 };
+      public static final double[] anglesConeHigh = { 12, -8.5 };
+      public static final double[] anglesIntermidiary2 = { -54.5, 115 };
+      public static final double[] anglesCubeMid = { -76, 108.5 };
+      public static final double[] anglesCubeHigh = { -30.2, 53 };
 
+      public static final ArmKeyframe akfStowed = new ArmKeyframe(anglesStowed, flaggingStates.stowed);
+      public static final ArmKeyframe akfIntermediary = new ArmKeyframe(anglesIntermediary, null);
+      public static final ArmKeyframe akfPickupGround = new ArmKeyframe(anglesPickupGround, flaggingStates.pickup);
+      public static final ArmKeyframe akfConeMid = new ArmKeyframe(anglesConeMid, flaggingStates.score);
+      public static final ArmKeyframe akfConeHigh = new ArmKeyframe(anglesConeHigh, flaggingStates.score);
+      public static final ArmKeyframe akfIntermediary2 = new ArmKeyframe(anglesIntermidiary2, null);
+      public static final ArmKeyframe akfCubeMid = new ArmKeyframe(anglesCubeMid, flaggingStates.score);
+      public static final ArmKeyframe akfCubeHigh = new ArmKeyframe(anglesCubeHigh, flaggingStates.score);
+
+      // sequences
+      public static final ArmKeyframe[] goToStow = { akfIntermediary2, akfIntermediary, akfStowed };
+
+      /**
+       * 
+       * @param akf that is NOT intermediary nor stow
+       * @return
+       */
+      public static final ArmKeyframe[] fromStowGoTo(ArmKeyframe akf) {
+        return new ArmKeyframe[] { akfIntermediary, akfIntermediary2, akf };
+      }
+      public static final ArmKeyframe[] goToIntermediary2then(ArmKeyframe akf){
+        return new ArmKeyframe[] {akfIntermediary2, akf };
+      }
     }
   }
 }

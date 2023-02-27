@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.AFFShufflable;
 import frc.robot.utils.PersistentShufflableDouble;
+import frc.robot.utils.ArmKeyframe.flaggingStates;
+import frc.robot.utils.ArmKeyframe;
+import static frc.robot.utils.Flags.*;
 
 import static frc.robot.Constants.ArmConstants.*;
 
@@ -22,10 +25,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import static frc.robot.utils.mapping.*;
 
-import java.beans.PersistenceDelegate;
 import java.util.Map;
 
 public class Arm extends SubsystemBase {
+
     public AFFShufflable ShoulderFeedForward;
     public AFFShufflable ElbowFeedForward;
     public double ShoulderTarget;
@@ -40,10 +43,11 @@ public class Arm extends SubsystemBase {
     private CANSparkMax ElbowMotor; // change to cansparkmax
     private DutyCycleEncoder ElbowEncoder; // change to absolute encoder
     // change angle offsets and arm segment lengths in constants
-    public double[][] keyPointSequence;
-    public double[][] targetSequence;
+    public ArmKeyframe[] keyPointSequence;
+    public ArmKeyframe[] targetSequence;
+    public ArmKeyframe lastKeyframe;
     public double[][] fkCoords;
-    public int keyPointIndex,sequenceIndex;
+    public int keyPointIndex, sequenceIndex;
 
     public PersistentShufflableDouble PSDInitialShoulderTarget, PSDInitialElbowTarget;
 
@@ -67,11 +71,8 @@ public class Arm extends SubsystemBase {
 
         ShoulderEncoder.setDistancePerRotation(kShoulderEncoderConversion);
         ElbowEncoder.setDistancePerRotation(kElbowEncoderConversion);
-        PSDInitialShoulderTarget = new PersistentShufflableDouble(0, "shoulderTargPSD","Arm");
-        PSDInitialElbowTarget = new PersistentShufflableDouble(0, "ElbowTargPSD","Arm");
-        updateShufflables();
-        ShoulderTarget = PSDInitialShoulderTarget.get();
-        ElbowTarget = PSDInitialElbowTarget.get();
+        PSDInitialShoulderTarget = new PersistentShufflableDouble(0, "shoulderTargPSD", "Arm");
+        PSDInitialElbowTarget = new PersistentShufflableDouble(0, "ElbowTargPSD", "Arm");
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
@@ -81,6 +82,9 @@ public class Arm extends SubsystemBase {
         targetSequence = null;
         sequenceIndex = 0;
         updateShufflables();
+        ShoulderTarget = PSDInitialShoulderTarget.get();
+        ElbowTarget = PSDInitialElbowTarget.get();
+        lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, flaggingStates.stowed);
     }
 
     @Override
@@ -88,6 +92,7 @@ public class Arm extends SubsystemBase {
 
     public void periodic() {
         limitLogic();
+        feedFlags();
         fkCoords = forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths);
         executeSequence();
         // add a filter of target angles here
@@ -160,20 +165,27 @@ public class Arm extends SubsystemBase {
             ElbowFeedForward.integralAcc = 0;
         if (Math.abs(shouldErr) > 15)
             ShoulderFeedForward.integralAcc = 0;
-        ElbowMotor.set(
-                clamp(
-                        safeZoneDrive(
-                                ElbowFeedForward.calc(elbowErr,
-                                        (getLocalArmAngles()[0] + getLocalArmAngles()[1])),
-                                getLocalArmAngles()[1], kElbowSafezone),
-                        -PSDElbowMaxPercentage.get(), PSDElbowMaxPercentage.get()));// replace 1.0 with maximum
-                                                                                    // percentage
+        switch (lastKeyframe.keyFrameState) {
+            case stowed:
+                ElbowMotor.set(PSDStowPressVelocity.get());
+                break;
+            default:
+                ElbowMotor.set(
+                        clamp(
+                                safeZoneDrive(
+                                        ElbowFeedForward.calc(elbowErr,
+                                                (getSpatialArmAngles(getLocalArmAngles())[1])),
+                                        getLocalArmAngles()[1], kElbowSafezone),
+                                -PSDElbowMaxPercentage.get(), PSDElbowMaxPercentage.get()));
+                break;
+        }
+
         ShoulderMotor.set(
                 clampShoulderByLimits(clamp(
                         safeZoneDrive(
                                 ShoulderFeedForward.calc(
                                         shouldErr,
-                                        (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()),
+                                        (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()), // 0 is a constant
                                 getLocalArmAngles()[0], kShoulderSafezone),
                         -PSDShoulderMaxPercentage.get(), PSDShoulderMaxPercentage.get())));
     }
@@ -189,8 +201,23 @@ public class Arm extends SubsystemBase {
             if (atTargets()) {
                 sequenceIndex++;
             }
-            ShoulderTarget = targetSequence[sequenceIndex][0];
-            ElbowTarget = targetSequence[sequenceIndex][1];
+            lastKeyframe = targetSequence[sequenceIndex];
+            ShoulderTarget = targetSequence[sequenceIndex].getKeyFrameAngles()[0];
+            ElbowTarget = targetSequence[sequenceIndex].getKeyFrameAngles()[1];
+        }
+    }
+
+    public void feedFlags() {
+        switch (lastKeyframe.keyFrameState) {
+            case stowed:
+                canRotate = false;
+                break;
+            case score:
+                canRotate = true;
+                break;
+            case pickup:
+                canRotate = true;
+                break;
         }
     }
 
@@ -247,7 +274,7 @@ public class Arm extends SubsystemBase {
      * setter method for arm angle target sequence, each array of double[] within
      * double[][] is a pair of arm angle targets 0=shoulder 1=elbow
      */
-    public void setSequence(double[][] TargetSequence) {
+    public void setSequence(ArmKeyframe[] TargetSequence) {
         targetSequence = TargetSequence;
     }
 
@@ -455,8 +482,12 @@ public class Arm extends SubsystemBase {
             PSDShoulderMaxPercentage.subscribeAndSet();
         if (PSDElbowMaxPercentage.detectChanges())
             PSDElbowMaxPercentage.subscribeAndSet();
-        if(PSDInitialElbowTarget.detectChanges()) PSDInitialElbowTarget.subscribeAndSet();
-        if(PSDInitialShoulderTarget.detectChanges()) PSDInitialShoulderTarget.subscribeAndSet();
+        if (PSDInitialElbowTarget.detectChanges())
+            PSDInitialElbowTarget.subscribeAndSet();
+        if (PSDInitialShoulderTarget.detectChanges())
+            PSDInitialShoulderTarget.subscribeAndSet();
+        if (PSDStowPressVelocity.detectChanges())
+            PSDStowPressVelocity.subscribeAndSet();
     }
 
 }

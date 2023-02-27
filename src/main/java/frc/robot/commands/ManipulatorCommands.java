@@ -6,8 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.utils.ArmKeyframe;
+
 import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.utils.Flags.*;
+import static frc.robot.Constants.ArmConstants.ArmSequences.*;
+
 public class ManipulatorCommands extends CommandBase {
   private Arm m_arm;
 
@@ -20,6 +24,7 @@ public class ManipulatorCommands extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    scoreHigh = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,29 +41,57 @@ public class ManipulatorCommands extends CommandBase {
     }
 
     // Cube picker-upper
-
+    //pickup
     if (kManipulator.getRawButtonPressed(kY)) {
       // Hand.IntakeMotorControl(true);
+      m_arm.setSequence(fromStowGoTo(akfPickupGround));
     }
+    //score
     if (kManipulator.getRawButtonPressed(kA)) {
+      ArmKeyframe end;
       // Hand.IntakeMotorControl(false);
+      if (ConeMode) {
+        if (scoreHigh) {
+          end=akfConeHigh;
+        } else{
+          end=akfConeMid;
+        }
+      } else {
+        if (scoreHigh) {
+          end=akfCubeHigh;
+        } else {
+          end=akfCubeMid;
+        }
+      }
+
+      switch (m_arm.lastKeyframe.keyFrameState) {
+        case stowed:
+          m_arm.setSequence(fromStowGoTo(end));
+          break;
+        default:
+          goToIntermediary2then(end);
+          break;
+      }
+    }
+    if(kManipulator.getRawButton(kB)){
+      m_arm.setSequence(goToStow);
     }
 
     // Rotator
     if (kManipulator.getRawButtonPressed(kRightBumper)) {
       // Hand.handPosition++;
       // if (Hand.handPosition > 1) {
-      //   Hand.handPosition = 1;
+      // Hand.handPosition = 1;
       // } else {
-      //   HandControls.RotateHand();
+      // HandControls.RotateHand();
       // }
     }
     if (kManipulator.getRawButtonPressed(kLeftBumper)) {
       // Hand.handPosition--;
       // if (Hand.handPosition < -1) {
-      //   Hand.handPosition = -1;
+      // Hand.handPosition = -1;
       // } else {
-      //   HandControls.RotateHand();
+      // HandControls.RotateHand();
       // }
     }
   }
