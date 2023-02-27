@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
-import frc.robot.utils.PIDShufflable;
 import frc.robot.utils.PersistentShufflableDouble;
 
 /**
@@ -25,7 +24,7 @@ public final class Constants {
   /** the indexes to address buttons on the controller */
   public static final class ControllerConstants {
     public static final Joystick kDriver = new Joystick(0);
-    // public static final Joystick kManipulator = new Joystick(1);
+    public static final Joystick kManipulator = new Joystick(1);
 
     public static final int kLeftVertical = 1;
     public static final int kRightVertical = 5;
@@ -53,6 +52,22 @@ public final class Constants {
 
     public static final double[] kAutoPositionPID = { 1, 2.5, 0.2 };
     public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
+  }
+
+  public static final class HandConstants {
+    public static final int kDoubleSolenoidModule = 0;
+    public static final int kSolenoidForward = 0;
+    public static final int kSolenoidReverse = 1;
+
+    public static final int kHandRotator = 2;
+    public static final int kHandLimitSwitch = 3;
+
+    public static final double kRotationSpeed = 0.3;
+
+    public static double kConeIntakeSpeed = 0.12;
+    public static double kCubeIntakeSpeed = 0.04;
+    public static final int kRightPickupID = 33;
+    public static final int kLeftPickupID = 34;
   }
 
   /** Can IDs, PID values, ect. */
@@ -100,5 +115,4 @@ public final class Constants {
         "rotateAccelSmooth");
 
   }
-
 }
