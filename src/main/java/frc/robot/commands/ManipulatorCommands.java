@@ -31,6 +31,7 @@ public class ManipulatorCommands extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Hand.updateWidget();
     //Mode switcher
     if (kManipulator.getRawButtonPressed(kLeftOptions)) 
     {
@@ -41,6 +42,15 @@ public class ManipulatorCommands extends CommandBase {
     {
       Flags.ConeMode = true;
       Hand.ChangeMode();
+    }
+
+    //Cube picker-upper
+
+    if(kManipulator.getRawButtonPressed(kY)) {
+      Hand.IntakeMotorControl(true);
+    }
+    if(kManipulator.getRawButtonPressed(kA)) {
+      Hand.IntakeMotorControl(false);
     }
 
     //Rotator

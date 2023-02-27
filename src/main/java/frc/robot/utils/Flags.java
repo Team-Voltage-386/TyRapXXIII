@@ -4,4 +4,5 @@ package frc.robot.utils;
 public class Flags {
     public static boolean ConeMode;
     public static boolean canRotate = true;
+    public static boolean IntakeDirection;
 }
