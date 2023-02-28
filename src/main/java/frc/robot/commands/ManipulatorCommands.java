@@ -40,41 +40,49 @@ public class ManipulatorCommands extends CommandBase {
       // Hand.ChangeMode();
     }
 
-    // Cube picker-upper
-    //pickup
+    // pickup
     if (kManipulator.getRawButtonPressed(kY)) {
       // Hand.IntakeMotorControl(true);
-      m_arm.setSequence(fromStowGoTo(akfPickupGround));
+      switch (m_arm.lastKeyframe.keyFrameState) {
+        case stowed:
+          m_arm.setKeyFrameSequence(sansIntermediary2(akfPickupGround));
+
+          break;
+        default:
+          m_arm.setKeyFrameSequence(ONLYintermediary2(akfPickupGround));
+          break;
+      }
     }
-    //score
+    // score
     if (kManipulator.getRawButtonPressed(kA)) {
       ArmKeyframe end;
       // Hand.IntakeMotorControl(false);
       if (ConeMode) {
         if (scoreHigh) {
-          end=akfConeHigh;
-        } else{
-          end=akfConeMid;
+          end = akfConeHigh;
+        } else {
+          end = akfConeMid;
         }
       } else {
         if (scoreHigh) {
-          end=akfCubeHigh;
+          end = akfCubeHigh;
         } else {
-          end=akfCubeMid;
+          end = akfCubeMid;
         }
       }
 
       switch (m_arm.lastKeyframe.keyFrameState) {
         case stowed:
-          m_arm.setSequence(fromStowGoTo(end));
+          m_arm.setKeyFrameSequence(fromStowGoTo(end));
           break;
         default:
-          goToIntermediary2then(end);
+          ONLYintermediary2(end);
           break;
       }
     }
-    if(kManipulator.getRawButton(kB)){
-      m_arm.setSequence(goToStow);
+    // stow
+    if (kManipulator.getRawButton(kB)) {
+      m_arm.setKeyFrameSequence(sansIntermediary2(akfStowed));
     }
 
     // Rotator

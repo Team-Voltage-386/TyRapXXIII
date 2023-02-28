@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,6 +37,7 @@ public class RobotContainer {
 
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
+  private final ParallelCommandGroup teleOpCommands= new ParallelCommandGroup(m_driverCommand,m_manipulatorCommand);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -63,7 +65,7 @@ public class RobotContainer {
   }
 
   public Command getTeleOp() {
-    return m_driverCommand;
+    return teleOpCommands;
   }
 
   /**
