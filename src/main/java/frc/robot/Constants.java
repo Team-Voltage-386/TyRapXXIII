@@ -115,6 +115,8 @@ public final class Constants {
         "Arm");
     public static final PersistentShufflableInteger PSITrajectorySteps = new PersistentShufflableInteger(7, "TrajSteps",
         "Arm");
+    public static final double KStowPressVelocity = -.01;
+    public static final int KTrajectorySteps = 9;
     public static final double kArmTolerance = 1;// in degrees
     public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
     public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -182,7 +184,7 @@ public final class Constants {
        * @param akf MUST BE intermediary or stow
        * @return
        */
-      public static final ArmKeyframe[] sansIntermediary2(ArmKeyframe akf) {
+      public static final ArmKeyframe[] onlyIntermediary1(ArmKeyframe akf) {
         return new ArmKeyframe[] { akfIntermediary, akf };
       }
 

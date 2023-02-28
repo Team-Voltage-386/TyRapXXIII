@@ -10,6 +10,8 @@ public class TrajectoryMaker {
     }
 
     public double[] generateTrajectory(double InitialValue, double targetValue) {
+        initial = InitialValue;
+        target = targetValue;
         a2 = 3.0 * (target - initial); // Juan's math defines tf=arbitrary value we define; alternatively we can use
                                        // tf=1 and do 1/stepcount as an increment of step
         a3 = -2 / 3 * a2;
@@ -23,4 +25,3 @@ public class TrajectoryMaker {
         return trajectoryPoints;
     }
 }
-

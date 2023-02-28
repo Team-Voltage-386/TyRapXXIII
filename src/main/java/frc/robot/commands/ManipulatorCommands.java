@@ -45,7 +45,7 @@ public class ManipulatorCommands extends CommandBase {
       // Hand.IntakeMotorControl(true);
       switch (m_arm.lastKeyframe.keyFrameState) {
         case stowed:
-          m_arm.setKeyFrameSequence(sansIntermediary2(akfPickupGround));
+          m_arm.setKeyFrameSequence(onlyIntermediary1(akfPickupGround));
 
           break;
         default:
@@ -82,7 +82,7 @@ public class ManipulatorCommands extends CommandBase {
     }
     // stow
     if (kManipulator.getRawButton(kB)) {
-      m_arm.setKeyFrameSequence(sansIntermediary2(akfStowed));
+      m_arm.setKeyFrameSequence(onlyIntermediary1(akfStowed));
     }
 
     // Rotator

@@ -19,6 +19,7 @@ import frc.robot.utils.ArmKeyframe;
 import static frc.robot.utils.Flags.*;
 
 import static frc.robot.Constants.ArmConstants.*;
+import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -89,13 +90,17 @@ public class Arm extends SubsystemBase {
         sequenceIndex = 0;
 
         updateShufflables();
-        ShoulderTarget = kInitialShoulderTarget;
-        ElbowTarget = kInitialElbowTarget;
+        
         lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, flaggingStates.stowed);
         nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, flaggingStates.stowed);
-        shoulderTrajectoryMaker = new TrajectoryMaker(PSITrajectorySteps.get());
-        elbowTrajectoryMaker = new TrajectoryMaker(PSITrajectorySteps.get());
+        // keyFrameSequence = onlyIntermediary1(akfStowed);
+        shoulderTrajectoryMaker = new TrajectoryMaker(KTrajectorySteps);
+        elbowTrajectoryMaker = new TrajectoryMaker(KTrajectorySteps);
         targetSequenceComplete = false;
+
+        ShoulderTarget = kInitialShoulderTarget;
+        ElbowTarget = kInitialElbowTarget;
+        
     }
 
     @Override
@@ -107,7 +112,7 @@ public class Arm extends SubsystemBase {
         fkCoords = forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths);
         executeKeyFrames();
         executeSequence();
-        
+
         // add a filter of target angles here
         ArmDrive();// the only line that will drive the arm motors is this one
         updateWidgets();
@@ -178,9 +183,9 @@ public class Arm extends SubsystemBase {
             ElbowFeedForward.integralAcc = 0;
         if (Math.abs(shouldErr) > 15)
             ShoulderFeedForward.integralAcc = 0;
-        switch (lastKeyframe.keyFrameState) {
+        switch (nextKeyframe.keyFrameState) {
             case stowed:
-                ElbowMotor.set(PSDStowPressVelocity.get());
+                    ElbowMotor.set(KStowPressVelocity);
                 break;
             default:
                 ElbowMotor.set(
@@ -233,7 +238,7 @@ public class Arm extends SubsystemBase {
         double[][] result = new double[shoulderAngles.length][2];
         for (int i = 0; i < shoulderAngles.length; i++) {
             result[i][0] = shoulderAngles[i];
-            result[i][1] = shoulderAngles[i];
+            result[i][1] = elbowAngles[i];
         }
         return result;
     }
@@ -243,15 +248,15 @@ public class Arm extends SubsystemBase {
             targetSequence = null;
             targetSequenceComplete = true;
         }
-        if (targetSequence == null) {
+        if (targetSequence == null || targetSequenceComplete) {
             sequenceIndex = 0;
         } else {
-            if(atTargets()){
+            if (atTargets()) {
                 sequenceIndex++;
             }
-            if(sequenceIndex<targetSequence.length){
-                ShoulderTarget=targetSequence[sequenceIndex][0];
-                ElbowTarget=targetSequence[sequenceIndex][1];
+            if (sequenceIndex < targetSequence.length) {
+                ShoulderTarget = targetSequence[sequenceIndex][0];
+                ElbowTarget = targetSequence[sequenceIndex][1];
             }
         }
     }
@@ -327,10 +332,11 @@ public class Arm extends SubsystemBase {
      * setter method for arm angle target sequence, each array of double[] within
      * double[][] is a pair of arm angle targets 0=shoulder 1=elbow
      */
-    public void setKeyFrameSequence(ArmKeyframe[] keyFrameSequence) {
+    public void setKeyFrameSequence(ArmKeyframe[] inputKeyFrames) {
         keyFrameIndex = 0;
         sequenceIndex = 0;
-        keyFrameSequence = keyFrameSequence;
+        targetSequenceComplete = false;
+        keyFrameSequence = inputKeyFrames;
     }
 
     /**
@@ -455,48 +461,52 @@ public class Arm extends SubsystemBase {
     }
 
     private ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
-    private GenericPublisher shoulderAngleWidget = armTab.add("ShoulderAngle", 0.0).withPosition(0, 0).withSize(1, 1)
+    private GenericPublisher shoulderAngleWidget = armTab.add("ShoulderAngle", 0.0).withSize(1, 1)
             .getEntry();
-    private GenericPublisher elbowAngleWidget = armTab.add("elbowAngle", 0.0).withPosition(1, 0).withSize(1, 1)
+    private GenericPublisher elbowAngleWidget = armTab.add("elbowAngle", 0.0).withSize(1, 1)
             .getEntry();
-    private GenericPublisher shoulderTargetWidget = armTab.add("shouldertarget", 0.0).withPosition(2, 3).withSize(1, 1)
+    private GenericPublisher shoulderTargetWidget = armTab.add("shouldertarget", 0.0).withSize(1, 1)
             .getEntry();
-    private GenericPublisher elbowTargetWidget = armTab.add("elbowTarget", 0.0).withPosition(3, 3).withSize(1, 1)
+    private GenericPublisher elbowTargetWidget = armTab.add("elbowTarget", 0.0).withSize(1, 1)
             .getEntry();
     // raw angle widgets
-    private GenericPublisher shoulderRawWidget = armTab.add("shoulderRaw", 0.0).withPosition(4, 0).withSize(1, 1)
+    private GenericPublisher shoulderRawWidget = armTab.add("shoulderRaw", 0.0).withSize(1, 1)
             .getEntry();
-    private GenericPublisher elbowRawWidget = armTab.add("elbowRaw", 0.0).withPosition(5, 0).withSize(1, 1).getEntry();
+    private GenericPublisher elbowRawWidget = armTab.add("elbowRaw", 0.0).withSize(1, 1).getEntry();
     // motor percentages
-    private GenericPublisher shoulderDrivePercentageWidget = armTab.add("ShoulderDrive", 0.0).withPosition(6, 3)
+    private GenericPublisher shoulderDrivePercentageWidget = armTab.add("ShoulderDrive", 0.0)
             .withSize(1, 1).getEntry();
-    private GenericPublisher elbowDrivePercentWidget = armTab.add("elbowDrive", 0.0).withPosition(7, 3).withSize(1, 1)
+    private GenericPublisher elbowDrivePercentWidget = armTab.add("elbowDrive", 0.0).withSize(1, 1)
             .getEntry();
-    private GenericPublisher shoulderDriveAmpsWidget = armTab.add("ShoulderAmps", 0.0).getEntry();
-    private GenericPublisher elbowDriveAmpsWidget = armTab.add("ElbowAMps", 0.0).getEntry();
-    private GenericPublisher shoulderTemperatureWidget = armTab.add("ShoulderTemp", 0.0).getEntry();
-    private GenericPublisher elbowTemperatureWidget = armTab.add("ElbowTemp", 0.0).getEntry();
+    // private GenericPublisher shoulderDriveAmpsWidget = armTab.add("ShoulderAmps",
+    // 0.0).getEntry();
+    // private GenericPublisher elbowDriveAmpsWidget = armTab.add("ElbowAMps",
+    // 0.0).getEntry();
+    // private GenericPublisher shoulderTemperatureWidget =
+    // armTab.add("ShoulderTemp", 0.0).getEntry();
+    // private GenericPublisher elbowTemperatureWidget = armTab.add("ElbowTemp",
+    // 0.0).getEntry();
     // these are shoulder limit switch widgets
-    private GenericPublisher shoulderLimitWidget = armTab.add("shoulderLimit", false).withPosition(2, 0).withSize(1, 1)
+    private GenericPublisher shoulderLimitWidget = armTab.add("shoulderLimit", false).withSize(1, 1)
             .getEntry();
     private GenericPublisher shoulderUpperLimitWidget = armTab.add("upperLimit", false)
             .withWidget(BuiltInWidgets.kBooleanBox)
-            .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(0, 1)
+            .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900"))
             .withSize(1, 1)
             .getEntry();
     private GenericPublisher shoulderLowerLimitWidget = armTab.add("lowerLimit", false)
             .withWidget(BuiltInWidgets.kBooleanBox)
-            .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(1, 1)
+            .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900"))
             .withSize(1, 1)
             .getEntry();
-    // these are FK coordinate widgets
-    private GenericPublisher shoulderXWidget = armTab.add("elbowX", 0.0).withPosition(5, 1).withSize(1, 1)
-            .getEntry();
-    private GenericPublisher shoulderYWidget = armTab.add("elbowY", 0.0).withPosition(6, 1).withSize(1, 1)
-            .getEntry();
-    private GenericPublisher elbowXWidget = armTab.add("handX", 0.0).withPosition(5, 2).withSize(1, 1)
-            .getEntry();
-    private GenericPublisher elbowYWidget = armTab.add("handY", 0.0).withPosition(6, 2).withSize(1, 1).getEntry();
+    // // these are FK coordinate widgets
+    // private GenericPublisher shoulderXWidget = armTab.add("elbowX", 0.0).withPosition(5, 1).withSize(1, 1)
+    //         .getEntry();
+    // private GenericPublisher shoulderYWidget = armTab.add("elbowY", 0.0).withPosition(6, 1).withSize(1, 1)
+    //         .getEntry();
+    // private GenericPublisher elbowXWidget = armTab.add("handX", 0.0).withPosition(5, 2).withSize(1, 1)
+    //         .getEntry();
+    // private GenericPublisher elbowYWidget = armTab.add("handY", 0.0).withPosition(6, 2).withSize(1, 1).getEntry();
     private GenericPublisher lastKeyFrameWidget = armTab.add("keyframestate", "").getEntry();
 
     public void updateWidgets() {
@@ -508,18 +518,18 @@ public class Arm extends SubsystemBase {
         elbowRawWidget.setDouble(ElbowEncoder.getAbsolutePosition());
         elbowDrivePercentWidget.setDouble(ElbowMotor.getAppliedOutput());
         shoulderDrivePercentageWidget.setDouble(ShoulderMotor.getAppliedOutput());
-        elbowDriveAmpsWidget.setDouble(ElbowMotor.getOutputCurrent());
-        shoulderDriveAmpsWidget.setDouble(ShoulderMotor.getOutputCurrent());
-        elbowTemperatureWidget.setDouble(ElbowMotor.getMotorTemperature());
-        shoulderTemperatureWidget.setDouble(ShoulderMotor.getMotorTemperature());
+        // elbowDriveAmpsWidget.setDouble(ElbowMotor.getOutputCurrent());
+        // shoulderDriveAmpsWidget.setDouble(ShoulderMotor.getOutputCurrent());
+        // elbowTemperatureWidget.setDouble(ElbowMotor.getMotorTemperature());
+        // shoulderTemperatureWidget.setDouble(ShoulderMotor.getMotorTemperature());
 
         shoulderLimitWidget.setBoolean(ShoulderLimitSwitch.get());
         shoulderUpperLimitWidget.setBoolean(shoulderUpperLimit);
         shoulderLowerLimitWidget.setBoolean(shoulderLowerLimit);
-        shoulderXWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[0][0]);
-        shoulderYWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[0][1]);
-        elbowXWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[1][0]);
-        elbowYWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[1][1]);
+        // shoulderXWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[0][0]);
+        // shoulderYWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[0][1]);
+        // elbowXWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[1][0]);
+        // elbowYWidget.setDouble(forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths)[1][1]);
         lastKeyFrameWidget.setString(lastKeyframe.stateString());
 
     }
