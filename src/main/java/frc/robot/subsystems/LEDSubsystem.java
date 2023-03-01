@@ -10,7 +10,6 @@ public class LEDSubsystem extends SubsystemBase{
     private static final int LEDPort = kLEDPort;
     private static final int LEDLength = kLEDLength;
     private double BWCycle = 0.0;
-
     
     AddressableLED led = new AddressableLED(LEDPort);
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LEDLength);
@@ -59,12 +58,17 @@ public class LEDSubsystem extends SubsystemBase{
           setOneYellow(i);
         }
     }
-
+    
     public void BlueYellow()
     {
+        int a = (int)(5*Math.cos(BWCycle));
         for(int i = 0; i < ledBuffer.getLength(); i++)
         {
-            
+            if(i%a == 0) {
+                setOneBlue(i);
+            } else {
+                setOneYellow(i);
+            }
         }
         BWCycle += 0.01;
     }
