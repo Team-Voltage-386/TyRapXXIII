@@ -115,4 +115,9 @@ public final class Constants {
         "rotateAccelSmooth");
 
   }
+
+  public static final class LEDConstants {
+    public static int kLEDPort = 0;
+    public static int kLEDLength = 0;
+  }
 }
