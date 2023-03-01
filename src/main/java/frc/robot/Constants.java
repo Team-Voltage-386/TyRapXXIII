@@ -106,15 +106,15 @@ public final class Constants {
 
   public static final class ArmConstants {
     public static final PersistentShufflableDouble PSDShoulderMaxPercentage = new PersistentShufflableDouble(.1,
-        "ShoulderMaxSpeed", "Arm");
+        "ShoulderMaxSpeed", "ArmFF");
     public static final PersistentShufflableDouble PSDElbowMaxPercentage = new PersistentShufflableDouble(.1,
-        "ElbowMaxSpeed", "Arm");
+        "ElbowMaxSpeed", "ArmFF");
     public static final PersistentShufflableDouble PSDStowPressVelocity = new PersistentShufflableDouble(-.01,
-        "StowVelocity", "Arm");
+        "StowVelocity", "ArmFF");
     public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5, "armThreshhold",
-        "Arm");
-    public static final PersistentShufflableInteger PSITrajectorySteps = new PersistentShufflableInteger(7, "TrajSteps",
-        "Arm");
+        "ArmFF");
+    public static final PersistentShufflableInteger PSITrajectorySteps = new PersistentShufflableInteger(30, "TrajSteps",
+        "ArmFF");
     public static final double KStowPressVelocity = -.01;
     public static final int KTrajectorySteps = 9;
     public static final double kArmTolerance = 1;// in degrees
@@ -143,9 +143,9 @@ public final class Constants {
     public static final double kInitialElbowTarget = 97.5;
 
     public static final PersistentShufflableDouble PSDShoulderOffset = new PersistentShufflableDouble(96,
-        "shoulderOffset", "Arm"); // degrees offset
+        "shoulderOffset", "ArmFF"); // degrees offset
     public static final PersistentShufflableDouble PSDElbowOffset = new PersistentShufflableDouble(-124, "elbowOffset",
-        "Arm"); // degrees offset
+        "ArmFF"); // degrees offset
     public static final double kShoulderMiddleAngleThreshold = -45;// the angle that is between the two limit switches
                                                                    // for the shoulder
     public static final int kShoulderLimitSwitch = 2;
