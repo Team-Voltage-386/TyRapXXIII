@@ -81,11 +81,9 @@ public class Hand extends SubsystemBase {
     private static final GenericEntry CurrentR = HandTab.add("CurrentR", 0.0).getEntry();
     private static final GenericEntry CurrentL = HandTab.add("CurrentL", 0.0).getEntry();
 
+    /**toggles between cone and cube mode. cone is default.*/
     public static void ChangeMode() {
         if (ConeMode) {
-            pcmCompressor.set(Value.kForward);
-        }
-        if (!ConeMode) {
             RPickup.setSmartCurrentLimit(35, 15);
             LPickup.setSmartCurrentLimit(35, 15);
             pcmCompressor.set(Value.kForward);
@@ -103,22 +101,23 @@ public class Hand extends SubsystemBase {
         }
     }
 
-    public static void IntakeMotorControl(boolean intake) {
-        if (!Flags.ConeMode) {
-            if (intake) {
+    /**IntakeMotorControl(bool intakein) specifies which way the intake motors are spinning, true for in, false for out.*/
+    public static void IntakeMotorControl(boolean intakein) {
+        if (Flags.ConeMode) {
+            if (intakein) {
                 RPickup.set(kConeIntakeSpeed);
                 LPickup.set(kConeIntakeSpeed);
             }
-            if (!intake) {
+            if (!intakein) {
                 RPickup.set(-kConeIntakeSpeed);
                 LPickup.set(-kConeIntakeSpeed);
             }
         } else {
-            if (intake) {
+            if (intakein) {
                 RPickup.set(kCubeIntakeSpeed);
                 LPickup.set(kCubeIntakeSpeed);
             }
-            if (!intake) {
+            if (!intakein) {
                 RPickup.set(-kCubeIntakeSpeed);
                 LPickup.set(-kCubeIntakeSpeed);
             }
@@ -130,6 +129,20 @@ public class Hand extends SubsystemBase {
             return true;
         }
         return false;
+    }
+
+    //needs an isStowed funcition in ArmSubsystem to turn off when stowed
+    public boolean isHoldingPiece() {
+        if(ConeMode){
+            if(RPickup.getOutputCurrent() > 30 || LPickup.getOutputCurrent() > 30)
+                return true;
+            else return false;
+        }
+        else {
+            if(RPickup.getOutputCurrent() > 4 || LPickup.getOutputCurrent() > 4)
+                return true;
+            else return false;
+        }
     }
 
     private void setHandMotor() {
