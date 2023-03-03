@@ -62,12 +62,22 @@ public class Hand extends SubsystemBase {
         LPickup = new CANSparkMax(HandConstants.kLeftPickupID, MotorType.kBrushless);
         Flags.IntakeDirection = false;
         Flags.ConeMode = true;
+        Flags.GripperStalling = false;
     }
 
     @Override
     public void periodic() {
         setHandMotor();
         updateWidgets();
+        if(ConeMode) {
+            if(RPickup.getOutputCurrent() > 30 && LPickup.getOutputCurrent() > 30)
+            GripperStalling = true;
+            else GripperStalling = false;
+        } else {
+            if(RPickup.getOutputCurrent() > 5 && LPickup.getOutputCurrent() > 5)
+            GripperStalling = true;
+            else GripperStalling = false;
+        }
     }
 
     public double getPositioning() {
@@ -80,6 +90,7 @@ public class Hand extends SubsystemBase {
     private static final GenericEntry Mode = HandTab.add("ConeMode", true).getEntry();
     private static final GenericEntry CurrentR = HandTab.add("CurrentR", 0.0).getEntry();
     private static final GenericEntry CurrentL = HandTab.add("CurrentL", 0.0).getEntry();
+    private static final GenericEntry GripperStall = HandTab.add("Gripper Stalling", false).getEntry();
 
     /**toggles between cone and cube mode. cone is default.*/
     public static void ChangeMode() {
@@ -133,16 +144,7 @@ public class Hand extends SubsystemBase {
 
     //needs an isStowed funcition in ArmSubsystem to turn off when stowed
     public boolean isHoldingPiece() {
-        if(ConeMode){
-            if(RPickup.getOutputCurrent() > 30 || LPickup.getOutputCurrent() > 30)
-                return true;
-            else return false;
-        }
-        else {
-            if(RPickup.getOutputCurrent() > 4 || LPickup.getOutputCurrent() > 4)
-                return true;
-            else return false;
-        }
+        return GripperStalling;
     }
 
     private void setHandMotor() {
@@ -198,6 +200,8 @@ public class Hand extends SubsystemBase {
     private GenericPublisher HandRotatedWidget = HandTab.add("Past Hand Mode", -11).withPosition(0, 3).withSize(1, 1)
             .getEntry();
 
+    
+
     private void updateWidgets() {
         HandWidget.setDouble(getPositioning());
         HandLimitWidget.setBoolean(getHandLimitSwitch());
@@ -208,5 +212,7 @@ public class Hand extends SubsystemBase {
         CurrentR.setDouble(RPickup.getOutputCurrent());
 
         CurrentL.setDouble(LPickup.getOutputCurrent());
+
+        GripperStall.setBoolean(GripperStalling);
     }
 }
