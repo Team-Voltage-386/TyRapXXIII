@@ -41,11 +41,11 @@ public class ManipulatorCommands extends CommandBase {
     // Mode switcher
     if (kManipulator.getRawButtonPressed(kLeftOptions)) {
       ConeMode = false;
-      Hand.ChangeMode();
+      HandControls.ChangeMode();
     }
     if (kManipulator.getRawButtonPressed(kRightOptions)) {
       ConeMode = true;
-      Hand.ChangeMode();
+      HandControls.ChangeMode();
     }
 
     // pickup
@@ -121,10 +121,10 @@ public class ManipulatorCommands extends CommandBase {
     // Cube picker-upper
 
     if (kManipulator.getRawButtonPressed(kY)) {
-      Hand.IntakeMotorControl(true);
+      HandControls.IntakeMotorControl(true);
     }
     if (kManipulator.getRawButtonPressed(kA)) {
-      Hand.IntakeMotorControl(false);
+      HandControls.IntakeMotorControl(false);
     }
 
     // Rotator

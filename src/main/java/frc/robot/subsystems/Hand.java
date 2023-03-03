@@ -43,8 +43,8 @@ public class Hand extends SubsystemBase {
     double targHandPos = 0;
 
     // Declaration of motors and pnumatics
-    static DoubleSolenoid pcmCompressor;
-    static TalonSRX HandRotationalMotor;
+    public DoubleSolenoid pcmCompressor;
+    public TalonSRX HandRotationalMotor;
 
     // Limit declaration
     private DigitalInput HandLimitSwitch; // LIMIT READING TRUE MEANS SWTICH NOT HIT
@@ -74,14 +74,14 @@ public class Hand extends SubsystemBase {
         return (HandRotationalMotor.getSelectedSensorPosition());
     }
 
-    static CANSparkMax RPickup;
-    static CANSparkMax LPickup;
+    public CANSparkMax RPickup;
+    public CANSparkMax LPickup;
     private static final ShuffleboardTab HandTab = Shuffleboard.getTab("Hand Tab");
-    private static final GenericEntry Mode = HandTab.add("ConeMode", true).getEntry();
-    private static final GenericEntry CurrentR = HandTab.add("CurrentR", 0.0).getEntry();
-    private static final GenericEntry CurrentL = HandTab.add("CurrentL", 0.0).getEntry();
+    private final GenericEntry Mode = HandTab.add("ConeMode", true).getEntry();
+    private final GenericEntry CurrentR = HandTab.add("CurrentR", 0.0).getEntry();
+    private final GenericEntry CurrentL = HandTab.add("CurrentL", 0.0).getEntry();
 
-    public static void ChangeMode() {
+    public void ChangeMode() {
         if (ConeMode) {
             pcmCompressor.set(Value.kForward);
         }
@@ -103,7 +103,7 @@ public class Hand extends SubsystemBase {
         }
     }
 
-    public static void IntakeMotorControl(boolean intake) {
+    public void IntakeMotorControl(boolean intake) {
         if (!Flags.ConeMode) {
             if (intake) {
                 RPickup.set(kConeIntakeSpeed);
