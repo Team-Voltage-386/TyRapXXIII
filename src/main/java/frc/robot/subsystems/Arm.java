@@ -549,7 +549,7 @@ public class Arm extends SubsystemBase {
     private GenericPublisher elbowTargetSequenceWidget = armTab.add("elbowTargets", new double[] {})
             .withPosition(4, 1).getEntry();
     private GenericPublisher keyFrameIndexWidget = armTab.add("keyFrameIndex",0).withPosition(4, 2).getEntry();
-    private GenericPublisher targetIndexWidget = armTab.add("keyFrameIndex", 0).withPosition(4, 3).getEntry();
+    private GenericPublisher targetIndexWidget = armTab.add("targetSequenceIndex", 0).withPosition(4, 3).getEntry();
 
 
     public void updateWidgets() {
