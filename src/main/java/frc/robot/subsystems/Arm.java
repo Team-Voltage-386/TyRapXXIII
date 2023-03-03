@@ -406,29 +406,29 @@ public class Arm extends SubsystemBase {
         return pv;
     }
 
-    /**
-     * @deprecated, use mapping utils clamp
-     * 
-     * @return given original percent output, cap @param output to maximum magnitude
-     *         of 1
-     */
-    public double capPercent(double output) {
-        if (Math.abs(output) > 1) {
-            return 1 * Math.signum(output);
-        }
-        return output;
-    }
+    // /**
+    //  * @deprecated, use mapping utils clamp
+    //  * 
+    //  * @return given original percent output, cap @param output to maximum magnitude
+    //  *         of 1
+    //  */
+    // public double capPercent(double output) {
+    //     if (Math.abs(output) > 1) {
+    //         return 1 * Math.signum(output);
+    //     }
+    //     return output;
+    // }
 
-    /**
-     * @deprecated
-     *             like PID but worse, given pv use exactly maximum motor output
-     *             percent
-     */
-    public double bangbangdrive(double pv, double motorMaxPercent) {
-        if (Math.abs(pv) > kArmMotorDeadband)
-            return motorMaxPercent * Math.signum(pv);
-        return 0;
-    }
+    // /**
+    //  * @deprecated
+    //  *             like PID but worse, given pv use exactly maximum motor output
+    //  *             percent
+    //  */
+    // public double bangbangdrive(double pv, double motorMaxPercent) {
+    //     if (Math.abs(pv) > kArmMotorDeadband)
+    //         return motorMaxPercent * Math.signum(pv);
+    //     return 0;
+    // }
 
     // // prerequisites: view the robot so that the arm extends to the right
     // // when all arm angles are zeroed, the arm sticks straight out to the right
@@ -548,6 +548,9 @@ public class Arm extends SubsystemBase {
             .withPosition(4, 0).getEntry();
     private GenericPublisher elbowTargetSequenceWidget = armTab.add("elbowTargets", new double[] {})
             .withPosition(4, 1).getEntry();
+    private GenericPublisher keyFrameIndexWidget = armTab.add("keyFrameIndex",0).withPosition(4, 2).getEntry();
+    private GenericPublisher targetIndexWidget = armTab.add("keyFrameIndex", 0).withPosition(4, 3).getEntry();
+
 
     public void updateWidgets() {
         shoulderAngleWidget.setDouble(getLocalArmAngles()[0]);
@@ -576,10 +579,14 @@ public class Arm extends SubsystemBase {
         // kArmLengths)[1][1]);
         lastKeyFrameWidget.setString(lastKeyframe.stateString());
         nextKeyFrameWidget.setString(nextKeyframe.stateString());
+        keyFrameIndexWidget.setInteger(keyFrameIndex);
+        targetIndexWidget.setInteger(sequenceIndex);
+
         if (targetSequence != null) {
             shoulderTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 0));
             elbowTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 1));
         }
+
     }
 
     public void updateShufflables() {
