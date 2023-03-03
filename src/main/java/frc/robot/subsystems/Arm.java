@@ -411,27 +411,28 @@ public class Arm extends SubsystemBase {
     }
 
     // /**
-    //  * @deprecated, use mapping utils clamp
-    //  * 
-    //  * @return given original percent output, cap @param output to maximum magnitude
-    //  *         of 1
-    //  */
+    // * @deprecated, use mapping utils clamp
+    // *
+    // * @return given original percent output, cap @param output to maximum
+    // magnitude
+    // * of 1
+    // */
     // public double capPercent(double output) {
-    //     if (Math.abs(output) > 1) {
-    //         return 1 * Math.signum(output);
-    //     }
-    //     return output;
+    // if (Math.abs(output) > 1) {
+    // return 1 * Math.signum(output);
+    // }
+    // return output;
     // }
 
     // /**
-    //  * @deprecated
-    //  *             like PID but worse, given pv use exactly maximum motor output
-    //  *             percent
-    //  */
+    // * @deprecated
+    // * like PID but worse, given pv use exactly maximum motor output
+    // * percent
+    // */
     // public double bangbangdrive(double pv, double motorMaxPercent) {
-    //     if (Math.abs(pv) > kArmMotorDeadband)
-    //         return motorMaxPercent * Math.signum(pv);
-    //     return 0;
+    // if (Math.abs(pv) > kArmMotorDeadband)
+    // return motorMaxPercent * Math.signum(pv);
+    // return 0;
     // }
 
     // // prerequisites: view the robot so that the arm extends to the right
@@ -552,14 +553,16 @@ public class Arm extends SubsystemBase {
             .withPosition(4, 0).getEntry();
     private GenericPublisher elbowTargetSequenceWidget = armTab.add("elbowTargets", new double[] {})
             .withPosition(4, 1).getEntry();
-    private GenericPublisher keyFrameIndexWidget = armTab.add("keyFrameIndex",0).withPosition(4, 2).getEntry();
+    private GenericPublisher keyFrameIndexWidget = armTab.add("keyFrameIndex", 0).withPosition(4, 2).getEntry();
     private GenericPublisher targetIndexWidget = armTab.add("targetIndex", 0).withPosition(4, 3).getEntry();
-    private GenericPublisher atTargetsWidget = armTab.add("atTargets",false).withPosition(5, 0).getEntry();
+    private GenericPublisher atTargetsWidget = armTab.add("atTargets", false).withPosition(5, 0).getEntry();
 
     public GenericEntry ConeModeWidget = armTab.add("coneMode", false).withWidget(BuiltInWidgets.kBooleanBox)
-            .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#9900FF")).withPosition(5, 1).getEntry();
+            .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#9900FF")).withPosition(5, 1)
+            .getEntry();
     public GenericEntry scoreHighWidget = armTab.add("scoreHigh", false).withWidget(BuiltInWidgets.kBooleanBox)
-            .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#999999")).withPosition(5, 2).getEntry();
+            .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#999999")).withPosition(5, 2)
+            .getEntry();
 
     public void updateWidgets() {
         shoulderAngleWidget.setDouble(getLocalArmAngles()[0]);

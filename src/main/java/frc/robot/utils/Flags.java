@@ -13,8 +13,8 @@ public class Flags {
     public static boolean IntakeDirection;// put out or suck
 
     public static boolean ConeMode;
-    public static boolean canRotate;
+    public static boolean canRotate = true;
     public static boolean scoreHigh;
     public static boolean armIsAtTarget;
-    
+
 }

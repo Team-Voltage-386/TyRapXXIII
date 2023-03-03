@@ -10,6 +10,7 @@ import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Hand;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,8 +37,9 @@ public class RobotContainer {
   private final Limelight m_ll = new Limelight();
 
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
-  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm);
-  private final ParallelCommandGroup teleOpCommands= new ParallelCommandGroup(m_driverCommand,m_manipulatorCommand);
+  public final Hand HandControls = new Hand();
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls);
+  private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand, m_manipulatorCommand);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -65,7 +67,7 @@ public class RobotContainer {
   }
 
   public Command getTeleOp() {
-    return teleOpCommands;
+    return m_teleop;
   }
 
   /**

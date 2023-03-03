@@ -7,18 +7,25 @@ package frc.robot.commands;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Hand;
+import frc.robot.utils.Flags;
 import frc.robot.utils.ArmKeyframe;
+import frc.robot.RobotContainer;
 
 import static frc.robot.Constants.ControllerConstants.*;
+import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.Flags.*;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 
 public class ManipulatorCommands extends CommandBase {
   private Arm m_arm;
+  private Hand HandControls;
 
   /** Creates a new ManipulatorCommands. */
-  public ManipulatorCommands(Arm arm) {
+  public ManipulatorCommands(Arm arm, Hand m_Hand) {
     m_arm = arm;
+    HandControls = m_Hand;
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -34,11 +41,11 @@ public class ManipulatorCommands extends CommandBase {
     // Mode switcher
     if (kManipulator.getRawButtonPressed(kLeftOptions)) {
       ConeMode = false;
-      // Hand.ChangeMode();
+      Hand.ChangeMode();
     }
     if (kManipulator.getRawButtonPressed(kRightOptions)) {
       ConeMode = true;
-      // Hand.ChangeMode();
+      Hand.ChangeMode();
     }
 
     // pickup
@@ -103,13 +110,33 @@ public class ManipulatorCommands extends CommandBase {
       // HandControls.RotateHand();
       // }
     }
-    //score high, low, left, right, etc
-    if(kManipulator.getPOV()==0){
-      scoreHigh=true;
+    // score high, low, left, right, etc
+    if (kManipulator.getPOV() == 0) {
+      scoreHigh = true;
     }
-    if(kManipulator.getPOV()==180){
-      scoreHigh=false;
+    if (kManipulator.getPOV() == 180) {
+      scoreHigh = false;
     }
+
+    // Cube picker-upper
+
+    if (kManipulator.getRawButtonPressed(kY)) {
+      Hand.IntakeMotorControl(true);
+    }
+    if (kManipulator.getRawButtonPressed(kA)) {
+      Hand.IntakeMotorControl(false);
+    }
+
+    // Rotator
+    if (kManipulator.getRawButtonPressed(kRightBumper) && Flags.canRotate) {
+      HandControls.RotateHand(true);
+    }
+    if (kManipulator.getRawButtonPressed(kLeftBumper) && Flags.canRotate) {
+      HandControls.RotateHand(false);
+    }
+
+    // Test Motor
+    HandControls.setLimitClear();
   }
 
   // Called once the command ends or is interrupted.
