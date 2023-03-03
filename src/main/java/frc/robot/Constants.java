@@ -155,7 +155,7 @@ public final class Constants {
     }
 
     public static final class ArmSequences {
-      public static final double[] anglesStowed = { -115.2, 97.5 };
+      public static final double[] anglesStowed = { -115.2, 100};
       public static final double[] anglesIntermediary = { -95, 100 };
       public static final double[] anglesPickupGround = { -84, 62.5 };
       public static final double[] anglesConeMid = { -46, 88.5 };

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -109,7 +110,7 @@ public class Arm extends SubsystemBase {
 
     public void periodic() {
         limitLogic();
-        feedFlags();
+        setFlags();
         fkCoords = forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths);
         if (runningKeyframesAndSequences) {
             executeKeyframesAndSequences();
@@ -239,7 +240,7 @@ public class Arm extends SubsystemBase {
 
     public void executeKeyframesAndSequences() {
         // at the very beginning
-        System.out.println(keyFrameIndex + " " + sequenceIndex);
+        // System.out.println(keyFrameIndex + " " + sequenceIndex);
         if (keyFrameIndex == 0 && sequenceIndex == 0) {
             lastKeyframe = nextKeyframe;
             nextKeyframe = keyFrameSequence[0];
@@ -283,8 +284,8 @@ public class Arm extends SubsystemBase {
     }
 
     /** call to set global flags based off of arm state */
-    public void feedFlags() {
-        switch (lastKeyframe.keyFrameState) {
+    public void setFlags() {
+        switch (nextKeyframe.keyFrameState) {
             case stowed:
                 canRotate = false;
                 break;
@@ -298,6 +299,7 @@ public class Arm extends SubsystemBase {
                 canRotate = true;
                 break;
         }
+        armIsAtTarget = !runningKeyframesAndSequences && atTargets();
     }
 
     // old turret tyrapXX logic
@@ -554,6 +556,10 @@ public class Arm extends SubsystemBase {
     private GenericPublisher targetIndexWidget = armTab.add("targetIndex", 0).withPosition(4, 3).getEntry();
     private GenericPublisher atTargetsWidget = armTab.add("atTargets",false).withPosition(5, 0).getEntry();
 
+    public GenericEntry ConeModeWidget = armTab.add("coneMode", false).withWidget(BuiltInWidgets.kBooleanBox)
+            .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#9900FF")).withPosition(5, 1).getEntry();
+    public GenericEntry scoreHighWidget = armTab.add("scoreHigh", false).withWidget(BuiltInWidgets.kBooleanBox)
+            .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#999999")).withPosition(5, 2).getEntry();
 
     public void updateWidgets() {
         shoulderAngleWidget.setDouble(getLocalArmAngles()[0]);
@@ -589,7 +595,9 @@ public class Arm extends SubsystemBase {
             shoulderTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 0));
             elbowTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 1));
         }
-        Flags.updateWidgets();
+        // Flags.updateWidgets();
+        ConeModeWidget.setBoolean(ConeMode);
+        scoreHighWidget.setBoolean(scoreHigh);
     }
 
     public void updateShufflables() {

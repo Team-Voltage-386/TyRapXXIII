@@ -15,14 +15,6 @@ public class Flags {
     public static boolean ConeMode;
     public static boolean canRotate;
     public static boolean scoreHigh;
-
-    public static ShuffleboardTab flagTab = Shuffleboard.getTab("Flags");
-    public static GenericEntry ConeModeWidget = flagTab.add("coneMode", false).withWidget(BuiltInWidgets.kBooleanBox)
-            .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#9900FF")).getEntry();
-    public static GenericEntry scoreHighWidget = flagTab.add("scoreHigh", false).withWidget(BuiltInWidgets.kBooleanBox)
-            .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#999999")).getEntry();
-    public static void updateWidgets(){
-        ConeModeWidget.setBoolean(ConeMode);
-        scoreHighWidget.setBoolean(scoreHigh);
-    }
+    public static boolean armIsAtTarget;
+    
 }
