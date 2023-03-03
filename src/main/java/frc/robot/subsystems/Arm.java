@@ -16,6 +16,8 @@ import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.TrajectoryMaker;
 import frc.robot.utils.ArmKeyframe.flaggingStates;
 import frc.robot.utils.ArmKeyframe;
+import frc.robot.utils.Flags;
+
 import static frc.robot.utils.Flags.*;
 
 import static frc.robot.Constants.ArmConstants.*;
@@ -549,7 +551,8 @@ public class Arm extends SubsystemBase {
     private GenericPublisher elbowTargetSequenceWidget = armTab.add("elbowTargets", new double[] {})
             .withPosition(4, 1).getEntry();
     private GenericPublisher keyFrameIndexWidget = armTab.add("keyFrameIndex",0).withPosition(4, 2).getEntry();
-    private GenericPublisher targetIndexWidget = armTab.add("targetSequenceIndex", 0).withPosition(4, 3).getEntry();
+    private GenericPublisher targetIndexWidget = armTab.add("targetIndex", 0).withPosition(4, 3).getEntry();
+    private GenericPublisher atTargetsWidget = armTab.add("atTargets",false).withPosition(5, 0).getEntry();
 
 
     public void updateWidgets() {
@@ -581,12 +584,12 @@ public class Arm extends SubsystemBase {
         nextKeyFrameWidget.setString(nextKeyframe.stateString());
         keyFrameIndexWidget.setInteger(keyFrameIndex);
         targetIndexWidget.setInteger(sequenceIndex);
-
+        atTargetsWidget.setBoolean(atTargets());
         if (targetSequence != null) {
             shoulderTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 0));
             elbowTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 1));
         }
-
+        Flags.updateWidgets();
     }
 
     public void updateShufflables() {

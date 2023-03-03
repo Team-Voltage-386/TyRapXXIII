@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.utils.ArmKeyframe;
@@ -102,6 +103,13 @@ public class ManipulatorCommands extends CommandBase {
       // HandControls.RotateHand();
       // }
     }
+    //score high, low, left, right, etc
+    if(kManipulator.getPOV()==0){
+      scoreHigh=true;
+    }
+    if(kManipulator.getPOV()==180){
+      scoreHigh=false;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -114,4 +122,5 @@ public class ManipulatorCommands extends CommandBase {
   public boolean isFinished() {
     return false;
   }
+
 }
