@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.utils.PersistentShufflableDouble;
 
 import static frc.robot.Constants.ControllerConstants.*;
@@ -15,6 +16,7 @@ import static frc.robot.Constants.SmoothingConstants.*;
 public class DriverCommands extends CommandBase {
 
     private Drivetrain driveTrain;
+    private LEDSubsystem ledSubsystem;
     private PersistentShufflableDouble driveCurvingPower = new PersistentShufflableDouble(1, "driveCurvingPower");
     private PersistentShufflableDouble rotationCurvingPower = new PersistentShufflableDouble(3, "rotationCurvingPower");
     private int orientationMultiplier;
@@ -22,9 +24,10 @@ public class DriverCommands extends CommandBase {
     private double testingBoostSpeed; // comment out before tryouts
     private double driveJoystickAngle, driveMagnitude, driveJoystickMagnitude;
 
-    public DriverCommands(Drivetrain DT) {
+    public DriverCommands(Drivetrain DT, LEDSubsystem LED) {
         updateShufflables();
         driveTrain = DT;
+        ledSubsystem = LED;
         testingBoostSpeed = kMaxDriveSpeed.get(); // comment out before tryouts
         orientationMultiplier = -1;// switch if red or blue
     }
@@ -93,6 +96,8 @@ public class DriverCommands extends CommandBase {
 
         if (kDriver.getRawButtonPressed(kRightBumper))
             driveTrain.resetFO();
+
+        ledSubsystem.allPurple();
     }
 
     @Override

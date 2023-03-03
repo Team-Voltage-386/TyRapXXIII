@@ -11,6 +11,7 @@ import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hand;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -35,10 +36,12 @@ public class RobotContainer {
   public final Drivetrain m_driveTrain = new Drivetrain();
   private final Arm m_Arm = new Arm();
   private final Limelight m_ll = new Limelight();
-  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
+  private final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
+  private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain, m_ledSubsystem);
   public final Hand HandControls = new Hand();
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(HandControls);
   private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand,m_manipulatorCommand);
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
