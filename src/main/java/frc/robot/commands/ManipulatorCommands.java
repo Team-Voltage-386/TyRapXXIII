@@ -93,23 +93,6 @@ public class ManipulatorCommands extends CommandBase {
       m_arm.setKeyFrameSequence(onlyIntermediary1(akfStowed));
     }
 
-    // Rotator
-    if (kManipulator.getRawButtonPressed(kRightBumper)) {
-      // Hand.handPosition++;
-      // if (Hand.handPosition > 1) {
-      // Hand.handPosition = 1;
-      // } else {
-      // HandControls.RotateHand();
-      // }
-    }
-    if (kManipulator.getRawButtonPressed(kLeftBumper)) {
-      // Hand.handPosition--;
-      // if (Hand.handPosition < -1) {
-      // Hand.handPosition = -1;
-      // } else {
-      // HandControls.RotateHand();
-      // }
-    }
     // score high, low, left, right, etc
     if (kManipulator.getPOV() == 0) {
       scoreHigh = true;

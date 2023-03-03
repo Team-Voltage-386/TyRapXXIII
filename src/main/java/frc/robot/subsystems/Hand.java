@@ -37,7 +37,7 @@ public class Hand extends SubsystemBase {
      * if handPosition = 1 it it rotated clockwise
      */
 
-    int handPosition;
+    public int handPosition;
 
     boolean handTurningClockwise;
     double targHandPos = 0;
@@ -133,21 +133,25 @@ public class Hand extends SubsystemBase {
     }
 
     private void setHandMotor() {
-        if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == 0 && handTurningClockwise && !getHandLimitSwitch() && getPositioning() > 0) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        } else if (handPosition == 0 && !handTurningClockwise && !getHandLimitSwitch() && getPositioning() < 0) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+        if (canRotate) {
+            if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+            } else if (handPosition == 0 && handTurningClockwise && !getHandLimitSwitch() && getPositioning() > 0) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            } else if (handPosition == 0 && !handTurningClockwise && !getHandLimitSwitch() && getPositioning() < 0) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+            } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            } else {
+                HandRotationalMotor.set(ControlMode.PercentOutput, 0);
+            }
         } else {
             HandRotationalMotor.set(ControlMode.PercentOutput, 0);
         }
+        
     }
 
     public void RotateHand(boolean isRightBumper) {
-        System.out.println("Rotate Hand ran");
         if (isRightBumper) {
             handPosition++;
             handTurningClockwise = false;
