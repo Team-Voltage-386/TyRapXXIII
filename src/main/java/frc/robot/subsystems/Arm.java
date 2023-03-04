@@ -272,9 +272,9 @@ public class Arm extends SubsystemBase {
         else if (sequenceIndex != 0 && sequenceIndex < targetSequence.length) {
             //
             ShoulderTarget = targetSequence[sequenceIndex][0];
-            if(lastKeyframe.keyFrameState==armKeyFrameStates.pickup){
-            ElbowTarget = targetSequence[sequenceIndex][1]+10;}
-            else{
+            if (lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
+                ElbowTarget = targetSequence[sequenceIndex][1] + 10;
+            } else {
                 ElbowTarget = targetSequence[sequenceIndex][1];
             }
             if (atTargets()) {
@@ -560,6 +560,8 @@ public class Arm extends SubsystemBase {
     private GenericPublisher keyFrameIndexWidget = armTab.add("keyFrameIndex", 0).withPosition(4, 2).getEntry();
     private GenericPublisher targetIndexWidget = armTab.add("targetIndex", 0).withPosition(4, 3).getEntry();
     private GenericPublisher atTargetsWidget = armTab.add("atTargets", false).withPosition(5, 0).getEntry();
+    private GenericPublisher runningKeyframesAndSequencesWidget = armTab.add("running", false).withPosition(4, 0)
+            .getEntry();
 
     public GenericEntry ConeModeWidget = armTab.add("coneMode", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#9900FF")).withPosition(5, 1)
@@ -603,6 +605,8 @@ public class Arm extends SubsystemBase {
             elbowTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 1));
         }
         ConeModeWidget.setBoolean(ConeMode);
+        runningKeyframesAndSequencesWidget.setBoolean(runningKeyframesAndSequences);
+
         scoreHighWidget.setBoolean(scoreHighTarget);
     }
 

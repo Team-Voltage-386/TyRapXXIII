@@ -77,14 +77,17 @@ public class ManipulatorCommands extends CommandBase {
       case runStow:
 
         // arm do
-        if (m_arm.nextKeyframe.keyFrameState != armKeyFrameStates.stowed && !m_arm.runningKeyframesAndSequences) {
+        if (m_arm.nextKeyframe.keyFrameState != armKeyFrameStates.stowed
+            && !m_arm.runningKeyframesAndSequences && m_arm.keyFrameSequence != onlyIntermediary1(akfStowed)
+            && !m_arm.runningKeyframesAndSequences) {
           m_arm.setKeyFrameSequence(onlyIntermediary1(akfStowed));
-          if (m_hand.canRetract()) {
-            m_arm.runningKeyframesAndSequences = true;
-          }
         }
+
         if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed && !m_hand.canRetract()) {
           m_arm.runningKeyframesAndSequences = false;
+        } else if (!m_arm.runningKeyframesAndSequences
+            && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
+          m_arm.runningKeyframesAndSequences = true;
         }
         // hand tasks
         // zero wrist
@@ -113,10 +116,12 @@ public class ManipulatorCommands extends CommandBase {
           m_hand.setRotateHand(false);
         }
         // intake motors
-        if (!kManipulator.getRawButton(kX) && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
+        if (kManipulator.getRawButton(kX) && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
         } else if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
           m_hand.IntakeMotorControl(handIntakeStates.intake);
+        } else {
+          m_hand.IntakeMotorControl(handIntakeStates.doNothing);
         }
         // mode switcher
         if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
@@ -134,7 +139,7 @@ public class ManipulatorCommands extends CommandBase {
       case runScore:
         // hand tasks
         // intake motors
-        if (!kManipulator.getRawButton(kX) && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
+        if (kManipulator.getRawButton(kX) && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
         } else {
           m_hand.IntakeMotorControl(handIntakeStates.doNothing);
