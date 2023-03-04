@@ -84,7 +84,7 @@ public class AutoPossibilities extends CommandBase {
                     && (pickingUp == null || pickingUp == Piece.NULL)) {
                 // Robot will move out of community from cable position, but not pick up a piece
                 // or balance
-                return sequentialCommand(new Drive(-1, 0, 0, ));
+                return new SequentialCommandGroup(new Drive(-1, 0, 0, m_driveTrain), new Drive(-1, 0, 0, m_driveTrain));
             }
             if (Starting == Position.CABLE && balance == Balancing.NORMAL
                     && !(pickingUp == null || pickingUp == Piece.NULL)) {
