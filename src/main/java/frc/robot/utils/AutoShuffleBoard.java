@@ -1,7 +1,10 @@
 package frc.robot.utils;
 
+import java.util.Map;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.GenericPublisher;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
@@ -19,9 +22,7 @@ public class AutoShuffleBoard {
     public final SendableChooser<Place> SecondPlaceChooser = new SendableChooser<>();
     public final SendableChooser<Balancing> BalancingChooser = new SendableChooser<>();
     // Martian rock is an exception to enums and will be using an integer value
-    public final SendableChooser<Integer> MartianRockChooser = new SendableChooser<>();
-    //
-    private SimpleWidget AutoReady;
+    public final SendableChooser<Integer> MartianRockChooser = new SendableChooser<>()
 
     public AutoShuffleBoard() {
         // Adds all of the auto options to the auto shuffleboard
@@ -64,7 +65,8 @@ public class AutoShuffleBoard {
         MartianRockChooser.setDefaultOption("Normal", 0);
         Auto.add("Martian Rock", MartianRockChooser).withPosition(6, 2).withSize(2, 2);
 
-        AutoReady = Auto.add("Auto Ready", false).withPosition(6, 0).withSize(2, 2);
+        GenericPublisher AutoReady = Auto.add("Auto Ready", false).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(6, 0).withSize(2, 2).getEntry();
+        
     }
 
     public Piece getStartingPiece() {
