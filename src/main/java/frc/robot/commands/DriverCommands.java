@@ -97,7 +97,7 @@ public class DriverCommands extends CommandBase {
         if (kDriver.getRawButtonPressed(kRightBumper))
             driveTrain.resetFO();
 
-        ledSubsystem.alternateBlueYellow();
+        ledSubsystem.patternBlueYellow();
     }
 
     @Override
