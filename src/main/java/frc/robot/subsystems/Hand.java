@@ -87,15 +87,11 @@ public class Hand extends SubsystemBase {
             RPickup.setSmartCurrentLimit(35, 15);
             LPickup.setSmartCurrentLimit(35, 15);
             pcmCompressor.set(Value.kForward);
-            RPickup.set(kConeIntakeSpeed);
-            LPickup.set(kConeIntakeSpeed);
 
         } else {
             RPickup.setSmartCurrentLimit(5, 10);
             LPickup.setSmartCurrentLimit(5, 10);
             pcmCompressor.set(Value.kReverse);
-            RPickup.set(kCubeIntakeSpeed);
-            LPickup.set(kCubeIntakeSpeed);
         }
     }
 
@@ -106,21 +102,26 @@ public class Hand extends SubsystemBase {
     public void IntakeMotorControl(handIntakeStates intakeTask) {
         double intakeSpeed;
         if (ConeMode) {
-            intakeSpeed = kConeIntakeSpeed;
+            intakeSpeed = -kConeIntakeSpeed;
         } else {
-            intakeSpeed = kCubeIntakeSpeed;
+            intakeSpeed = -kCubeIntakeSpeed;
         }
         switch (intakeTask) {
             case intake:
                 RPickup.set(intakeSpeed);
                 LPickup.set(intakeSpeed);
+                break;
             case letitgo:
 
                 RPickup.set(-intakeSpeed);
                 LPickup.set(-intakeSpeed);
+                break;
+
             default:
                 RPickup.set(0);
                 LPickup.set(0);
+                break;
+
         }
     }
 

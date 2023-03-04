@@ -20,4 +20,16 @@ public class Flags {
     public static enum subsystemsStates {
         runStow, runScore, runPickup
     }
+    public static String statesString(subsystemsStates state){
+        switch(state){
+            case runStow:
+            return "runStow";
+            case runScore:
+            return "runScore";
+            case runPickup:
+            return "runPickup";
+            default:
+            return "bad";
+        }
+    }
 }

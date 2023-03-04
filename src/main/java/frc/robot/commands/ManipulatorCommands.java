@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Hand;
@@ -39,10 +40,12 @@ public class ManipulatorCommands extends CommandBase {
     manipulatorSetState = subsystemsStates.runStow;
   }
 
+  public GenericEntry manipulationStateWidget = Shuffleboard.getTab("Main").add("manipState", "").getEntry();
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    manipulationStateWidget.setString(manipulatorSetState.toString());
     // pickup
     if (kManipulator.getRawButtonPressed(kY)) {
       manipulatorSetState = subsystemsStates.runPickup;
@@ -53,7 +56,7 @@ public class ManipulatorCommands extends CommandBase {
 
     }
     // stow
-    if (kManipulator.getRawButton(kB)) {
+    if (kManipulator.getRawButtonPressed(kB)) {
       manipulatorSetState = subsystemsStates.runStow;
     }
 
@@ -87,12 +90,8 @@ public class ManipulatorCommands extends CommandBase {
         // zero wrist
         m_hand.handPosition = 0;
         // intake tasks
-        if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed && !kManipulator.getRawButton(kX)) {
-          m_hand.IntakeMotorControl(handIntakeStates.letitgo);
-        } else {
-          m_hand.IntakeMotorControl(handIntakeStates.doNothing);
-        }
-
+        m_hand.IntakeMotorControl(handIntakeStates.doNothing);
+        break;
       case runPickup:
         // arm sequence
         if (m_arm.nextKeyframe.keyFrameState != armKeyFrameStates.pickup && !m_arm.runningKeyframesAndSequences) {
@@ -120,17 +119,17 @@ public class ManipulatorCommands extends CommandBase {
           m_hand.IntakeMotorControl(handIntakeStates.intake);
         }
         // mode switcher
-
         if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
           if (kManipulator.getRawButtonPressed(kLeftOptions)) {
             ConeMode = false;
-            m_hand.ChangeMode();
           }
           if (kManipulator.getRawButtonPressed(kRightOptions)) {
             ConeMode = true;
-            m_hand.ChangeMode();
           }
+          m_hand.ChangeMode();
+
         }
+        break;
 
       case runScore:
         // hand tasks
@@ -168,6 +167,8 @@ public class ManipulatorCommands extends CommandBase {
               break;
           }
         }
+        break;
+
     }
   }
 

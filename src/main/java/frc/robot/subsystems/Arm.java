@@ -242,7 +242,7 @@ public class Arm extends SubsystemBase {
         // at the very beginning
         // System.out.println(keyFrameIndex + " " + sequenceIndex);
         if (keyFrameIndex == 0 && sequenceIndex == 0) {
-            lastKeyframe = nextKeyframe;
+            lastKeyframe = new ArmKeyframe(getLocalArmAngles(), lastKeyframe.keyFrameState);
             nextKeyframe = keyFrameSequence[0];
             targetSequence = zipperAngles(
                     shoulderTrajectoryMaker.generateTrajectory(
@@ -272,7 +272,11 @@ public class Arm extends SubsystemBase {
         else if (sequenceIndex != 0 && sequenceIndex < targetSequence.length) {
             //
             ShoulderTarget = targetSequence[sequenceIndex][0];
-            ElbowTarget = targetSequence[sequenceIndex][1];
+            if(lastKeyframe.keyFrameState==armKeyFrameStates.pickup){
+            ElbowTarget = targetSequence[sequenceIndex][1]+10;}
+            else{
+                ElbowTarget = targetSequence[sequenceIndex][1];
+            }
             if (atTargets()) {
                 sequenceIndex++;
             }
@@ -285,7 +289,7 @@ public class Arm extends SubsystemBase {
 
     /** call to set global flags based off of arm state */
     public void setFlags() {
-        switch (nextKeyframe.keyFrameState) {
+        switch (lastKeyframe.keyFrameState) {
             case stowed:
                 handCanRotate = false;
                 break;
@@ -598,7 +602,6 @@ public class Arm extends SubsystemBase {
             shoulderTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 0));
             elbowTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 1));
         }
-        // Flags.updateWidgets();
         ConeModeWidget.setBoolean(ConeMode);
         scoreHighWidget.setBoolean(scoreHighTarget);
     }

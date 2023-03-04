@@ -156,7 +156,7 @@ public final class Constants {
     public static final double kShoulderEncOffset = -141.2;
     public static final double kElbowEncOffset = 112;
     public static final double kInitialShoulderTarget = -115.2;
-    public static final double kInitialElbowTarget = 97.5;
+    public static final double kInitialElbowTarget = 100;
 
     public static final PersistentShufflableDouble PSDShoulderOffset = new PersistentShufflableDouble(96,
         "shoulderOffset", "ArmFF"); // degrees offset
@@ -172,7 +172,7 @@ public final class Constants {
 
     public static final class ArmSequences {
       public static final double[] anglesStowed = { -115.2, 100 };
-      public static final double[] anglesIntermediary = { -95, 100 };
+      public static final double[] anglesIntermediary = { -95, 110 };
       public static final double[] anglesPickupGround = { -84, 62.5 };
       public static final double[] anglesConeMid = { -46, 88.5 };
       public static final double[] anglesConeHigh = { 12, -8.5 };
