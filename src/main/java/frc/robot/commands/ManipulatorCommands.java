@@ -95,7 +95,7 @@ public class ManipulatorCommands extends CommandBase {
 
       case runPickup:
         // arm sequence
-        if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup && !m_arm.runningKeyframesAndSequences) {
+        if (m_arm.nextKeyframe.keyFrameState != armKeyFrameStates.pickup && !m_arm.runningKeyframesAndSequences) {
           switch (m_arm.lastKeyframe.keyFrameState) {
             case stowed:
               m_arm.setKeyFrameSequence(onlyIntermediary1(akfPickupGround));
@@ -107,10 +107,10 @@ public class ManipulatorCommands extends CommandBase {
         }
         // hand tasks
         // wrist position setter
-        if (kManipulator.getRawButtonPressed(kRightBumper) && Flags.handCanRotate) {
+        if (kManipulator.getRawButtonPressed(kRightBumper)) {
           m_hand.setRotateHand(true);
         }
-        if (kManipulator.getRawButtonPressed(kLeftBumper) && Flags.handCanRotate) {
+        if (kManipulator.getRawButtonPressed(kLeftBumper)) {
           m_hand.setRotateHand(false);
         }
         // intake motors
@@ -137,7 +137,7 @@ public class ManipulatorCommands extends CommandBase {
         // intake motors
         if (!kManipulator.getRawButton(kX) && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
-        }  else {
+        } else {
           m_hand.IntakeMotorControl(handIntakeStates.doNothing);
         }
         // zero wrist
