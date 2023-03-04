@@ -8,11 +8,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.Enumeration;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -26,8 +28,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
-import frc.robot.Constants.*;
-import frc.robot.utils.Flags;
+import static frc.robot.Constants.*;
+import static frc.robot.utils.Flags.*;
 
 public class Hand extends SubsystemBase {
     /*
@@ -60,8 +62,7 @@ public class Hand extends SubsystemBase {
 
         RPickup = new CANSparkMax(HandConstants.kRightPickupID, MotorType.kBrushless);
         LPickup = new CANSparkMax(HandConstants.kLeftPickupID, MotorType.kBrushless);
-        Flags.IntakeDirection = false;
-        Flags.ConeMode = true;
+        ConeMode = true;
     }
 
     @Override
@@ -83,15 +84,11 @@ public class Hand extends SubsystemBase {
 
     public void ChangeMode() {
         if (ConeMode) {
-            pcmCompressor.set(Value.kForward);
-        }
-        if (!ConeMode) {
             RPickup.setSmartCurrentLimit(35, 15);
             LPickup.setSmartCurrentLimit(35, 15);
             pcmCompressor.set(Value.kForward);
             RPickup.set(kConeIntakeSpeed);
             LPickup.set(kConeIntakeSpeed);
-            Flags.ConeMode = false;
 
         } else {
             RPickup.setSmartCurrentLimit(5, 10);
@@ -99,29 +96,31 @@ public class Hand extends SubsystemBase {
             pcmCompressor.set(Value.kReverse);
             RPickup.set(kCubeIntakeSpeed);
             LPickup.set(kCubeIntakeSpeed);
-            Flags.ConeMode = true;
         }
     }
 
-    public void IntakeMotorControl(boolean intake) {
-        if (!Flags.ConeMode) {
-            if (intake) {
-                RPickup.set(kConeIntakeSpeed);
-                LPickup.set(kConeIntakeSpeed);
-            }
-            if (!intake) {
-                RPickup.set(-kConeIntakeSpeed);
-                LPickup.set(-kConeIntakeSpeed);
-            }
+    public static enum handIntakeStates {
+        letitgo, intake, doNothing
+    }
+
+    public void IntakeMotorControl(handIntakeStates intakeTask) {
+        double intakeSpeed;
+        if (ConeMode) {
+            intakeSpeed = kConeIntakeSpeed;
         } else {
-            if (intake) {
-                RPickup.set(kCubeIntakeSpeed);
-                LPickup.set(kCubeIntakeSpeed);
-            }
-            if (!intake) {
-                RPickup.set(-kCubeIntakeSpeed);
-                LPickup.set(-kCubeIntakeSpeed);
-            }
+            intakeSpeed = kCubeIntakeSpeed;
+        }
+        switch (intakeTask) {
+            case intake:
+                RPickup.set(intakeSpeed);
+                LPickup.set(intakeSpeed);
+            case letitgo:
+
+                RPickup.set(-intakeSpeed);
+                LPickup.set(-intakeSpeed);
+            default:
+                RPickup.set(0);
+                LPickup.set(0);
         }
     }
 
@@ -133,7 +132,7 @@ public class Hand extends SubsystemBase {
     }
 
     private void setHandMotor() {
-        if (canRotate) {
+        if (handCanRotate) {
             if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
             } else if (handPosition == 0 && handTurningClockwise && !getHandLimitSwitch() && getPositioning() > 0) {
@@ -148,10 +147,10 @@ public class Hand extends SubsystemBase {
         } else {
             HandRotationalMotor.set(ControlMode.PercentOutput, 0);
         }
-        
+
     }
 
-    public void RotateHand(boolean isRightBumper) {
+    public void setRotateHand(boolean isRightBumper) {
         if (isRightBumper) {
             handPosition++;
             handTurningClockwise = false;
@@ -186,15 +185,13 @@ public class Hand extends SubsystemBase {
             .withSize(1, 1).getEntry();
     private GenericPublisher HandRotateWidget = HandTab.add("Hand Mode", -11).withPosition(0, 2).withSize(1, 1)
             .getEntry();
-    private GenericPublisher HandRotatedWidget = HandTab.add("Past Hand Mode", -11).withPosition(0, 3).withSize(1, 1)
-            .getEntry();
 
     private void updateWidgets() {
         HandWidget.setDouble(getPositioning());
         HandLimitWidget.setBoolean(getHandLimitSwitch());
         HandRotateWidget.setInteger(handPosition);
 
-        Mode.setBoolean(Flags.ConeMode);
+        Mode.setBoolean(ConeMode);
 
         CurrentR.setDouble(RPickup.getOutputCurrent());
 

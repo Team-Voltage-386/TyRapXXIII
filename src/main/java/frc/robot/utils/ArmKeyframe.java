@@ -1,14 +1,14 @@
 package frc.robot.utils;
 
 public class ArmKeyframe {
-    public static enum flaggingStates {
+    public static enum armKeyFrameStates {
         stowed, score, pickup, intermediary
     }
 
     public double[] keyFrameAngles;
-    public flaggingStates keyFrameState;
+    public armKeyFrameStates keyFrameState;
 
-    public ArmKeyframe(double[] angles, flaggingStates state) {
+    public ArmKeyframe(double[] angles, armKeyFrameStates state) {
         keyFrameAngles = angles;
         keyFrameState = state;
     }

@@ -10,11 +10,14 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 //where to put the flags that will be accessed by multiple subsystems
 public class Flags {
 
-    public static boolean IntakeDirection;// put out or suck
-
+    // public static boolean IntakeDirection;// put out or suck
     public static boolean ConeMode;
-    public static boolean canRotate = true;
-    public static boolean scoreHigh;
+    public static boolean handCanRotate;
+    public static boolean scoreHighTarget;
     public static boolean armIsAtTarget;
+    public static subsystemsStates manipulatorSetState;
 
+    public static enum subsystemsStates {
+        runStow, runScore, runPickup
+    }
 }

@@ -9,7 +9,7 @@ import frc.robot.subsystems.SwerveModule;
 import frc.robot.utils.ArmKeyframe;
 import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.PersistentShufflableInteger;
-import frc.robot.utils.ArmKeyframe.flaggingStates;
+import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -128,7 +128,8 @@ public final class Constants {
         "StowVelocity", "ArmFF");
     public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5, "armThreshhold",
         "ArmFF");
-    public static final PersistentShufflableInteger PSITrajectorySteps = new PersistentShufflableInteger(30, "TrajSteps",
+    public static final PersistentShufflableInteger PSITrajectorySteps = new PersistentShufflableInteger(30,
+        "TrajSteps",
         "ArmFF");
     public static final double KStowPressVelocity = -.01;
     public static final int KTrajectorySteps = 9;
@@ -170,7 +171,7 @@ public final class Constants {
     }
 
     public static final class ArmSequences {
-      public static final double[] anglesStowed = { -115.2, 100};
+      public static final double[] anglesStowed = { -115.2, 100 };
       public static final double[] anglesIntermediary = { -95, 100 };
       public static final double[] anglesPickupGround = { -84, 62.5 };
       public static final double[] anglesConeMid = { -46, 88.5 };
@@ -179,16 +180,16 @@ public final class Constants {
       public static final double[] anglesCubeMid = { -76, 108.5 };
       public static final double[] anglesCubeHigh = { -30.2, 53 };
 
-      public static final ArmKeyframe akfStowed = new ArmKeyframe(anglesStowed, flaggingStates.stowed);
+      public static final ArmKeyframe akfStowed = new ArmKeyframe(anglesStowed, armKeyFrameStates.stowed);
       public static final ArmKeyframe akfIntermediary = new ArmKeyframe(anglesIntermediary,
-          flaggingStates.intermediary);
-      public static final ArmKeyframe akfPickupGround = new ArmKeyframe(anglesPickupGround, flaggingStates.pickup);
-      public static final ArmKeyframe akfConeMid = new ArmKeyframe(anglesConeMid, flaggingStates.score);
-      public static final ArmKeyframe akfConeHigh = new ArmKeyframe(anglesConeHigh, flaggingStates.score);
+          armKeyFrameStates.intermediary);
+      public static final ArmKeyframe akfPickupGround = new ArmKeyframe(anglesPickupGround, armKeyFrameStates.pickup);
+      public static final ArmKeyframe akfConeMid = new ArmKeyframe(anglesConeMid, armKeyFrameStates.score);
+      public static final ArmKeyframe akfConeHigh = new ArmKeyframe(anglesConeHigh, armKeyFrameStates.score);
       public static final ArmKeyframe akfIntermediary2 = new ArmKeyframe(anglesIntermidiary2,
-          flaggingStates.intermediary);
-      public static final ArmKeyframe akfCubeMid = new ArmKeyframe(anglesCubeMid, flaggingStates.score);
-      public static final ArmKeyframe akfCubeHigh = new ArmKeyframe(anglesCubeHigh, flaggingStates.score);
+          armKeyFrameStates.intermediary);
+      public static final ArmKeyframe akfCubeMid = new ArmKeyframe(anglesCubeMid, armKeyFrameStates.score);
+      public static final ArmKeyframe akfCubeHigh = new ArmKeyframe(anglesCubeHigh, armKeyFrameStates.score);
 
       // sequences
       public static final ArmKeyframe[] goToStow = { akfIntermediary2, akfIntermediary, akfStowed };
@@ -223,7 +224,8 @@ public final class Constants {
         return new ArmKeyframe[] { akfIntermediary2, akf };
       }
     }
-    }
+  }
+
   public static final class LEDConstants {
     public static int kLEDPort = 0;
     public static int kLEDLength = 0;

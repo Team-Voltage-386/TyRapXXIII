@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.AFFShufflable;
 import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.TrajectoryMaker;
-import frc.robot.utils.ArmKeyframe.flaggingStates;
+import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 import frc.robot.utils.ArmKeyframe;
 import frc.robot.utils.Flags;
 
@@ -54,7 +54,7 @@ public class Arm extends SubsystemBase {
     public double[][] fkCoords;
     public int keyFrameIndex, sequenceIndex;
     public TrajectoryMaker shoulderTrajectoryMaker, elbowTrajectoryMaker;
-    private boolean runningKeyframesAndSequences;
+    public boolean runningKeyframesAndSequences;
 
     // public PersistentShufflableDouble PSDInitialShoulderTarget,
     // PSDInitialElbowTarget;
@@ -96,8 +96,8 @@ public class Arm extends SubsystemBase {
         ShoulderTarget = kInitialShoulderTarget;
         ElbowTarget = kInitialElbowTarget;
         targetSequence = new double[][] { { kInitialShoulderTarget, kInitialElbowTarget } };
-        lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, flaggingStates.stowed);
-        nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, flaggingStates.stowed);
+        lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed);
+        nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed);
         keyFrameSequence = new ArmKeyframe[] { lastKeyframe };
         // keyFrameSequence = onlyIntermediary1(akfStowed);
         shoulderTrajectoryMaker = new TrajectoryMaker(PSITrajectorySteps.get());
@@ -287,16 +287,16 @@ public class Arm extends SubsystemBase {
     public void setFlags() {
         switch (nextKeyframe.keyFrameState) {
             case stowed:
-                canRotate = false;
+                handCanRotate = false;
                 break;
             case score:
-                canRotate = true;
+                handCanRotate = true;
                 break;
             case pickup:
-                canRotate = true;
+                handCanRotate = true;
                 break;
             default:
-                canRotate = true;
+                handCanRotate = true;
                 break;
         }
         armIsAtTarget = !runningKeyframesAndSequences && atTargets();
@@ -600,7 +600,7 @@ public class Arm extends SubsystemBase {
         }
         // Flags.updateWidgets();
         ConeModeWidget.setBoolean(ConeMode);
-        scoreHighWidget.setBoolean(scoreHigh);
+        scoreHighWidget.setBoolean(scoreHighTarget);
     }
 
     public void updateShufflables() {
