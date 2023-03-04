@@ -22,7 +22,7 @@ public class AutoShuffleBoard {
     public final SendableChooser<Place> SecondPlaceChooser = new SendableChooser<>();
     public final SendableChooser<Balancing> BalancingChooser = new SendableChooser<>();
     // Martian rock is an exception to enums and will be using an integer value
-    public final SendableChooser<Integer> MartianRockChooser = new SendableChooser<>()
+    public final SendableChooser<Integer> MartianRockChooser = new SendableChooser<>();
 
     public AutoShuffleBoard() {
         // Adds all of the auto options to the auto shuffleboard
