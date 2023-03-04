@@ -34,13 +34,13 @@ public class LEDSubsystem extends SubsystemBase{
         ledBuffer.setRGB(index, 0, 0, 255);
     }
 
-    // public void alternateBlueYellow() {
-    //     for(int i = 0; i < ledBuffer.getLength(); i++) {
-    //         if(i%2 ==0) setOneBlue(i);
-    //         else setOneYellow(i);
-    //     }
-    //     led.setData(ledBuffer);
-    // }
+    public void alternateBlueYellow() {
+        for(int i = 0; i < ledBuffer.getLength(); i++) {
+            if(i%2 ==0) setOneBlue(i);
+            else setOneYellow(i);
+        }
+        led.setData(ledBuffer);
+    }
     
     public void allPurple() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
