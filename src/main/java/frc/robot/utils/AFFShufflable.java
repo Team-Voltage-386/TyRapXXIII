@@ -9,9 +9,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class AFFShufflable extends PIDShufflable {
     public double f;// f is maximum torque the motor fights
     public double s;// static force to overcome from feedforward
+    private double[] lastVals = new double[5];
+    private boolean ready = false;
 
     public double load;// total load on this arm segment
-
+    
     // this next block of stuff is just shuffleboard Implementation
     private static GenericSubscriber fUpdater;
     private static GenericSubscriber sUpdater;
@@ -49,6 +51,15 @@ public class AFFShufflable extends PIDShufflable {
      *                     shoulder angle
      */
     public double calc(double pv, double SpatialAngle, double extraload) {
+        if(!ready){
+            for(int i =0; i<lastVals.length;i++){
+                lastVals[i]=pv;
+            }
+            ready = true;
+        } else {
+            shiftOne(pv, lastVals);
+        }
+        double apv=averageArray(lastVals);
         double result = super.calc(pv) + f * Math.cos(Math.toRadians(SpatialAngle)) + Math.signum(pv) * s + extraload;
         return result;
     }
@@ -64,7 +75,21 @@ public class AFFShufflable extends PIDShufflable {
     public double calc(double pv, double SpatialAngle) {
         return calc(pv, SpatialAngle, 0.0);
     }
-
+    public double[] shiftOne(double insertion, double[] original){
+        double[] result = new double[original.length];
+        result[0]=insertion;
+        for(int i=1; i<result.length; i++){
+            result[i]=original[i-1];
+        }
+        return result;
+    }
+    public double averageArray(double[] input){
+        double sum=0;
+        for(double i:input){
+            sum+=i;
+        }
+        return sum/((double)input.length);
+    }
     public double getLoad() {
         return load;
     }

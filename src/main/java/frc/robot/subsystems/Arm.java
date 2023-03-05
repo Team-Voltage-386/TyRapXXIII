@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.AFFShufflable;
 import frc.robot.utils.PersistentShufflableDouble;
-import frc.robot.utils.TrajectoryMaker;
+import static frc.robot.utils.TrajectoryMaker.*;
 import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 import frc.robot.utils.ArmKeyframe;
 import frc.robot.utils.Flags;
@@ -53,7 +53,6 @@ public class Arm extends SubsystemBase {
     public ArmKeyframe lastKeyframe, nextKeyframe;
     public double[][] fkCoords;
     public int keyFrameIndex, sequenceIndex;
-    public TrajectoryMaker shoulderTrajectoryMaker, elbowTrajectoryMaker;
     public boolean runningKeyframesAndSequences;
 
     // public PersistentShufflableDouble PSDInitialShoulderTarget,
@@ -96,12 +95,10 @@ public class Arm extends SubsystemBase {
         ShoulderTarget = kInitialShoulderTarget;
         ElbowTarget = kInitialElbowTarget;
         targetSequence = new double[][] { { kInitialShoulderTarget, kInitialElbowTarget } };
-        lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed);
-        nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed);
+        lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
+        nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
         keyFrameSequence = new ArmKeyframe[] { lastKeyframe };
         // keyFrameSequence = onlyIntermediary1(akfStowed);
-        shoulderTrajectoryMaker = new TrajectoryMaker(PSITrajectorySteps.get());
-        elbowTrajectoryMaker = new TrajectoryMaker(PSITrajectorySteps.get());
         runningKeyframesAndSequences = false;
     }
 
@@ -189,36 +186,37 @@ public class Arm extends SubsystemBase {
         switch (nextKeyframe.keyFrameState) {
             case stowed:
                 if (!runningKeyframesAndSequences) {
-                    ElbowMotor.set(KStowPressVelocity);
+                    ElbowMotor.setVoltage(KStowPressVelocity);
+                    ElbowFeedForward.integralAcc = 0;
                 } else {
-                    ElbowMotor.set(
+                    ElbowMotor.setVoltage(
                             clamp(
                                     safeZoneDrive(
                                             ElbowFeedForward.calc(elbowErr,
                                                     (getSpatialArmAngles(getLocalArmAngles())[1])),
                                             getLocalArmAngles()[1], kElbowSafezone),
-                                    -PSDElbowMaxPercentage.get(), PSDElbowMaxPercentage.get()));
+                                    -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
                 }
                 break;
             default:
-                ElbowMotor.set(
+                ElbowMotor.setVoltage(
                         clamp(
                                 safeZoneDrive(
                                         ElbowFeedForward.calc(elbowErr,
                                                 (getSpatialArmAngles(getLocalArmAngles())[1])),
                                         getLocalArmAngles()[1], kElbowSafezone),
-                                -PSDElbowMaxPercentage.get(), PSDElbowMaxPercentage.get()));
+                                -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
                 break;
         }
 
-        ShoulderMotor.set(
+        ShoulderMotor.setVoltage(
                 clampShoulderByLimits(clamp(
                         safeZoneDrive(
                                 ShoulderFeedForward.calc(
                                         shouldErr,
                                         (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()), // 0 is a constant
                                 getLocalArmAngles()[0], kShoulderSafezone),
-                        -PSDShoulderMaxPercentage.get(), PSDShoulderMaxPercentage.get())));
+                        -PSDShoulderMaxVoltage.get(), PSDShoulderMaxVoltage.get())));
     }
 
     public double[][] zipperAngles(double[] shoulderAngles, double[] elbowAngles) {
@@ -240,27 +238,39 @@ public class Arm extends SubsystemBase {
 
     public void executeKeyframesAndSequences() {
         // at the very beginning
-        // System.out.println(keyFrameIndex + " " + sequenceIndex);
+        System.out.println(keyFrameIndex + " " + sequenceIndex);
         if (keyFrameIndex == 0 && sequenceIndex == 0) {
-            lastKeyframe = new ArmKeyframe(getLocalArmAngles(), lastKeyframe.keyFrameState);
+            lastKeyframe = new ArmKeyframe(getLocalArmAngles(), armKeyFrameStates.intermediary, 3);
+            // lastKeyframe.keyFrameState,
+            // lastKeyframe.substepsToHere);
             nextKeyframe = keyFrameSequence[0];
             targetSequence = zipperAngles(
-                    shoulderTrajectoryMaker.generateTrajectory(
-                            lastKeyframe.getKeyFrameAngles()[0], nextKeyframe.getKeyFrameAngles()[0]),
-                    elbowTrajectoryMaker.generateTrajectory(
-                            lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1]));
+                    generateTrajectory(
+                            lastKeyframe.getKeyFrameAngles()[0], nextKeyframe.getKeyFrameAngles()[0],
+                            nextKeyframe.substepsToHere),
+                    generateTrajectory(
+                            lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1],
+                            nextKeyframe.substepsToHere));
             sequenceIndex++;
+            // reset i term
+            ElbowFeedForward.integralAcc = 0;
+            ShoulderFeedForward.integralAcc = 0;
         }
         // at a keyframe, not the end or middle
         else if (keyFrameIndex != 0 && keyFrameIndex < keyFrameSequence.length && sequenceIndex == 0) {
             lastKeyframe = nextKeyframe;
             nextKeyframe = keyFrameSequence[keyFrameIndex];
             targetSequence = zipperAngles(
-                    shoulderTrajectoryMaker.generateTrajectory(
-                            lastKeyframe.getKeyFrameAngles()[0], nextKeyframe.getKeyFrameAngles()[0]),
-                    elbowTrajectoryMaker.generateTrajectory(
-                            lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1]));
+                    generateTrajectory(
+                            lastKeyframe.getKeyFrameAngles()[0], nextKeyframe.getKeyFrameAngles()[0],
+                            nextKeyframe.substepsToHere),
+                    generateTrajectory(
+                            lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1],
+                            nextKeyframe.substepsToHere));
             sequenceIndex++;
+            // reset i term
+            ElbowFeedForward.integralAcc = 0;
+            ShoulderFeedForward.integralAcc = 0;
         }
         // at end
         else if (keyFrameIndex >= keyFrameSequence.length) {
@@ -272,11 +282,7 @@ public class Arm extends SubsystemBase {
         else if (sequenceIndex != 0 && sequenceIndex < targetSequence.length) {
             //
             ShoulderTarget = targetSequence[sequenceIndex][0];
-            if (lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
-                ElbowTarget = targetSequence[sequenceIndex][1] + 10;
-            } else {
-                ElbowTarget = targetSequence[sequenceIndex][1];
-            }
+            ElbowTarget = targetSequence[sequenceIndex][1];
             if (atTargets()) {
                 sequenceIndex++;
             }
@@ -359,11 +365,14 @@ public class Arm extends SubsystemBase {
      * setter method for arm angle target sequence, each array of double[] within
      * double[][] is a pair of arm angle targets 0=shoulder 1=elbow
      */
-    public void setKeyFrameSequence(ArmKeyframe[] inputKeyFrames) {
-        keyFrameIndex = 0;
-        sequenceIndex = 0;
-        keyFrameSequence = inputKeyFrames;
-        runningKeyframesAndSequences = true;
+    public boolean setKeyFrameSequence(ArmKeyframe[] inputKeyFrames) {
+        if (keyFrameSequence != inputKeyFrames && !runningKeyframesAndSequences) {
+            keyFrameIndex = 0;
+            sequenceIndex = 0;
+            keyFrameSequence = inputKeyFrames;
+            runningKeyframesAndSequences = true;
+            return true;
+        } return false;
     }
 
     // /**
@@ -621,14 +630,12 @@ public class Arm extends SubsystemBase {
             PSDElbowOffset.subscribeAndSet();
         if (PSDShoulderOffset.detectChanges())
             PSDShoulderOffset.subscribeAndSet();
-        if (PSDShoulderMaxPercentage.detectChanges())
-            PSDShoulderMaxPercentage.subscribeAndSet();
-        if (PSDElbowMaxPercentage.detectChanges())
-            PSDElbowMaxPercentage.subscribeAndSet();
+        if (PSDShoulderMaxVoltage.detectChanges())
+            PSDShoulderMaxVoltage.subscribeAndSet();
+        if (PSDElbowMaxVoltage.detectChanges())
+            PSDElbowMaxVoltage.subscribeAndSet();
         if (PSDStowPressVelocity.detectChanges())
             PSDStowPressVelocity.subscribeAndSet();
-        if (PSITrajectorySteps.detectChanges())
-            PSITrajectorySteps.subscribeAndSet();
     }
 
 }

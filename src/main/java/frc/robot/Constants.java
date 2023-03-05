@@ -120,20 +120,17 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final PersistentShufflableDouble PSDShoulderMaxPercentage = new PersistentShufflableDouble(.1,
-        "ShoulderMaxSpeed", "ArmFF");
-    public static final PersistentShufflableDouble PSDElbowMaxPercentage = new PersistentShufflableDouble(.1,
-        "ElbowMaxSpeed", "ArmFF");
+    public static final PersistentShufflableDouble PSDShoulderMaxVoltage = new PersistentShufflableDouble(3,
+        "ShoulderMaxVoltage", "ArmFF");
+    public static final PersistentShufflableDouble PSDElbowMaxVoltage = new PersistentShufflableDouble(3,
+        "ElbowMaxVoltage", "ArmFF");
     public static final PersistentShufflableDouble PSDStowPressVelocity = new PersistentShufflableDouble(-.01,
-        "StowVelocity", "ArmFF");
+        "StowVoltage", "ArmFF");
     public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5, "armThreshhold",
         "ArmFF");
-    public static final PersistentShufflableInteger PSITrajectorySteps = new PersistentShufflableInteger(30,
-        "TrajSteps",
-        "ArmFF");
-    public static final double KStowPressVelocity = -.01;
-    public static final int KTrajectorySteps = 9;
-    public static final double kArmTolerance = 1;// in degrees
+    public static final double KStowPressVelocity = -.1;
+    public static final int KTrajectorySteps = 3;
+    public static final double kArmTolerance = 5;// in degrees
     public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
     public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
@@ -171,58 +168,68 @@ public final class Constants {
     }
 
     public static final class ArmSequences {
-      public static final double[] anglesStowed = { -115.2, 100 };
-      public static final double[] anglesIntermediary = { -95, 110 };
-      public static final double[] anglesPickupGround = { -84, 62.5 };
-      public static final double[] anglesConeMid = { -46, 88.5 };
-      public static final double[] anglesConeHigh = { 12, -8.5 };
-      public static final double[] anglesIntermidiary2 = { -54.5, 115 };
-      public static final double[] anglesCubeMid = { -76, 108.5 };
-      public static final double[] anglesCubeHigh = { -30.2, 53 };
+      // pickup sequences
+      public static ArmKeyframe[] kfseqCubeStowToCubePickup = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 3),
+          new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 3),
+          new ArmKeyframe(new double[] { -84, 103 }, armKeyFrameStates.intermediary, 3),
+          new ArmKeyframe(new double[] { -84, 65 }, armKeyFrameStates.pickup, 3),
+      };
+      // stowing sequences
+      public static ArmKeyframe[] kfseqCubePickuptoCubeStow = {
+          new ArmKeyframe(new double[] { -84, 103 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
+      };
+      public static ArmKeyframe[] kfseqConeHightoCubeStow = {
+          new ArmKeyframe(new double[] { 10, 27 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.stowed, 15)
+      };
+      public static ArmKeyframe[] kfseqConeMidtoCubeStow = {
+          new ArmKeyframe(new double[] { -55.5, 118 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
+      };
+      public static ArmKeyframe[] kfseqCubehightoCubeStow = {
+          new ArmKeyframe(new double[] { -54.5, 90 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
+      };
+      public static ArmKeyframe[] kfseqCubeMidtoCubeStow = {
+          new ArmKeyframe(new double[] { -91, 130 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
+      };
+      // scoring sequences
+      public static ArmKeyframe[] kfseqCubeStowToCubeMid = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -91, 140 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -70, 95 }, armKeyFrameStates.scoreCubeMid, 15),
+      };
+      public static ArmKeyframe[] kfseqCubeStowToCubeHigh = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -100, 128 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -52, 96 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -33, 68 }, armKeyFrameStates.scoreCubeHigh, 15),
+      };
+      public static ArmKeyframe[] kfseqConeStowToConeMid = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -55.5, 118 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -58, 87 }, armKeyFrameStates.scoreConeMid, 15),
+      };
+      public static ArmKeyframe[] kfseqConeStowToConeHigh = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { 10, 27 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { 0, 0 }, armKeyFrameStates.scoreConeHigh, 15),
 
-      public static final ArmKeyframe akfStowed = new ArmKeyframe(anglesStowed, armKeyFrameStates.stowed);
-      public static final ArmKeyframe akfIntermediary = new ArmKeyframe(anglesIntermediary,
-          armKeyFrameStates.intermediary);
-      public static final ArmKeyframe akfPickupGround = new ArmKeyframe(anglesPickupGround, armKeyFrameStates.pickup);
-      public static final ArmKeyframe akfConeMid = new ArmKeyframe(anglesConeMid, armKeyFrameStates.score);
-      public static final ArmKeyframe akfConeHigh = new ArmKeyframe(anglesConeHigh, armKeyFrameStates.score);
-      public static final ArmKeyframe akfIntermediary2 = new ArmKeyframe(anglesIntermidiary2,
-          armKeyFrameStates.intermediary);
-      public static final ArmKeyframe akfCubeMid = new ArmKeyframe(anglesCubeMid, armKeyFrameStates.score);
-      public static final ArmKeyframe akfCubeHigh = new ArmKeyframe(anglesCubeHigh, armKeyFrameStates.score);
-
-      // sequences
-      public static final ArmKeyframe[] goToStow = { akfIntermediary2, akfIntermediary, akfStowed };
-
-      /**
-       * start MUST BE intermediary or stow
-       * 
-       * @param akf MUST BE intermediary or stow
-       * @return
-       */
-      public static final ArmKeyframe[] onlyIntermediary1(ArmKeyframe akf) {
-        return new ArmKeyframe[] { akfIntermediary, akf };
-      }
-
-      /**
-       * STARTING FROM STOWED CONFIGURATION
-       * 
-       * @param akf that is NOT intermediary nor stow
-       * @return ArmKeyframe sequence
-       */
-      public static final ArmKeyframe[] fromStowGoTo(ArmKeyframe akf) {
-        return new ArmKeyframe[] { akfIntermediary, akfIntermediary2, akf };
-      }
-
-      /**
-       * MUST NOT BE STARTING FROM STOWED CONFIGURATION
-       * 
-       * @param akf
-       * @return ArmKeyframe sequence
-       */
-      public static final ArmKeyframe[] ONLYintermediary2(ArmKeyframe akf) {
-        return new ArmKeyframe[] { akfIntermediary2, akf };
-      }
+      };
     }
   }
 
