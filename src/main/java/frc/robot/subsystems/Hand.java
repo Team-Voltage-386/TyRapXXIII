@@ -8,11 +8,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.Enumeration;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -26,8 +28,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
-import frc.robot.Constants.*;
-import frc.robot.utils.Flags;
+import static frc.robot.Constants.*;
+import static frc.robot.utils.Flags.*;
 
 public class Hand extends SubsystemBase {
     /*
@@ -37,14 +39,15 @@ public class Hand extends SubsystemBase {
      * if handPosition = 1 it it rotated clockwise
      */
 
-    int handPosition;
+    public int handPosition;
+    public handIntakeStates intakeCurrentTask=handIntakeStates.doNothing;
 
     boolean handTurningClockwise;
     double targHandPos = 0;
 
     // Declaration of motors and pnumatics
-    static DoubleSolenoid pcmCompressor;
-    static TalonSRX HandRotationalMotor;
+    public DoubleSolenoid pcmCompressor;
+    public TalonSRX HandRotationalMotor;
 
     // Limit declaration
     private DigitalInput HandLimitSwitch; // LIMIT READING TRUE MEANS SWTICH NOT HIT
@@ -60,13 +63,12 @@ public class Hand extends SubsystemBase {
 
         RPickup = new CANSparkMax(HandConstants.kRightPickupID, MotorType.kBrushless);
         LPickup = new CANSparkMax(HandConstants.kLeftPickupID, MotorType.kBrushless);
-        Flags.IntakeDirection = false;
-        Flags.ConeMode = true;
     }
 
     @Override
     public void periodic() {
-        setHandMotor();
+        if(handCanRotate){
+        setHandMotor();}
         updateWidgets();
     }
 
@@ -74,80 +76,78 @@ public class Hand extends SubsystemBase {
         return (HandRotationalMotor.getSelectedSensorPosition());
     }
 
-    static CANSparkMax RPickup;
-    static CANSparkMax LPickup;
+    public CANSparkMax RPickup;
+    public CANSparkMax LPickup;
     private static final ShuffleboardTab HandTab = Shuffleboard.getTab("Hand Tab");
-    private static final GenericEntry Mode = HandTab.add("ConeMode", true).getEntry();
-    private static final GenericEntry CurrentR = HandTab.add("CurrentR", 0.0).getEntry();
-    private static final GenericEntry CurrentL = HandTab.add("CurrentL", 0.0).getEntry();
+    private final GenericEntry Mode = HandTab.add("ConeMode", true).getEntry();
+    private final GenericEntry CurrentR = HandTab.add("CurrentR", 0.0).getEntry();
+    private final GenericEntry CurrentL = HandTab.add("CurrentL", 0.0).getEntry();
 
-    public static void ChangeMode() {
+    public void ChangeMode() {
         if (ConeMode) {
-            pcmCompressor.set(Value.kForward);
-        }
-        if (!ConeMode) {
             RPickup.setSmartCurrentLimit(35, 15);
             LPickup.setSmartCurrentLimit(35, 15);
             pcmCompressor.set(Value.kForward);
-            RPickup.set(kConeIntakeSpeed);
-            LPickup.set(kConeIntakeSpeed);
-            Flags.ConeMode = false;
 
         } else {
             RPickup.setSmartCurrentLimit(5, 10);
             LPickup.setSmartCurrentLimit(5, 10);
             pcmCompressor.set(Value.kReverse);
-            RPickup.set(kCubeIntakeSpeed);
-            LPickup.set(kCubeIntakeSpeed);
-            Flags.ConeMode = true;
         }
     }
 
-    public static void IntakeMotorControl(boolean intake) {
-        if (!Flags.ConeMode) {
-            if (intake) {
-                RPickup.set(kConeIntakeSpeed);
-                LPickup.set(kConeIntakeSpeed);
-            }
-            if (!intake) {
-                RPickup.set(-kConeIntakeSpeed);
-                LPickup.set(-kConeIntakeSpeed);
-            }
+    public static enum handIntakeStates {
+        letitgo, intake, doNothing
+    }
+
+    public void IntakeMotorControl(handIntakeStates intakeTask) {
+        intakeCurrentTask=intakeTask;
+        double intakeSpeed;
+        double ejectSpeed;
+        if (ConeMode) {
+            intakeSpeed = kConeIntakeSpeed;
+            ejectSpeed = -kConeIntakeSpeed;
         } else {
-            if (intake) {
-                RPickup.set(kCubeIntakeSpeed);
-                LPickup.set(kCubeIntakeSpeed);
-            }
-            if (!intake) {
-                RPickup.set(-kCubeIntakeSpeed);
-                LPickup.set(-kCubeIntakeSpeed);
-            }
+            intakeSpeed = kCubeIntakeSpeed;
+            ejectSpeed = -kCubeIntakeSpeed-.2;
+        }
+        switch (intakeTask) {
+            case intake:
+                RPickup.set(intakeSpeed);
+                LPickup.set(intakeSpeed);
+                break;
+            case letitgo:
+                RPickup.set(ejectSpeed);
+                LPickup.set(ejectSpeed);
+                break;
+
+            default:
+                RPickup.set(0);
+                LPickup.set(0);
+                break;
+
         }
     }
 
     public boolean canRetract() {
-        if (handPosition == 0) {
-            return true;
-        }
-        return false;
+        return (Math.abs(getPositioning())<3.0);
     }
 
     private void setHandMotor() {
-        if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == 0 && handTurningClockwise && !getHandLimitSwitch() && getPositioning() > 0) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        } else if (handPosition == 0 && !handTurningClockwise && !getHandLimitSwitch() && getPositioning() < 0) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        } else {
-            HandRotationalMotor.set(ControlMode.PercentOutput, 0);
-        }
+            if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+            } else if (handPosition == 0  && !getHandLimitSwitch() && getPositioning() > 0&& !canRetract()) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            } else if (handPosition == 0  && !getHandLimitSwitch() && getPositioning() < 0 && !canRetract()) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+            } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            } else {
+                HandRotationalMotor.set(ControlMode.PercentOutput, 0);
+            }
     }
 
-    public void RotateHand(boolean isRightBumper) {
-        System.out.println("Rotate Hand ran");
+    public void setRotateHand(boolean isRightBumper) {
         if (isRightBumper) {
             handPosition++;
             handTurningClockwise = false;
@@ -182,18 +182,26 @@ public class Hand extends SubsystemBase {
             .withSize(1, 1).getEntry();
     private GenericPublisher HandRotateWidget = HandTab.add("Hand Mode", -11).withPosition(0, 2).withSize(1, 1)
             .getEntry();
-    private GenericPublisher HandRotatedWidget = HandTab.add("Past Hand Mode", -11).withPosition(0, 3).withSize(1, 1)
-            .getEntry();
-
+    private GenericPublisher handIntakeTast = HandTab.add("Intake Task", "").withPosition(1, 2).getEntry();
+    public String whatIsIntakeDoing(){
+        switch (intakeCurrentTask){
+            case intake:
+            return "intake";
+            case letitgo:
+            return "lettingGo";
+            case doNothing:
+            return"doNothing";
+            default:
+            return "uh oh";
+        }
+    }
     private void updateWidgets() {
         HandWidget.setDouble(getPositioning());
         HandLimitWidget.setBoolean(getHandLimitSwitch());
         HandRotateWidget.setInteger(handPosition);
-
-        Mode.setBoolean(Flags.ConeMode);
-
+        Mode.setBoolean(ConeMode);
         CurrentR.setDouble(RPickup.getOutputCurrent());
-
         CurrentL.setDouble(LPickup.getOutputCurrent());
+        handIntakeTast.setString(whatIsIntakeDoing());
     }
 }

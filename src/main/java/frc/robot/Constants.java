@@ -6,7 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.utils.ArmKeyframe;
 import frc.robot.utils.PersistentShufflableDouble;
+import frc.robot.utils.PersistentShufflableInteger;
+import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -114,6 +117,120 @@ public final class Constants {
     public static PersistentShufflableDouble kRotationAccelerationSmoothFactor = new PersistentShufflableDouble(.5,
         "rotateAccelSmooth");
 
+  }
+
+  public static final class ArmConstants {
+    public static final PersistentShufflableDouble PSDShoulderMaxVoltage = new PersistentShufflableDouble(3,
+        "ShoulderMaxVoltage", "ArmFF");
+    public static final PersistentShufflableDouble PSDElbowMaxVoltage = new PersistentShufflableDouble(3,
+        "ElbowMaxVoltage", "ArmFF");
+    public static final PersistentShufflableDouble PSDStowPressVelocity = new PersistentShufflableDouble(-.01,
+        "StowVoltage", "ArmFF");
+    public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5, "armThreshhold",
+        "ArmFF");
+    public static final double KStowPressVelocity = -.1;
+    public static final int KTrajectorySteps = 3;
+    public static final double kArmTolerance = 5;// in degrees
+    public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+    public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+    public static final double[] kShoulderSafezone = { -120, 20 };// lower limit is index 0, upper limit is index 1
+    public static final double[] kElbowSafezone = { -10, 120 };// lowe limit is index 0, upper limit is index 1
+    public static final double kArmMotorDeadband = .1;
+    public static final double kShoulderLength = 0.762;// meters //30 in
+    // notes: the origin point is 48 inches off the ground
+    // safe volume within robot frame is relatively small, just above the platform
+    // no need to have elbow go negative angles
+    // actuate elbow first
+    public static final double kElbowLength = 0.762;// meters, the superior measuring system //30 in
+    public static final double kArmLengths[] = { kShoulderLength, kElbowLength };
+    public static final double kShoulderEncoderConversion = 360;// 360 degrees per rotation
+    public static final double kElbowEncoderConversion = 360;// 360 degrees per rotation
+    public static final int kShoulderMotorID = 31;
+    public static final int kElbowMotorID = 32;
+    public static final int kShoulderEncoderPin = 1;
+    public static final int kElbowEncoderPin = 0;
+    public static final double kShoulderEncOffset = -141.2;
+    public static final double kElbowEncOffset = 112;
+    public static final double kInitialShoulderTarget = -115.2;
+    public static final double kInitialElbowTarget = 100;
+
+    public static final PersistentShufflableDouble PSDShoulderOffset = new PersistentShufflableDouble(96,
+        "shoulderOffset", "ArmFF"); // degrees offset
+    public static final PersistentShufflableDouble PSDElbowOffset = new PersistentShufflableDouble(-124, "elbowOffset",
+        "ArmFF"); // degrees offset
+    public static final double kShoulderMiddleAngleThreshold = -45;// the angle that is between the two limit switches
+                                                                   // for the shoulder
+    public static final int kShoulderLimitSwitch = 2;
+
+    public static double squareOf(double i) {
+      return Math.pow(i, 2);
+    }
+
+    public static final class ArmSequences {
+      // pickup sequences
+      public static ArmKeyframe[] kfseqCubeStowToCubePickup = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 3),
+          new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 3),
+          new ArmKeyframe(new double[] { -84, 103 }, armKeyFrameStates.intermediary, 3),
+          new ArmKeyframe(new double[] { -84, 65 }, armKeyFrameStates.pickup, 3),
+      };
+      // stowing sequences
+      public static ArmKeyframe[] kfseqCubePickuptoCubeStow = {
+          new ArmKeyframe(new double[] { -84, 103 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
+      };
+      public static ArmKeyframe[] kfseqConeHightoCubeStow = {
+          new ArmKeyframe(new double[] { 10, 27 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.stowed, 15)
+      };
+      public static ArmKeyframe[] kfseqConeMidtoCubeStow = {
+          new ArmKeyframe(new double[] { -55.5, 118 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
+      };
+      public static ArmKeyframe[] kfseqCubehightoCubeStow = {
+          new ArmKeyframe(new double[] { -54.5, 90 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
+      };
+      public static ArmKeyframe[] kfseqCubeMidtoCubeStow = {
+          new ArmKeyframe(new double[] { -91, 130 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
+      };
+      // scoring sequences
+      public static ArmKeyframe[] kfseqCubeStowToCubeMid = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -91, 140 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -70, 95 }, armKeyFrameStates.scoreCubeMid, 15),
+      };
+      public static ArmKeyframe[] kfseqCubeStowToCubeHigh = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -100, 128 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -52, 96 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -33, 68 }, armKeyFrameStates.scoreCubeHigh, 15),
+      };
+      public static ArmKeyframe[] kfseqConeStowToConeMid = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -55.5, 118 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -58, 87 }, armKeyFrameStates.scoreConeMid, 15),
+      };
+      public static ArmKeyframe[] kfseqConeStowToConeHigh = {
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { 10, 27 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { 0, 0 }, armKeyFrameStates.scoreConeHigh, 15),
+
+      };
+    }
   }
 
   public static final class LEDConstants {
