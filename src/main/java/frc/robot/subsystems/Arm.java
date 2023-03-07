@@ -179,8 +179,8 @@ public class Arm extends SubsystemBase {
     public void ArmDrive() {
         double elbowErr = ElbowTarget - getLocalArmAngles()[1];
         double shouldErr = ShoulderTarget - getLocalArmAngles()[0];
-        // if (Math.abs(elbowErr) > 30)
-        //     ElbowFeedForward.integralAcc = 0;
+        if (Math.abs(elbowErr) > 15)
+            ElbowFeedForward.integralAcc = 0;
         if (Math.abs(shouldErr) > 15)
             ShoulderFeedForward.integralAcc = 0;
         switch (nextKeyframe.keyFrameState) {
@@ -253,6 +253,8 @@ public class Arm extends SubsystemBase {
                             nextKeyframe.substepsToHere));
             sequenceIndex++;
             // reset i term
+            ElbowFeedForward.integralAcc = 0;
+            ShoulderFeedForward.integralAcc = 0;
         }
         // at a keyframe, not the end or middle
         else if (keyFrameIndex != 0 && keyFrameIndex < keyFrameSequence.length && sequenceIndex == 0) {
@@ -267,6 +269,8 @@ public class Arm extends SubsystemBase {
                             nextKeyframe.substepsToHere));
             sequenceIndex++;
             // reset i term
+            ElbowFeedForward.integralAcc = 0;
+            ShoulderFeedForward.integralAcc = 0;
         }
         // at end
         else if (keyFrameIndex >= keyFrameSequence.length) {
@@ -335,7 +339,7 @@ public class Arm extends SubsystemBase {
             out = clamp(out, -PSDShoulderMaxVoltage.get(), 0);
         }
         if (shoulderLowerLimit) {
-            out = clamp(out, 0, PSDShoulderMaxVoltage.get());
+            out = clamp(out, 0, -PSDShoulderMaxVoltage.get());
         }
         return out;
     }

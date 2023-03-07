@@ -130,7 +130,7 @@ public final class Constants {
         "ArmFF");
     public static final double KStowPressVelocity = -.1;
     public static final int KTrajectorySteps = 3;
-    public static final double kArmTolerance = 3;// in degrees
+    public static final double kArmTolerance = 5;// in degrees
     public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
     public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
@@ -200,15 +200,14 @@ public final class Constants {
           new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
       };
       public static ArmKeyframe[] kfseqCubeMidtoCubeStow = {
-          new ArmKeyframe(new double[] { -91, 110 }, armKeyFrameStates.intermediary, 15),
-          new ArmKeyframe(new double[] { -103.1, 105 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -91, 130 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
           new ArmKeyframe(new double[] { -115.2, 100 }, armKeyFrameStates.stowed, 15)
       };
       // scoring sequences
       public static ArmKeyframe[] kfseqCubeStowToCubeMid = {
           new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 15),
-        new ArmKeyframe(new double[] { -103.1, 115 }, armKeyFrameStates.intermediary, 15),
-          new ArmKeyframe(new double[] { -91, 115 }, armKeyFrameStates.intermediary, 15),
+          new ArmKeyframe(new double[] { -91, 140 }, armKeyFrameStates.intermediary, 15),
           new ArmKeyframe(new double[] { -70, 95 }, armKeyFrameStates.scoreCubeMid, 15),
       };
       public static ArmKeyframe[] kfseqCubeStowToCubeHigh = {
