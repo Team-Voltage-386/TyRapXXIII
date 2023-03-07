@@ -37,7 +37,7 @@ public class ManipulatorCommands extends CommandBase {
   @Override
   public void initialize() {
     scoreHighTarget = true;
-    ConeMode = true;
+    ConeMode = false;
     manipulatorSetState = subsystemsStates.runStow;
   }
 

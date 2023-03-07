@@ -22,10 +22,10 @@ public class PID {
         integralAcc = 0;
         lastPV = 0;
     }
-
+    double timeStep = 0;
     public double calc(double pv) {
         long time = System.currentTimeMillis();
-        double timeStep = (time - lastTime);
+        timeStep = (time - lastTime);
         timeStep /= 1000;
         if (timeStep > 0.5)
             timeStep = 0;
