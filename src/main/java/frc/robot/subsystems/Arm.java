@@ -85,8 +85,8 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
-        ShoulderFeedForward = new AFFShufflable(.0001, 0, 0, 0, 0, "ShoulderPIDF", "ArmFF");
-        ElbowFeedForward = new AFFShufflable(.0001, 0, 0, 0, 0, "ElbowPIDF", "ArmFF");
+        ShoulderFeedForward = new AFFShufflable(.288, .12, .36, 0, 0, "ShoulderPIDF", "ArmFF");
+        ElbowFeedForward = new AFFShufflable(.12, .12, .36, 0, 0, "ElbowPIDF", "ArmFF");
 
         sequenceIndex = 0;
 
@@ -179,8 +179,8 @@ public class Arm extends SubsystemBase {
     public void ArmDrive() {
         double elbowErr = ElbowTarget - getLocalArmAngles()[1];
         double shouldErr = ShoulderTarget - getLocalArmAngles()[0];
-        if (Math.abs(elbowErr) > 15)
-            ElbowFeedForward.integralAcc = 0;
+        // if (Math.abs(elbowErr) > 15)
+        //     ElbowFeedForward.integralAcc = 0;
         if (Math.abs(shouldErr) > 15)
             ShoulderFeedForward.integralAcc = 0;
         switch (nextKeyframe.keyFrameState) {
@@ -252,9 +252,6 @@ public class Arm extends SubsystemBase {
                             lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1],
                             nextKeyframe.substepsToHere));
             sequenceIndex++;
-            // reset i term
-            ElbowFeedForward.integralAcc = 0;
-            ShoulderFeedForward.integralAcc = 0;
         }
         // at a keyframe, not the end or middle
         else if (keyFrameIndex != 0 && keyFrameIndex < keyFrameSequence.length && sequenceIndex == 0) {
@@ -268,9 +265,6 @@ public class Arm extends SubsystemBase {
                             lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1],
                             nextKeyframe.substepsToHere));
             sequenceIndex++;
-            // reset i term
-            ElbowFeedForward.integralAcc = 0;
-            ShoulderFeedForward.integralAcc = 0;
         }
         // at end
         else if (keyFrameIndex >= keyFrameSequence.length) {
@@ -336,10 +330,10 @@ public class Arm extends SubsystemBase {
     public double clampShoulderByLimits(double pv) {
         double out = pv;
         if (shoulderUpperLimit) {
-            out = clamp(out, -1, 0);
+            out = clamp(out, -PSDShoulderMaxVoltage.get(), 0);
         }
         if (shoulderLowerLimit) {
-            out = clamp(out, 0, 1);
+            out = clamp(out, 0, PSDShoulderMaxVoltage.get());
         }
         return out;
     }

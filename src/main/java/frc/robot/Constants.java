@@ -67,8 +67,8 @@ public final class Constants {
 
     public static final double kRotationSpeed = 0.3;
 
-    public static double kConeIntakeSpeed = 0.12;
-    public static double kCubeIntakeSpeed = 0.04;
+    public static double kConeIntakeSpeed = 0.20;
+    public static double kCubeIntakeSpeed = 0.06;
     public static final int kRightPickupID = 33;
     public static final int kLeftPickupID = 34;
   }
@@ -135,7 +135,7 @@ public final class Constants {
     public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
     public static final double[] kShoulderSafezone = { -120, 20 };// lower limit is index 0, upper limit is index 1
-    public static final double[] kElbowSafezone = { -10, 120 };// lowe limit is index 0, upper limit is index 1
+    public static final double[] kElbowSafezone = { -10, 140 };// lowe limit is index 0, upper limit is index 1
     public static final double kArmMotorDeadband = .1;
     public static final double kShoulderLength = 0.762;// meters //30 in
     // notes: the origin point is 48 inches off the ground
@@ -168,12 +168,14 @@ public final class Constants {
     }
 
     public static final class ArmSequences {
+        public static final double kElbowWristedPickup=65;
+        public static final double kElbowPickupNormal=69;
       // pickup sequences
       public static ArmKeyframe[] kfseqCubeStowToCubePickup = {
           new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 3),
           new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 3),
           new ArmKeyframe(new double[] { -84, 103 }, armKeyFrameStates.intermediary, 3),
-          new ArmKeyframe(new double[] { -84, 65 }, armKeyFrameStates.pickup, 3),
+          new ArmKeyframe(new double[] { -84, kElbowPickupNormal }, armKeyFrameStates.pickup, 3),
       };
       // stowing sequences
       public static ArmKeyframe[] kfseqCubePickuptoCubeStow = {
