@@ -339,7 +339,7 @@ public class Arm extends SubsystemBase {
             out = clamp(out, -1, 0);
         }
         if (shoulderLowerLimit) {
-            out = clamp(out, 0, 1);
+            out = clamp(out, 0, PSDShoulderMaxVoltage.get());
         }
         return out;
     }
