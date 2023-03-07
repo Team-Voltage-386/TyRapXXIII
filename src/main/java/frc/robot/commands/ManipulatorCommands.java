@@ -112,6 +112,11 @@ public class ManipulatorCommands extends CommandBase {
         m_hand.handPosition = 0;
         // intake tasks
         m_hand.IntakeMotorControl(handIntakeStates.doNothing);
+        if (kManipulator.getRawButton(kX)) {
+          m_hand.IntakeMotorControl(handIntakeStates.letitgo);
+          m_hand.pcmCompressor.set(Value.kReverse);
+
+        }
         break;
       case runPickup:
         // arm sequence
@@ -125,8 +130,16 @@ public class ManipulatorCommands extends CommandBase {
         if (kManipulator.getRawButtonPressed(kLeftBumper)) {
           m_hand.setRotateHand(false);
         }
+        // change elbow angle if wrist is rotated
+        if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
+          if (m_hand.handPosition != 0) {
+            m_arm.ElbowTarget = kElbowWristedPickup;
+          } else {
+            m_arm.ElbowTarget = kElbowPickupNormal;
+          }
+        }
         // intake motors
-        if (kManipulator.getRawButton(kX) && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
+        if (kManipulator.getRawButton(kX)) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
           m_hand.pcmCompressor.set(Value.kReverse);
 
@@ -169,7 +182,7 @@ public class ManipulatorCommands extends CommandBase {
         }
         // hand tasks
         // intake motors
-        if (kManipulator.getRawButton(kX) && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
+        if (kManipulator.getRawButton(kX)) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
           m_hand.pcmCompressor.set(Value.kReverse);
         } else {

@@ -67,8 +67,8 @@ public final class Constants {
 
     public static final double kRotationSpeed = 0.3;
 
-    public static double kConeIntakeSpeed = 0.12;
-    public static double kCubeIntakeSpeed = 0.04;
+    public static double kConeIntakeSpeed = 0.20;
+    public static double kCubeIntakeSpeed = 0.06;
     public static final int kRightPickupID = 33;
     public static final int kLeftPickupID = 34;
   }
@@ -168,12 +168,14 @@ public final class Constants {
     }
 
     public static final class ArmSequences {
+        public static final double kElbowWristedPickup=65;
+        public static final double kElbowPickupNormal=69;
       // pickup sequences
       public static ArmKeyframe[] kfseqCubeStowToCubePickup = {
           new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 3),
           new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 3),
           new ArmKeyframe(new double[] { -84, 103 }, armKeyFrameStates.intermediary, 3),
-          new ArmKeyframe(new double[] { -84, 65 }, armKeyFrameStates.pickup, 3),
+          new ArmKeyframe(new double[] { -84, kElbowPickupNormal }, armKeyFrameStates.pickup, 3),
       };
       // stowing sequences
       public static ArmKeyframe[] kfseqCubePickuptoCubeStow = {
