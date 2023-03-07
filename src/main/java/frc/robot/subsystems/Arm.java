@@ -336,10 +336,10 @@ public class Arm extends SubsystemBase {
     public double clampShoulderByLimits(double pv) {
         double out = pv;
         if (shoulderUpperLimit) {
-            out = clamp(out, -PSDShoulderMaxVoltage.get(), 0);
+            out = clamp(out, -1, 0);
         }
         if (shoulderLowerLimit) {
-            out = clamp(out, 0, -PSDShoulderMaxVoltage.get());
+            out = clamp(out, 0, 1);
         }
         return out;
     }
