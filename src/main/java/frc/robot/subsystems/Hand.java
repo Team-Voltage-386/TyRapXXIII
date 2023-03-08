@@ -67,8 +67,10 @@ public class Hand extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(handCanRotate){
-        setHandMotor();}
+        if(handCanRotate) {
+            setHandMotor();
+            correctHandPos();
+        }
         updateWidgets();
     }
 
@@ -136,15 +138,24 @@ public class Hand extends SubsystemBase {
     private void setHandMotor() {
             if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-            } else if (handPosition == 0  && !getHandLimitSwitch() && getPositioning() > 0&& !canRetract()) {
+            } else if (handPosition == 0  && getPositioning() > 0 && !canRetract()) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-            } else if (handPosition == 0  && !getHandLimitSwitch() && getPositioning() < 0 && !canRetract()) {
+            } else if (handPosition == 0  && getPositioning() < 0 && !canRetract()) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
             } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
             } else {
                 HandRotationalMotor.set(ControlMode.PercentOutput, 0);
             }
+    }
+
+    private void correctHandPos() {
+        if(handPosition == 1 && getPositioning() > 75) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+        }
+        if(handPosition == -1 && getPositioning() < -75) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+        }
     }
 
     public void setRotateHand(boolean isRightBumper) {
@@ -179,6 +190,7 @@ public class Hand extends SubsystemBase {
     private GenericPublisher HandLimitWidget = HandTab.add("Magnetic limit", false)
             .withWidget(BuiltInWidgets.kBooleanBox)
             .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(0, 1)
+     
             .withSize(1, 1).getEntry();
     private GenericPublisher HandRotateWidget = HandTab.add("Hand Mode", -11).withPosition(0, 2).withSize(1, 1)
             .getEntry();
