@@ -16,12 +16,7 @@ public class Drive extends CommandBase {
     private final double y;
     private final double h;
     private final Drivetrain dt;
-    private final PIDShufflable autoPositionX = new PIDShufflable(kAutoPositionPID[0], kAutoPositionPID[1],
-            kAutoPositionPID[2], "autoPosX","autotab");
-    private final PIDShufflable autoPositionY = new PIDShufflable(kAutoPositionPID[0], kAutoPositionPID[1],
-            kAutoPositionPID[2], "autoPosY", "autotab");
-    private final PIDShufflable autoPositionH = new PIDShufflable(kAutoHeadingPID[0], kAutoHeadingPID[1],
-            kAutoHeadingPID[2], "autoPosH", "autotab");
+    
 
     public Drive(double X, double Y, double H, Drivetrain DT) {
         x = X;
