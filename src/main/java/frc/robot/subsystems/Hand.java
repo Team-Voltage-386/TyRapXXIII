@@ -69,7 +69,6 @@ public class Hand extends SubsystemBase {
     public void periodic() {
         if (handCanRotate) {
             setHandMotor();
-            correctHandPos();
         }
         updateWidgets();
     }
@@ -99,19 +98,22 @@ public class Hand extends SubsystemBase {
     }
 
     public static enum handIntakeStates {
-        letitgo, intake, doNothing
+        letitgo, intake, doNothing, stow
     }
 
     public void IntakeMotorControl(handIntakeStates intakeTask) {
         intakeCurrentTask = intakeTask;
         double intakeSpeed;
         double ejectSpeed;
+        double stowSpeed;
         if (ConeMode) {
             intakeSpeed = kConeIntakeSpeed;
             ejectSpeed = -kConeIntakeSpeed;
+            stowSpeed = kCubeStowSpeed;
         } else {
             intakeSpeed = kCubeIntakeSpeed;
             ejectSpeed = -kCubeIntakeSpeed - .2;
+            stowSpeed = kCubeStowSpeed;
         }
         switch (intakeTask) {
             case intake:
@@ -122,7 +124,10 @@ public class Hand extends SubsystemBase {
                 RPickup.set(ejectSpeed);
                 LPickup.set(ejectSpeed);
                 break;
-
+            case stow:
+                RPickup.set(stowSpeed);
+                LPickup.set(stowSpeed);
+                break;
             default:
                 RPickup.set(0);
                 LPickup.set(0);
@@ -144,18 +149,16 @@ public class Hand extends SubsystemBase {
             HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
         } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
             HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            // fix hand positions
+        } else if (handPosition == 1 && getPositioning() > 78) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+        } else if (handPosition == -1 && getPositioning() < -78) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+            // do nothing
         } else {
             HandRotationalMotor.set(ControlMode.PercentOutput, 0);
         }
-    }
 
-    private void correctHandPos() {
-        if (handPosition == 1 && getPositioning() > 75) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        }
-        if (handPosition == -1 && getPositioning() < -75) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        }
     }
 
     public void setRotateHand(boolean isRightBumper) {

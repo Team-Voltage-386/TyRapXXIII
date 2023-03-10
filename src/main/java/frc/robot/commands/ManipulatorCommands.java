@@ -100,19 +100,19 @@ public class ManipulatorCommands extends CommandBase {
         }
 
         // arm do
-        if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed) {
+        if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed && m_arm.lastKeyframe.keyFrameState!=armKeyFrameStates.stowed) {
           if (!m_hand.canRetract()) {
             m_arm.runningKeyframesAndSequences = false;
+          } else {
+            m_arm.runningKeyframesAndSequences = true;
           }
-        } else {
-          m_arm.runningKeyframesAndSequences = true;
-        }
+        } 
         // hand tasks
         // zero wrist
         m_hand.handPosition = 0;
         // intake tasks
-        m_hand.IntakeMotorControl(handIntakeStates.doNothing);
-        if (kManipulator.getRawButton(kX)) {
+        m_hand.IntakeMotorControl(handIntakeStates.stow);
+        if (kManipulator.getRawAxis(kRightTrigger) > kDeadband) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
           m_hand.pcmCompressor.set(Value.kReverse);
 
@@ -120,8 +120,9 @@ public class ManipulatorCommands extends CommandBase {
         break;
       case runPickup:
         // arm sequence
-
-        m_arm.setKeyFrameSequence(kfseqCubeStowToCubePickup);
+        if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed) {
+          m_arm.setKeyFrameSequence(kfseqCubeStowToCubePickup);
+        }
         // hand tasks
         // wrist position setter
         if (kManipulator.getRawButtonPressed(kRightBumper)) {
@@ -139,14 +140,14 @@ public class ManipulatorCommands extends CommandBase {
           }
         }
         // intake motors
-        if (kManipulator.getRawButton(kX)) {
+        if (kManipulator.getRawAxis(kRightTrigger) > kDeadband) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
           m_hand.pcmCompressor.set(Value.kReverse);
 
         } else if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
           m_hand.IntakeMotorControl(handIntakeStates.intake);
         } else {
-          m_hand.IntakeMotorControl(handIntakeStates.doNothing);
+          m_hand.IntakeMotorControl(handIntakeStates.stow);
         }
         // mode switcher
         if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
@@ -165,28 +166,33 @@ public class ManipulatorCommands extends CommandBase {
         // store score position
 
         // set arm targets
-        if (!ConeMode) {
-          if (!scoreHighTarget) {
-            m_arm.setKeyFrameSequence(kfseqCubeStowToCubeMid);
-          } else {
-            m_arm.setKeyFrameSequence(kfseqCubeStowToCubeHigh);
-          }
+        if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed) {
+          if (!ConeMode) {
+            if (!scoreHighTarget) {
+              m_arm.setKeyFrameSequence(kfseqCubeStowToCubeMid);
+            } else {
+              m_arm.setKeyFrameSequence(kfseqCubeStowToCubeHigh);
+            }
 
-        } else {
-          if (!scoreHighTarget) {
-            m_arm.setKeyFrameSequence(kfseqConeStowToConeMid);
           } else {
-            m_arm.setKeyFrameSequence(kfseqConeStowToConeHigh);
+            if (!scoreHighTarget) {
+              m_arm.setKeyFrameSequence(kfseqConeStowToConeMid);
+            } else {
+              m_arm.setKeyFrameSequence(kfseqConeStowToConeHigh);
+            }
           }
-
         }
         // hand tasks
         // intake motors
-        if (kManipulator.getRawButton(kX)) {
-          m_hand.IntakeMotorControl(handIntakeStates.letitgo);
+        if (kManipulator.getRawAxis(kRightTrigger) > kDeadband) {
+          if (!ConeMode) {
+            m_hand.IntakeMotorControl(handIntakeStates.letitgo);
+          } else {
+            m_hand.IntakeMotorControl(handIntakeStates.stow);
+          }
           m_hand.pcmCompressor.set(Value.kReverse);
         } else {
-          m_hand.IntakeMotorControl(handIntakeStates.doNothing);
+          m_hand.IntakeMotorControl(handIntakeStates.stow);
         }
         // zero wrist
         m_hand.handPosition = 0;
