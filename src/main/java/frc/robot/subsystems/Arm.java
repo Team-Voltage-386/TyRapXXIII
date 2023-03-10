@@ -238,7 +238,7 @@ public class Arm extends SubsystemBase {
 
     public void executeKeyframesAndSequences() {
         // at the very beginning
-        System.out.println(keyFrameIndex + " " + sequenceIndex);
+        // System.out.println(keyFrameIndex + " " + sequenceIndex);
         if (keyFrameIndex == 0 && sequenceIndex == 0) {
             lastKeyframe = new ArmKeyframe(getLocalArmAngles(), armKeyFrameStates.intermediary, 3);
             // lastKeyframe.keyFrameState,
