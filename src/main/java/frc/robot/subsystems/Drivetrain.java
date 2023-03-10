@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -31,6 +32,7 @@ public class Drivetrain extends SubsystemBase {
 
     private Timer odometryTimer = new Timer();
     private long odoTimerLast = 0;
+    public boolean doFieldOrientation = true;
 
     public SwerveModule[] modules = { RightFront, RightRear, LeftRear, LeftFront };
 
@@ -41,6 +43,7 @@ public class Drivetrain extends SubsystemBase {
     public void init() {
         odoTimerLast = System.currentTimeMillis();
         resetFO();
+        doFieldOrientation = true;
     }
 
     @Override
@@ -53,6 +56,7 @@ public class Drivetrain extends SubsystemBase {
 
                     double x = xDriveTarget;
                     double y = yDriveTarget;
+                    double xFin, yFin;
 
                     targetSpeed = Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2));
 
@@ -60,9 +64,13 @@ public class Drivetrain extends SubsystemBase {
                     double rAngle = swerve.angleFromCenter + angle + 90;
                     x += r * Math.cos(Math.toRadians(rAngle));
                     y += r * Math.sin(Math.toRadians(rAngle));
-
-                    double xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
-                    double yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
+                    if (doFieldOrientation) {
+                        xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
+                        yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
+                    } else {
+                        xFin = -x;
+                        yFin = -y;
+                    }
 
                     swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
                     swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
@@ -161,7 +169,6 @@ public class Drivetrain extends SubsystemBase {
             angle += 360;
         return res;
     }
-
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final ShuffleboardTab speedTab = Shuffleboard.getTab("Speed");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();

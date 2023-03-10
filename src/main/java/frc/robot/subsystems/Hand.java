@@ -40,7 +40,7 @@ public class Hand extends SubsystemBase {
      */
 
     public int handPosition;
-    public handIntakeStates intakeCurrentTask=handIntakeStates.doNothing;
+    public handIntakeStates intakeCurrentTask = handIntakeStates.doNothing;
 
     boolean handTurningClockwise;
     double targHandPos = 0;
@@ -67,8 +67,9 @@ public class Hand extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(handCanRotate){
-        setHandMotor();}
+        if (handCanRotate) {
+            setHandMotor();
+        }
         updateWidgets();
     }
 
@@ -97,19 +98,22 @@ public class Hand extends SubsystemBase {
     }
 
     public static enum handIntakeStates {
-        letitgo, intake, doNothing
+        letitgo, intake, doNothing, stow
     }
 
     public void IntakeMotorControl(handIntakeStates intakeTask) {
-        intakeCurrentTask=intakeTask;
+        intakeCurrentTask = intakeTask;
         double intakeSpeed;
         double ejectSpeed;
+        double stowSpeed;
         if (ConeMode) {
             intakeSpeed = kConeIntakeSpeed;
             ejectSpeed = -kConeIntakeSpeed;
+            stowSpeed = kCubeStowSpeed;
         } else {
             intakeSpeed = kCubeIntakeSpeed;
-            ejectSpeed = -kCubeIntakeSpeed-.2;
+            ejectSpeed = -kCubeIntakeSpeed - .2;
+            stowSpeed = kCubeStowSpeed;
         }
         switch (intakeTask) {
             case intake:
@@ -120,7 +124,10 @@ public class Hand extends SubsystemBase {
                 RPickup.set(ejectSpeed);
                 LPickup.set(ejectSpeed);
                 break;
-
+            case stow:
+                RPickup.set(stowSpeed);
+                LPickup.set(stowSpeed);
+                break;
             default:
                 RPickup.set(0);
                 LPickup.set(0);
@@ -130,21 +137,28 @@ public class Hand extends SubsystemBase {
     }
 
     public boolean canRetract() {
-        return (Math.abs(getPositioning())<3.0);
+        return (Math.abs(getPositioning()) < 3.0);
     }
 
     private void setHandMotor() {
-            if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
-                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-            } else if (handPosition == 0  && !getHandLimitSwitch() && getPositioning() > 0&& !canRetract()) {
-                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-            } else if (handPosition == 0  && !getHandLimitSwitch() && getPositioning() < 0 && !canRetract()) {
-                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-            } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
-                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-            } else {
-                HandRotationalMotor.set(ControlMode.PercentOutput, 0);
-            }
+        if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+        } else if (handPosition == 0 && getPositioning() > 0 && !canRetract()) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+        } else if (handPosition == 0 && getPositioning() < 0 && !canRetract()) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+        } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            // fix hand positions
+        } else if (handPosition == 1 && getPositioning() > 78) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+        } else if (handPosition == -1 && getPositioning() < -78) {
+            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+            // do nothing
+        } else {
+            HandRotationalMotor.set(ControlMode.PercentOutput, 0);
+        }
+
     }
 
     public void setRotateHand(boolean isRightBumper) {
@@ -179,22 +193,25 @@ public class Hand extends SubsystemBase {
     private GenericPublisher HandLimitWidget = HandTab.add("Magnetic limit", false)
             .withWidget(BuiltInWidgets.kBooleanBox)
             .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(0, 1)
+
             .withSize(1, 1).getEntry();
     private GenericPublisher HandRotateWidget = HandTab.add("Hand Mode", -11).withPosition(0, 2).withSize(1, 1)
             .getEntry();
     private GenericPublisher handIntakeTast = HandTab.add("Intake Task", "").withPosition(1, 2).getEntry();
-    public String whatIsIntakeDoing(){
-        switch (intakeCurrentTask){
+
+    public String whatIsIntakeDoing() {
+        switch (intakeCurrentTask) {
             case intake:
-            return "intake";
+                return "intake";
             case letitgo:
-            return "lettingGo";
+                return "lettingGo";
             case doNothing:
-            return"doNothing";
+                return "doNothing";
             default:
-            return "uh oh";
+                return "uh oh";
         }
     }
+
     private void updateWidgets() {
         HandWidget.setDouble(getPositioning());
         HandLimitWidget.setBoolean(getHandLimitSwitch());

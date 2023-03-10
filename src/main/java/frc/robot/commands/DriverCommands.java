@@ -21,11 +21,13 @@ public class DriverCommands extends CommandBase {
 
     private double testingBoostSpeed; // comment out before tryouts
     private double driveJoystickAngle, driveMagnitude, driveJoystickMagnitude;
+    public double m_driveSpeed;
+    public double m_rotSpeed;
 
     public DriverCommands(Drivetrain DT) {
         updateShufflables();
         driveTrain = DT;
-        testingBoostSpeed = kMaxDriveSpeed.get(); // comment out before tryouts
+        testingBoostSpeed = PSDMaxDriveSpeed.get(); // comment out before tryouts
         orientationMultiplier = -1;// switch if red or blue
     }
 
@@ -42,6 +44,16 @@ public class DriverCommands extends CommandBase {
     public void execute() {
         updateShufflables();
         updateWidget();
+        if(kDriver.getRawAxis(kLeftTrigger)>kDeadband){
+            m_driveSpeed=kSlowDriveSpeed;
+            m_rotSpeed=kSlowRotSpeed;
+        } else {
+            m_driveSpeed=kMaxDriveSpeed;
+            m_rotSpeed=kMaxRotSpeed;
+        }
+        if(kDriver.getRawAxis(kRightTrigger)>kDeadband){driveTrain.doFieldOrientation=false;} else{
+            driveTrain.doFieldOrientation = true;}
+        System.out.println(m_driveSpeed+" "+m_rotSpeed);
         // driveJoystickAngle = Math.atan2(
         // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
         // kDriver.getRawAxis(kLeftHorizontal));// radians, use atan2 to avoid undefined
@@ -58,20 +70,20 @@ public class DriverCommands extends CommandBase {
         // * kMaxDriveSpeed.get();
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,
-                -kDriver.getRawAxis(kLeftVertical) * kMaxDriveSpeed.get());
+                -kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
         driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.yDriveTarget,
-                kDriver.getRawAxis(kLeftHorizontal) * kMaxDriveSpeed.get());
+                kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
         driveTrain.rotationTarget = orientationMultiplier
                 * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
-                * kMaxRotSpeed.get();
+                * m_rotSpeed;
 
         // comment out before tryouts
-        if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
-            testingBoostSpeed += 2;
-        } else {
-            testingBoostSpeed = kMaxDriveSpeed.get();
-        }
+        // if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
+        //     testingBoostSpeed += 2;
+        // } else {
+        //     testingBoostSpeed = PSDMaxDriveSpeed.get();
+        // }
 
         // driveTrain.xDriveTarget = -kDriver.getRawAxis(kLeftVertical) *
         // testingBoostSpeed;
@@ -134,11 +146,11 @@ public class DriverCommands extends CommandBase {
     }
 
     private void updateShufflables() {
-        if (kMaxDriveSpeed.detectChanges()) {
-            kMaxDriveSpeed.subscribeAndSet();
+        if (PSDMaxDriveSpeed.detectChanges()) {
+            PSDMaxDriveSpeed.subscribeAndSet();
         }
-        if (kMaxRotSpeed.detectChanges()) {
-            kMaxRotSpeed.subscribeAndSet();
+        if (PSDMaxRotSpeed.detectChanges()) {
+            PSDMaxRotSpeed.subscribeAndSet();
         }
         if (kAccelerationSmoothFactor.detectChanges()) {
             kAccelerationSmoothFactor.subscribeAndSet();
