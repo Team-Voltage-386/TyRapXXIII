@@ -25,6 +25,7 @@ public class HandTasks extends InstantCommand {
    */
   public HandTasks(boolean clawClose, handIntakeStates intakeDo, Hand hand) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_clawClose=clawClose;
     m_hand = hand;
     m_IntakeState = intakeDo;
     addRequirements(hand);

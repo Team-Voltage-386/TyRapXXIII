@@ -19,6 +19,8 @@ public class ArmDo extends CommandBase {
    * @param sequence
    */
   public ArmDo(Arm arm, ArmKeyframe[] sequence) {
+    m_arm=arm;
+    m_sequence=sequence;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
   }
