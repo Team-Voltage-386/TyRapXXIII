@@ -41,6 +41,9 @@ public class Hand extends SubsystemBase {
 
     public int handPosition;
     public handIntakeStates intakeCurrentTask = handIntakeStates.doNothing;
+    double intakeSpeed;
+    double ejectSpeed;
+    double stowSpeed;
 
     boolean handTurningClockwise;
     double targHandPos = 0;
@@ -70,10 +73,11 @@ public class Hand extends SubsystemBase {
         if (handCanRotate) {
             setHandMotor();
         }
+        runIntakeMotorState();
         updateWidgets();
     }
 
-    public double getPositioning() {
+    public double getWristAngle() {
         return (HandRotationalMotor.getSelectedSensorPosition());
     }
 
@@ -103,9 +107,6 @@ public class Hand extends SubsystemBase {
 
     public void IntakeMotorControl(handIntakeStates intakeTask) {
         intakeCurrentTask = intakeTask;
-        double intakeSpeed;
-        double ejectSpeed;
-        double stowSpeed;
         if (ConeMode) {
             intakeSpeed = kConeIntakeSpeed;
             ejectSpeed = -kConeIntakeSpeed;
@@ -115,7 +116,10 @@ public class Hand extends SubsystemBase {
             ejectSpeed = -kCubeIntakeSpeed - .2;
             stowSpeed = kCubeStowSpeed;
         }
-        switch (intakeTask) {
+        
+    }
+    private void runIntakeMotorState(){
+        switch (intakeCurrentTask) {
             case intake:
                 RPickup.set(intakeSpeed);
                 LPickup.set(intakeSpeed);
@@ -137,22 +141,22 @@ public class Hand extends SubsystemBase {
     }
 
     public boolean canRetract() {
-        return (Math.abs(getPositioning()) < 3.0);
+        return (Math.abs(getWristAngle()) < 3.0);
     }
 
     private void setHandMotor() {
-        if (handPosition == 1 && !getHandLimitSwitch() && getPositioning() < 75) {
+        if (handPosition == 1 && !getHandLimitSwitch() && getWristAngle() < 75) {
             HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == 0 && getPositioning() > 0 && !canRetract()) {
+        } else if (handPosition == 0 && getWristAngle() > 0 && !canRetract()) {
             HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        } else if (handPosition == 0 && getPositioning() < 0 && !canRetract()) {
+        } else if (handPosition == 0 && getWristAngle() < 0 && !canRetract()) {
             HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == -1 && !getHandLimitSwitch() && getPositioning() > -75) {
+        } else if (handPosition == -1 && !getHandLimitSwitch() && getWristAngle() > -75) {
             HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
             // fix hand positions
-        } else if (handPosition == 1 && getPositioning() > 78) {
+        } else if (handPosition == 1 && getWristAngle() > 78) {
             HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        } else if (handPosition == -1 && getPositioning() < -78) {
+        } else if (handPosition == -1 && getWristAngle() < -78) {
             HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
             // do nothing
         } else {
@@ -188,16 +192,16 @@ public class Hand extends SubsystemBase {
 
     }
 
-    private GenericPublisher HandWidget = HandTab.add("Hand Position", 0.0).withPosition(0, 0).withSize(1, 1)
+    private GenericPublisher HandAngleWidget = HandTab.add("Hand Angle", 0.0).withPosition(0, 0).withSize(1, 1)
             .getEntry();
     private GenericPublisher HandLimitWidget = HandTab.add("Magnetic limit", false)
             .withWidget(BuiltInWidgets.kBooleanBox)
             .withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(0, 1)
 
             .withSize(1, 1).getEntry();
-    private GenericPublisher HandRotateWidget = HandTab.add("Hand Mode", -11).withPosition(0, 2).withSize(1, 1)
+    private GenericPublisher HandStateWidget = HandTab.add("Hand Mode", -11).withPosition(0, 2).withSize(1, 1)
             .getEntry();
-    private GenericPublisher handIntakeTast = HandTab.add("Intake Task", "").withPosition(1, 2).getEntry();
+    private GenericPublisher handIntakeTask = HandTab.add("Intake Task", "").withPosition(1, 2).getEntry();
 
     public String whatIsIntakeDoing() {
         switch (intakeCurrentTask) {
@@ -213,12 +217,12 @@ public class Hand extends SubsystemBase {
     }
 
     private void updateWidgets() {
-        HandWidget.setDouble(getPositioning());
+        HandAngleWidget.setDouble(getWristAngle());
         HandLimitWidget.setBoolean(getHandLimitSwitch());
-        HandRotateWidget.setInteger(handPosition);
+        HandStateWidget.setInteger(handPosition);
         Mode.setBoolean(ConeMode);
         CurrentR.setDouble(RPickup.getOutputCurrent());
         CurrentL.setDouble(LPickup.getOutputCurrent());
-        handIntakeTast.setString(whatIsIntakeDoing());
+        handIntakeTask.setString(whatIsIntakeDoing());
     }
 }
