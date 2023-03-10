@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class Flags {
 
     // public static boolean IntakeDirection;// put out or suck
-    public static boolean ConeMode;
-    public static boolean handCanRotate;
-    public static boolean scoreHighTarget;
-    public static boolean armIsAtTarget;
-    public static subsystemsStates manipulatorSetState;
+    public static boolean ConeMode=true;
+    public static boolean handCanRotate=false;
+    public static boolean scoreHighTarget=true;
+    public static boolean armIsAtTarget=false;
+    public static subsystemsStates manipulatorSetState = subsystemsStates.runStow;
 
     public static enum subsystemsStates {
         runStow, runScore, runPickup

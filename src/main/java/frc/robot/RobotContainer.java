@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -44,12 +45,18 @@ public class RobotContainer {
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls);
   private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand, m_manipulatorCommand);
 
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private final AutoRoutines autos = this.new AutoRoutines();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    autoChooser.addOption("test1", autos.test1);
+    Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
+
   }
 
   /**
@@ -73,20 +80,23 @@ public class RobotContainer {
     return m_teleop;
   }
 
-  public final class AutoRoutines{
+  public final class AutoRoutines {
 
     public final Command test1 = new SequentialCommandGroup(
-      new HandTasks(true,handIntakeStates.intake,HandControls),
-      new ArmDo(m_Arm, null)
-
+        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        new Drive(-3, 0, 0, m_driveTrain)
     );
   }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
   }
 }

@@ -15,14 +15,15 @@ import frc.robot.subsystems.Hand;
 public class HandTasks extends InstantCommand {
   private Hand m_hand;
   private handIntakeStates m_IntakeState;
-  private boolean m_clawOpen;
+  private boolean m_clawClose;
+
   /**
    * 
-   * @param clawOpen
+   * @param clawClose
    * @param intakeDo
    * @param hand
    */
-  public HandTasks(boolean clawOpen, handIntakeStates intakeDo, Hand hand) {
+  public HandTasks(boolean clawClose, handIntakeStates intakeDo, Hand hand) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_hand = hand;
     m_IntakeState = intakeDo;
@@ -33,7 +34,7 @@ public class HandTasks extends InstantCommand {
   @Override
   public void initialize() {
     m_hand.IntakeMotorControl(m_IntakeState);
-    if (m_clawOpen) {
+    if (m_clawClose) {
       m_hand.pcmCompressor.set((Value.kForward));
     } else {
       m_hand.pcmCompressor.set((Value.kReverse));
