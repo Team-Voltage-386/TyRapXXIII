@@ -11,13 +11,13 @@ import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.mapping.*;
 import static frc.robot.Constants.SmoothingConstants.*;
+import static frc.robot.utils.AllianceData.*;
 
 public class DriverCommands extends CommandBase {
 
     private Drivetrain driveTrain;
     private PersistentShufflableDouble driveCurvingPower = new PersistentShufflableDouble(1, "driveCurvingPower");
     private PersistentShufflableDouble rotationCurvingPower = new PersistentShufflableDouble(3, "rotationCurvingPower");
-    private int orientationMultiplier;
 
     private double testingBoostSpeed; // comment out before tryouts
     private double driveJoystickAngle, driveMagnitude, driveJoystickMagnitude;
@@ -28,7 +28,6 @@ public class DriverCommands extends CommandBase {
         updateShufflables();
         driveTrain = DT;
         testingBoostSpeed = PSDMaxDriveSpeed.get(); // comment out before tryouts
-        orientationMultiplier = -1;// switch if red or blue
     }
 
     @Override
@@ -70,11 +69,11 @@ public class DriverCommands extends CommandBase {
         // * kMaxDriveSpeed.get();
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,
-                -kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
+                joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
         driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.yDriveTarget,
                 kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
-        driveTrain.rotationTarget = orientationMultiplier
+        driveTrain.rotationTarget = joystickOrientationMultiplier
                 * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
                 * m_rotSpeed;
 
