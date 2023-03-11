@@ -122,8 +122,8 @@ public class Arm extends SubsystemBase {
 
         // add a filter of target angles here
         ArmDrive();// the only line that will drive the arm motors is this one
-        updateWidgets();
-        updateShufflables();
+        // updateWidgets();
+        // updateShufflables();
     }
 
     /**

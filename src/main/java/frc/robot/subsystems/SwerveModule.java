@@ -102,7 +102,7 @@ public class SwerveModule {
     }
 
     public void drive() {
-        updateWidget();
+        // updateWidget();
 
         steerMotor.set(steerPID.calc(getSwerveHeadingError()));
 

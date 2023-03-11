@@ -56,7 +56,7 @@ public class DriverCommands extends CommandBase {
         } else {
             driveTrain.doFieldOrientation = true;
         }
-        System.out.println(m_driveSpeed + " " + m_rotSpeed);
+        // System.out.println(m_driveSpeed + " " + m_rotSpeed);
         // driveJoystickAngle = Math.atan2(
         // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
         // kDriver.getRawAxis(kLeftHorizontal));// radians, use atan2 to avoid undefined

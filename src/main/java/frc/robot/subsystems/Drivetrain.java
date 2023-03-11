@@ -94,11 +94,11 @@ public class Drivetrain extends SubsystemBase {
                     
 
             wasEnabled = false;
-            for (SwerveModule swerve : modules) //diagnosing tool, delete later
-                swerve.updateWidget();//diagnosing tool, delete later
+            // for (SwerveModule swerve : modules) //diagnosing tool, delete later
+                // swerve.updateWidget();//diagnosing tool, delete later
         }
 
-        updateWidget();
+        // updateWidget();
     }
 
     public double getRawHeading() {
