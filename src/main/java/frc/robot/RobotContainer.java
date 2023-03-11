@@ -49,7 +49,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final AutoRoutines autos = this.new AutoRoutines();
 
-  public final static LEDSubsystem LED = new LEDSubsystem();
+  public final LEDSubsystem LED = new LEDSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

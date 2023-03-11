@@ -172,7 +172,8 @@ public class LEDSubsystem extends SubsystemBase
 
     @Override
     public void periodic() {
-        led.setData(ledBuffer);    
+        led.setData(ledBuffer);
+        updateLEDS();
     }
 
 
