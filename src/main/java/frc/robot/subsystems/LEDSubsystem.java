@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.LEDConstants.*;
+import static frc.robot.utils.Flags.*;
 
 public class LEDSubsystem extends SubsystemBase
 {
@@ -11,6 +13,9 @@ public class LEDSubsystem extends SubsystemBase
     private static final int LEDPort = kLEDPort;
     private static final int LEDLength = kLEDLength;
     private double BWCycle = 0.0;
+
+    //LEDs will alternate every LED_Speed milliseconds
+    private static int LED_Speed=50;
 
     //Sets up the LEDs so we can write values to them
     AddressableLED led = new AddressableLED(LEDPort);
@@ -21,6 +26,18 @@ public class LEDSubsystem extends SubsystemBase
         led.setLength(LEDLength);
         led.setData(ledBuffer);
         led.start();
+    }
+
+    public void updateLEDS()
+    {
+        if (ConeMode==true)
+        {
+            AlternatingYellow();
+        }
+        else
+        {
+            AlternatingPurple();
+        }
     }
 
     //Sets the single LED at index to purple
@@ -72,10 +89,49 @@ public class LEDSubsystem extends SubsystemBase
         }
     }
 
-    //Alternates all of the LEDs for when the Robot is in cone mode
+    //Alternates all of the LEDs between off and purple for when the Robot is in cube mode
     public void AlternatingPurple() {
+        int LED_Mode=0;
+        if ((Timer.getFPGATimestamp()%(LED_Speed*2))>LED_Speed)
+        {
+            LED_Mode=0;
+        }
+        else
+        {
+            LED_Mode=1;
+        }
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-          setOnePurple(i);
+            if (i%2==LED_Mode)
+            {
+                setOnePurple(i);
+            }
+            else
+            {
+                setOneOff(i);
+            }
+        }
+    }
+
+    //Alternates all of the LEDs between off and purple for when the Robot is in cone mode
+    public void AlternatingYellow() {
+        int LED_Mode=0;
+        if ((Timer.getFPGATimestamp()%(LED_Speed*2))>LED_Speed)
+        {
+            LED_Mode=0;
+        }
+        else
+        {
+            LED_Mode=1;
+        }
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            if (i%2==LED_Mode)
+            {
+                setOneYellow(i);
+            }
+            else
+            {
+                setOneOff(i);
+            }
         }
     }
 

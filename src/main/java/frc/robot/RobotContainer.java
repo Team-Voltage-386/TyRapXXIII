@@ -13,6 +13,7 @@ import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hand;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Hand.handIntakeStates;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,6 +48,8 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final AutoRoutines autos = this.new AutoRoutines();
+
+  public final static LEDSubsystem LED = new LEDSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
