@@ -55,6 +55,8 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     autoChooser.addOption("test1", autos.test1);
+    autoChooser.addOption("test2", autos.test2);
+
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
 
   }
@@ -80,6 +82,7 @@ public class RobotContainer {
     return m_teleop;
   }
 
+  //all auto routines go here, make sure to add to sendable chooseer
   public final class AutoRoutines {
 
     public final Command test1 = new SequentialCommandGroup(

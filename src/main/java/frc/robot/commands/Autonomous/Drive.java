@@ -17,7 +17,13 @@ public class Drive extends CommandBase {
     private final double h;
     private final Drivetrain dt;
     
-
+    /**
+     * achieve relative x, y, and H (target x, y and heading)
+     * @param X
+     * @param Y
+     * @param H
+     * @param DT
+     */
     public Drive(double X, double Y, double H, Drivetrain DT) {
         x = X;
         y = Y;

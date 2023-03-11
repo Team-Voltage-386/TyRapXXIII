@@ -10,11 +10,10 @@ import frc.robot.utils.ArmKeyframe;
 import static frc.robot.utils.Flags.*;
 
 public class ArmDo extends CommandBase {
-  /** Creates a new ArmDo. */
   private Arm m_arm;
   private ArmKeyframe[] m_sequence;
   /**
-   * 
+   * set arm sequence of arm
    * @param arm
    * @param sequence
    */

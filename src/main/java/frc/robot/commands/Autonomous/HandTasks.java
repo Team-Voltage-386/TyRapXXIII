@@ -18,7 +18,7 @@ public class HandTasks extends InstantCommand {
   private boolean m_clawClose;
 
   /**
-   * 
+   * set hand states of claw and intake wheel speed. Wrist should be set on 0
    * @param clawClose
    * @param intakeDo
    * @param hand
