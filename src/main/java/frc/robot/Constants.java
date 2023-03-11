@@ -193,14 +193,14 @@ public final class Constants {
             // pickup sequences
             public static ArmKeyframe[] kfseqCubeStowToCubePickup = {
                     new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary, 5),
-                    new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 5),
-                    new ArmKeyframe(new double[] { -84, 103 }, armKeyFrameStates.intermediary, 3),
+                    //new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary, 5),
+                    new ArmKeyframe(new double[] { -99, 103 }, armKeyFrameStates.intermediary, 3),
                     new ArmKeyframe(new double[] { -84, kElbowPickupNormal }, armKeyFrameStates.pickup, 3),
             };
             // stowing sequences
             public static ArmKeyframe[] kfseqCubePickuptoCubeStow = {
-                    new ArmKeyframe(new double[] { -84, 103 }, armKeyFrameStates.intermediary, 3),
-                    new ArmKeyframe(new double[] { -115.2, 120 }, armKeyFrameStates.stowed, 15)
+                    new ArmKeyframe(new double[] { -99, 103 }, armKeyFrameStates.intermediary, 3),
+                    new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.stowed, 3)
             };
             public static ArmKeyframe[] kfseqConeHightoCubeStow = {
                     new ArmKeyframe(new double[] { 10, 27 }, armKeyFrameStates.intermediary, 3),
