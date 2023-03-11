@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants.*;
 
-public class AutoShuffleBoard {
+public class AutoShuffleBoard{
     // Initialization of all shuffleboard auto options
     private static final ShuffleboardTab Auto = Shuffleboard.getTab("Auto");
     public final SendableChooser<Piece> StartingPieceChooser = new SendableChooser<>();
@@ -23,6 +23,8 @@ public class AutoShuffleBoard {
     public final SendableChooser<Balancing> BalancingChooser = new SendableChooser<>();
     // Martian rock is an exception to enums and will be using an integer value
     public final SendableChooser<Integer> MartianRockChooser = new SendableChooser<>();
+    private GenericPublisher AutoReady = Auto.add("Auto Ready", false).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(6, 0).withSize(2, 2).getEntry();
+
 
     public AutoShuffleBoard() {
         // Adds all of the auto options to the auto shuffleboard
@@ -64,8 +66,6 @@ public class AutoShuffleBoard {
         MartianRockChooser.addOption("Martian Rock Mode", 1);
         MartianRockChooser.setDefaultOption("Normal", 0);
         Auto.add("Martian Rock", MartianRockChooser).withPosition(6, 2).withSize(2, 2);
-
-        GenericPublisher AutoReady = Auto.add("Auto Ready", false).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "#FF0000", "Color when false", "#009900")).withPosition(6, 0).withSize(2, 2).getEntry();
         
     }
 
@@ -104,10 +104,13 @@ public class AutoShuffleBoard {
         if (!(getMartianRock() || getStartingPiece() == Piece.ERROR || getStartingPlace() == Place.ERROR ||
                 getBalance() == Balancing.ERROR || getStartingPosition() == Position.ERROR
                 || getSecondPiece() == Piece.ERROR ||
-                getSecondPlace() == Place.ERROR)) {
-            SmartDashboard.putBoolean("Auto Ready", true);
-        } else {
-            SmartDashboard.putBoolean("Auto Ready", false);
+                getSecondPlace() == Place.ERROR)) 
+        {
+            AutoReady.setBoolean(true);
+        } 
+        else 
+        {
+            AutoReady.setBoolean(false);
         }
     }
 }
