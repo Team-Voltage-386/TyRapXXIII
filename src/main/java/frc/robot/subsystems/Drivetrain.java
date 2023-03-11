@@ -71,7 +71,7 @@ public class Drivetrain extends SubsystemBase {
                         swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
                         swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
                     } else {
-                        swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
+                        swerve.targetSteer = Math.toDegrees(Math.atan2(-y, -x));
                         swerve.targetDrive = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
                     }
                 } else {
