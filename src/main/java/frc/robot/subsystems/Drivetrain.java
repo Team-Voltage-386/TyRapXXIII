@@ -77,7 +77,8 @@ public class Drivetrain extends SubsystemBase {
                 } else {
                     swerve.targetDrive = 0;
                     swerve.drivePID.reset();
-                    swerve.targetSteer = swerve.angleFromCenter + 90;// circle lock is add 90, x lock is add 0
+                    swerve.targetSteer = 0;// circle lock is add 90, x lock is add 0
+                    // swerve.angleFromCenter + 90
                 }
 
                 swerve.drive();
@@ -89,7 +90,11 @@ public class Drivetrain extends SubsystemBase {
             if (wasEnabled)
                 for (SwerveModule swerve : modules)
                     swerve.reset();
+                    
+
             wasEnabled = false;
+            for (SwerveModule swerve : modules) //diagnosing tool, delete later
+                swerve.updateWidget();//diagnosing tool, delete later
         }
 
         updateWidget();
@@ -169,6 +174,7 @@ public class Drivetrain extends SubsystemBase {
             angle += 360;
         return res;
     }
+
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final ShuffleboardTab speedTab = Shuffleboard.getTab("Speed");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();

@@ -117,7 +117,7 @@ public class SwerveModule {
         driveMotor.set(0);
     }
 
-    private void updateWidget() {
+    public void updateWidget() {
         steerMotorCurrentWidget.setDouble(steerMotor.getOutputCurrent());
         driveMotorCurrentWidget.setDouble(driveMotor.getOutputCurrent());
         driveMotorSetWidget.setDouble(mapValue(Math.abs(getSwerveHeadingError()), 0, 180, 1, 0)
