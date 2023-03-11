@@ -147,9 +147,9 @@ public class Hand extends SubsystemBase {
     private void setHandMotor() {
         if (handPosition == 1 && !getHandLimitSwitch() && getWristAngle() < 75) {
             HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == 0 && getWristAngle() > 0 && !canRetract()) {
+        } else if (handPosition == 0 && getWristAngle() > 0 && !canRetract() && !getHandLimitSwitch()) {
             HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        } else if (handPosition == 0 && getWristAngle() < 0 && !canRetract()) {
+        } else if (handPosition == 0 && getWristAngle() < 0 && !canRetract() && !getHandLimitSwitch()) {
             HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
         } else if (handPosition == -1 && !getHandLimitSwitch() && getWristAngle() > -75) {
             HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
@@ -211,6 +211,8 @@ public class Hand extends SubsystemBase {
                 return "lettingGo";
             case doNothing:
                 return "doNothing";
+            case stow:
+                return "stow";
             default:
                 return "uh oh";
         }

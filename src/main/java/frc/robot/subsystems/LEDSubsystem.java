@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+
 import static frc.robot.Constants.LEDConstants.*;
 import static frc.robot.utils.Flags.*;
 
@@ -30,13 +32,18 @@ public class LEDSubsystem extends SubsystemBase
 
     public void updateLEDS()
     {
-        if (ConeMode==true)
+        if (Robot.inst.isEnabled())
         {
-            AlternatingYellow();
-        }
-        else
-        {
-            AlternatingPurple();
+            if (ConeMode==true)
+            {
+                AlternatingYellow();
+            }
+            else
+            {
+                FadingBlue();
+            }
+        } else {
+            allOff(); //i added this while ryan was afk
         }
     }
 
@@ -89,10 +96,10 @@ public class LEDSubsystem extends SubsystemBase
         }
     }
 
-    //Alternates all of the LEDs between off and purple for when the Robot is in cube mode
-    public void AlternatingPurple() {
+    //Alternates all of the LEDs between off and blue for when the Robot is in cube mode
+    public void AlternatingBlue() {
         int LED_Mode=0;
-        if ((Timer.getFPGATimestamp()%(LED_Speed*2))>LED_Speed)
+        if ((Timer.getFPGATimestamp()/(LED_Speed*2))>LED_Speed)
         {
             LED_Mode=0;
         }
@@ -103,7 +110,7 @@ public class LEDSubsystem extends SubsystemBase
         for (int i = 0; i < ledBuffer.getLength(); i++) {
             if (i%2==LED_Mode)
             {
-                setOnePurple(i);
+                setOneBlue(i);
             }
             else
             {
@@ -115,7 +122,7 @@ public class LEDSubsystem extends SubsystemBase
     //Alternates all of the LEDs between off and purple for when the Robot is in cone mode
     public void AlternatingYellow() {
         int LED_Mode=0;
-        if ((Timer.getFPGATimestamp()%(LED_Speed*2))>LED_Speed)
+        if ((int)(Timer.getFPGATimestamp()/(LED_Speed*2))>LED_Speed)
         {
             LED_Mode=0;
         }
@@ -132,6 +139,13 @@ public class LEDSubsystem extends SubsystemBase
             {
                 setOneOff(i);
             }
+        }
+    }
+
+    public void FadingBlue(){
+        for (int i=0; i < ledBuffer.getLength(); i++)
+        {
+            ledBuffer.setHSV(i, 270, 100, ((int)(Timer.getFPGATimestamp()*100)%100));
         }
     }
 
