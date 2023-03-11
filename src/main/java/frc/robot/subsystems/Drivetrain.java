@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.utils.AllianceData;
 
 public class Drivetrain extends SubsystemBase {
     public double xDriveTarget = 0;
@@ -115,7 +116,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.setYaw(180);
+        IMU.setYaw(AllianceData.resetOrientationOffset);
     }
 
     private void updateOdometry() {
