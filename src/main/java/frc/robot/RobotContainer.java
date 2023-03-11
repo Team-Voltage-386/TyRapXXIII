@@ -7,11 +7,14 @@ package frc.robot;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
+import frc.robot.commands.Autonomous.HandTasks;
+import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hand;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Hand.handIntakeStates;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -20,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -41,12 +45,20 @@ public class RobotContainer {
   private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls);
   private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand, m_manipulatorCommand);
 
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private final AutoRoutines autos = this.new AutoRoutines();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    autoChooser.addOption("test1", autos.test1);
+    autoChooser.addOption("test2", autos.test2);
+
+    Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
+
   }
 
   /**
@@ -70,12 +82,31 @@ public class RobotContainer {
     return m_teleop;
   }
 
+  //all auto routines go here, make sure to add to sendable chooseer
+  public final class AutoRoutines {
+
+    public final Command test1 = new SequentialCommandGroup(
+        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        new Drive(-3, 0, 0, m_driveTrain)
+    );
+    public final Command test2 = new SequentialCommandGroup(
+        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        new Drive(-3, 0, 0, m_driveTrain))
+        );
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
   }
 }

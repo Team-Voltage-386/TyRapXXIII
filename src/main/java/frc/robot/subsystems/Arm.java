@@ -271,6 +271,7 @@ public class Arm extends SubsystemBase {
             lastKeyframe = nextKeyframe;
             // break, it is done
             runningKeyframesAndSequences = false;
+            armIsAtTarget=true;
         }
         // between keyframes
         else if (sequenceIndex != 0 && sequenceIndex < targetSequence.length) {
@@ -365,6 +366,7 @@ public class Arm extends SubsystemBase {
             sequenceIndex = 0;
             keyFrameSequence = inputKeyFrames;
             runningKeyframesAndSequences = true;
+            armIsAtTarget=false;
             return true;
         } return false;
     }
