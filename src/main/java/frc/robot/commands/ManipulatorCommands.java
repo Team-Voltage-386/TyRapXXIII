@@ -117,6 +117,20 @@ public class ManipulatorCommands extends CommandBase {
           m_hand.pcmCompressor.set(Value.kReverse);
 
         }
+
+        if(ConeMode){
+          if (kManipulator.getRawAxis(kLeftTrigger) > kDeadband) {
+            m_hand.pcmCompressor.set(Value.kReverse);
+          }
+          if(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed && kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
+            m_hand.pcmCompressor.set(Value.kForward);
+          }
+        }
+
+        if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
+          m_arm.dontProtectArm();
+        }
+
         break;
       case runPickup:
         // arm sequence
@@ -160,6 +174,20 @@ public class ManipulatorCommands extends CommandBase {
           m_hand.ChangeMode();
 
         }
+
+        if(ConeMode){
+          if (kManipulator.getRawAxis(kLeftTrigger)>kDeadband) {
+            m_hand.pcmCompressor.set(Value.kReverse);
+          }
+          if(kManipulator.getRawAxis(kLeftTrigger)<=kDeadband) {
+            m_hand.pcmCompressor.set(Value.kForward);
+          }
+        }
+
+        if(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup && !m_arm.runningKeyframesAndSequences) {
+          m_arm.protectArm();
+        }
+
         break;
 
       case runScore:
@@ -197,6 +225,10 @@ public class ManipulatorCommands extends CommandBase {
         // zero wrist
         m_hand.handPosition = 0;
         // arm tasks
+
+        if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
+          m_arm.dontProtectArm();
+        }
 
         break;
 

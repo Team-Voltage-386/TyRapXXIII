@@ -7,7 +7,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -23,6 +26,7 @@ import static frc.robot.utils.Flags.*;
 
 import static frc.robot.Constants.ArmConstants.*;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
+import static frc.robot.Constants.HandConstants.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -54,6 +58,7 @@ public class Arm extends SubsystemBase {
     public double[][] fkCoords;
     public int keyFrameIndex, sequenceIndex;
     public boolean runningKeyframesAndSequences;
+    public DoubleSolenoid armprotector;
 
     // public PersistentShufflableDouble PSDInitialShoulderTarget,
     // PSDInitialElbowTarget;
@@ -71,6 +76,8 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder = new DutyCycleEncoder(kShoulderEncoderPin);// update encoder ID's
         ElbowEncoder = new DutyCycleEncoder(kElbowEncoderPin);
         ShoulderLimitSwitch = new DigitalInput(kShoulderLimitSwitch);
+        armprotector = new DoubleSolenoid(kDoubleSolenoidModule, PneumaticsModuleType.CTREPCM, kProtectorUp,
+                kProtectorDown);
         // ArmUpperEncoder.setReverseDirection(true);
         // ArmUpperMotor.setInverted(true);
         // ArmLowerEncoder.setReverseDirection(true);
@@ -285,6 +292,27 @@ public class Arm extends SubsystemBase {
                 sequenceIndex = 0;
                 keyFrameIndex++;
             }
+        }
+    }
+
+    /**whether the arm protectors are up or not. true = theyre up, false = theyre down.*/
+    public boolean armIsProtected = false;
+    /**deploys the arm protectors.
+     * ONLY RUN THIS IN PICKUP. IF YOU RUN THIS IN ANYTHING BUT PICKUP, THINGS WILL EXPLODE.
+     */
+    public void protectArm() {
+        if(!armIsProtected) {
+        armprotector.set(Value.kForward);
+        armIsProtected = true;
+        }
+    }
+    /**UN-DEPLOYS the arm protectors, and keeps them undeployed.
+     * ONLY RUN THIS IN PICKUP. IF YOU RUN THIS IN ANYTHING BUT PICKUP, THINGS WILL EXPLODE.
+     */
+    public void dontProtectArm() {
+        if(armIsProtected) {
+            armprotector.set(Value.kReverse);
+            armIsProtected = false;
         }
     }
 

@@ -143,6 +143,8 @@ public final class Constants {
         public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5,
                 "armThreshhold",
                 "ArmFF");
+        public static final int kProtectorUp = 7;
+        public static final int kProtectorDown = 6;
         public static final double KStowPressVelocity = -.1;
         public static final int KTrajectorySteps = 3;
         public static final double kArmTolerance = 5;// in degrees
