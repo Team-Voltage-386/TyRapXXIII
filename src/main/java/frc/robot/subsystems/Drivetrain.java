@@ -64,16 +64,16 @@ public class Drivetrain extends SubsystemBase {
                     double rAngle = swerve.angleFromCenter + angle + 90;
                     x += r * Math.cos(Math.toRadians(rAngle));
                     y += r * Math.sin(Math.toRadians(rAngle));
-                    if (doFieldOrientation) {
-                        xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
-                        yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
-                    } else {
-                        xFin = -x;
-                        yFin = -y;
-                    }
+                    xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
+                    yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
 
-                    swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
-                    swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
+                    if (doFieldOrientation) {
+                        swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
+                        swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
+                    } else {
+                        swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
+                        swerve.targetDrive = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+                    }
                 } else {
                     swerve.targetDrive = 0;
                     swerve.drivePID.reset();
@@ -169,6 +169,7 @@ public class Drivetrain extends SubsystemBase {
             angle += 360;
         return res;
     }
+
     private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private static final ShuffleboardTab speedTab = Shuffleboard.getTab("Speed");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
