@@ -127,6 +127,10 @@ public class ManipulatorCommands extends CommandBase {
           }
         }
 
+        if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
+          m_arm.dontProtectArm();
+        }
+
         break;
       case runPickup:
         // arm sequence
@@ -180,6 +184,10 @@ public class ManipulatorCommands extends CommandBase {
           }
         }
 
+        if(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup && !m_arm.runningKeyframesAndSequences) {
+          m_arm.protectArm();
+        }
+
         break;
 
       case runScore:
@@ -217,6 +225,10 @@ public class ManipulatorCommands extends CommandBase {
         // zero wrist
         m_hand.handPosition = 0;
         // arm tasks
+
+        if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
+          m_arm.dontProtectArm();
+        }
 
         break;
 
