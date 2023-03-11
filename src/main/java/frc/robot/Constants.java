@@ -252,7 +252,7 @@ public final class Constants {
     }
 
     public static final class LEDConstants {
-        public static int kLEDPort = 0;
-        public static int kLEDLength = 0;
+        public static int kLEDPort = 9;
+        public static int kLEDLength = 146;
     }
 }

@@ -13,6 +13,7 @@ import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hand;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Hand.handIntakeStates;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -39,10 +40,11 @@ public class RobotContainer {
   public final Drivetrain m_driveTrain = new Drivetrain();
   private final Arm m_Arm = new Arm();
   private final Limelight m_ll = new Limelight();
+  private final LEDSubsystem m_LED = new LEDSubsystem();
 
   private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrain);
   public final Hand HandControls = new Hand();
-  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls);
+  private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls, m_LED);
   private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand, m_manipulatorCommand);
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
