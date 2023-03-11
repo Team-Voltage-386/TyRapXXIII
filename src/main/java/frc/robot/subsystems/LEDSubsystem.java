@@ -14,6 +14,7 @@ public class LEDSubsystem extends SubsystemBase
     //Intializes led length and port
     private static final int LEDPort = kLEDPort;
     private static final int LEDLength = kLEDLength;
+    private boolean LEDConeMode;
     private double BWCycle = 0.0;
 
     //LEDs will alternate every LED_Speed milliseconds
@@ -34,13 +35,13 @@ public class LEDSubsystem extends SubsystemBase
     {
         if (Robot.inst.isEnabled())
         {
-            if (ConeMode==true)
+            if (LEDConeMode==true)
             {
-                AlternatingYellow();
+                allYellow();
             }
-            else
+            if (LEDConeMode==false)
             {
-                FadingBlue();
+                allBlue();
             }
         } else {
             allOff(); //i added this while ryan was afk
@@ -74,7 +75,9 @@ public class LEDSubsystem extends SubsystemBase
     //     }
     //     led.setData(ledBuffer);
     // }
-    
+    public void setLEDConeMode(boolean ManipulatorConemode){
+        LEDConeMode=ManipulatorConemode;
+    }
     //Sets all of the LEDs on the strip to purple
     public void allPurple() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
@@ -93,6 +96,13 @@ public class LEDSubsystem extends SubsystemBase
     public void allYellow() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
           setOneYellow(i);
+        }
+    }
+
+    //Sets all of the Leds on the strip to blue
+    public void allBlue() {
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+          setOneBlue(i);
         }
     }
 
@@ -149,6 +159,12 @@ public class LEDSubsystem extends SubsystemBase
         }
     }
 
+    public void FadingYellow(){
+        for (int i=0; i < ledBuffer.getLength(); i++)
+        {
+            ledBuffer.setHSV(i, 90, 100, ((int)(Timer.getFPGATimestamp()*100)%100));
+        }
+    }
     //Huh? (Ask Lucas idk what he was trying to do)
     public void BlueYellow()
     {
