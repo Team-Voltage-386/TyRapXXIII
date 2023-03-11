@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -15,6 +16,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import frc.robot.utils.AllianceData;
+import frc.robot.utils.Flags;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -94,6 +98,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    AllianceData.defineOrientations();
+
     m_robotContainer.m_driveTrain.resetFO();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -111,6 +117,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    AllianceData.defineOrientations();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
