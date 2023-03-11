@@ -77,7 +77,7 @@ public class Drivetrain extends SubsystemBase {
                 } else {
                     swerve.targetDrive = 0;
                     swerve.drivePID.reset();
-                    swerve.targetSteer = 0;// circle lock is add 90, x lock is add 0
+                    swerve.targetSteer = swerve.angleFromCenter +90 ;// circle lock is add 90, x lock is add 0
                     // swerve.angleFromCenter + 90
                 }
 
