@@ -122,7 +122,7 @@ public class ManipulatorCommands extends CommandBase {
           if (kManipulator.getRawAxis(kLeftTrigger) > kDeadband) {
             m_hand.pcmCompressor.set(Value.kReverse);
           }
-          if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.score && kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
+          if(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed && kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
             m_hand.pcmCompressor.set(Value.kForward);
           }
         }
@@ -179,7 +179,7 @@ public class ManipulatorCommands extends CommandBase {
           if (kManipulator.getRawAxis(kLeftTrigger)>kDeadband) {
             m_hand.pcmCompressor.set(Value.kReverse);
           }
-          if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.score && kManipulator.getRawAxis(kLeftTrigger)<=kDeadband) {
+          if(kManipulator.getRawAxis(kLeftTrigger)<=kDeadband) {
             m_hand.pcmCompressor.set(Value.kForward);
           }
         }
