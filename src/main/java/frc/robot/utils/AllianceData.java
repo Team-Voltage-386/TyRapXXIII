@@ -12,10 +12,10 @@ public class AllianceData {
     public static void defineOrientations() {
         m_Alliance = DriverStation.getAlliance();
         if (m_Alliance == Alliance.Red) {
-            joystickOrientationMultiplier = -1;
+            joystickOrientationMultiplier = 1;
             resetOrientationOffset = 180;
         } else { //Blue
-            joystickOrientationMultiplier = 1;
+            joystickOrientationMultiplier = -1;
             resetOrientationOffset = 0;
         }
     }
