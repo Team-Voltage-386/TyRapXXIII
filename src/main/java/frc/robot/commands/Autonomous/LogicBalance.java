@@ -10,19 +10,18 @@ import frc.robot.subsystems.Drivetrain;
 public class LogicBalance extends CommandBase {
 
     private final Drivetrain dt;
+    //Store gyro values from pigeon
     private double ypr[] = new double[3];
     public Pigeon2 pigeon = new Pigeon2(kIMUid);
-
-    // Might potentially need in order to slow the robot down to prevent oscillation
-    // on the balance
-    // private int timesSwappedCounter = 0;
-    // private int timerCounter;
 
     boolean balanceDone = false;
     // This is zone in degrees when the charging station is considered balanced
     private double balanceTarget = 2.5;
+    //Counts the number of times that the direction has changed (going forward and backward on the charge station)
     private int numTimesDirectionChanged = 0;
+    //This boolean is used to determine when the robot changes direction
     private boolean wasGoingForward = true;
+    //This value is used to slow down the drive as the balance progresses
     public double driveMultiplier;
 
     // variables to display on shuffleboard
@@ -34,7 +33,7 @@ public class LogicBalance extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("Balancing Starting");
+        //System.out.println("Balancing Starting");
     }
 
     @Override
@@ -46,7 +45,8 @@ public class LogicBalance extends CommandBase {
 
         if (Math.abs(ypr[2]) > balanceTarget) {
             if (ypr[2] > balanceTarget) {
-                dt.xDriveTarget = 1.5 * driveMultiplier;
+                //driveMultiplier = Math.pow(0.8, numTimesDirectionChanged);
+                dt.xDriveTarget = 0.5 * driveMultiplier;
                 // Increments numTimesDirectionChanged
                 if (!wasGoingForward) {
                     wasGoingForward = true;
@@ -54,7 +54,8 @@ public class LogicBalance extends CommandBase {
                 }
                 isDrivingForward = true;
             } else if (ypr[2] < balanceTarget) {
-                dt.xDriveTarget = -1.5 * driveMultiplier;
+                //driveMultiplier = Math.pow(0.8, numTimesDirectionChanged);
+                dt.xDriveTarget = -0.5 * driveMultiplier;
                 // Increments numTimesDirectionChanged
                 if (wasGoingForward) {
                     wasGoingForward = false;
@@ -63,14 +64,9 @@ public class LogicBalance extends CommandBase {
                 isDrivingForward = false;
             }
         } else {
-            // x-lock the wheels when the charging station is balanced
+            // circle - lock the wheels when the charging station is balanced
             dt.xDriveTarget = 0;
         }
-        // timesSwappedCounter++;
-        SmartDashboard.putBoolean("Is Driving Forward", isDrivingForward);
-        SmartDashboard.putNumber("Number of Times Direction Changed", numTimesDirectionChanged);
-        SmartDashboard.putNumber("driveMultiplier", driveMultiplier);
-        SmartDashboard.putNumber("Balance Target", balanceTarget);
     }
 
     @Override

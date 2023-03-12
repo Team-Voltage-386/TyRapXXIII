@@ -48,9 +48,9 @@ public class DriveUntil extends CommandBase {
         } else {
             // Changing this will change the speed of the robot's approach
             if (isForward) {
-                dt.xDriveTarget = 2;
+                dt.xDriveTarget = 0.5;
             } else {
-                dt.xDriveTarget = -2;
+                dt.xDriveTarget = -0.5;
             }
 
         }

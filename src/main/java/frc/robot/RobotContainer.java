@@ -28,6 +28,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 
+import frc.robot.commands.Autonomous.DriveUntil;
+import frc.robot.commands.Autonomous.LogicBalance;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -62,7 +65,8 @@ public class RobotContainer {
     autoChooser.addOption("test2", autos.test2);
     autoChooser.addOption("test3", autos.test3);
     autoChooser.addOption("test4", autos.test4);
-    Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
+    autoChooser.addOption("Logic Balance FACE FORWARD", autos.logicBalance);
+    Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1);
 
   }
 
@@ -110,10 +114,12 @@ public class RobotContainer {
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
             new Drive(3 * AllianceData.fieldSideMultiplier, 0,
                 (AllianceData.resetOrientationOffset + 180) % 360, m_driveTrain)));
-                public final Command test4 = new SequentialCommandGroup(
+    public final Command test4 = new SequentialCommandGroup(
         new Drive(-3, 0, 0, m_driveTrain),
         new Drive(-3, -2, 0, m_driveTrain));
-    
+    public final Command logicBalance = new SequentialCommandGroup(
+        new DriveUntil(true, m_driveTrain),
+        new LogicBalance(m_driveTrain));
   }
 
   /**
