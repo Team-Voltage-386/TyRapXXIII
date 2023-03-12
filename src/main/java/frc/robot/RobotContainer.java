@@ -8,7 +8,6 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.HandTasks;
-import frc.robot.commands.Autonomous.ManualFeedOdometry;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Arm;
@@ -17,7 +16,6 @@ import frc.robot.subsystems.Hand;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Hand.handIntakeStates;
-import frc.robot.utils.AllianceData;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -58,10 +56,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    autoChooser.addOption("test1", autos.test1);
-    autoChooser.addOption("test2", autos.test2);
-    autoChooser.addOption("test3", autos.test3);
-    autoChooser.addOption("test4", autos.test4);
+    autoChooser.addOption("blue1", autos.Blue1);
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
 
   }
@@ -89,30 +84,17 @@ public class RobotContainer {
 
   // all auto routines go here, make sure to add to sendable chooseer
   public final class AutoRoutines {
+    public final Command Blue1 = new SequentialCommandGroup(
+      new HandTasks(true, handIntakeStates.stow, HandControls),
+      new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+      new HandTasks(false, handIntakeStates.doNothing, HandControls),
 
-    public final Command test1 = new SequentialCommandGroup(
-        new HandTasks(true, handIntakeStates.stow, HandControls),
-        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+      new ParallelCommandGroup(
         new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, 0, m_driveTrain));
-    public final Command test2 = new SequentialCommandGroup(
-        new HandTasks(true, handIntakeStates.stow, HandControls),
-        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-            new Drive(-3, 0, 0, m_driveTrain)));
-    public final Command test3 = new SequentialCommandGroup(
-        new ManualFeedOdometry(m_driveTrain, 0, 0, (AllianceData.resetOrientationOffset + 180) % 360),
-        new HandTasks(true, handIntakeStates.stow, HandControls),
-        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-            new Drive(3 * AllianceData.fieldSideMultiplier, 0,
-                (AllianceData.resetOrientationOffset + 180) % 360, m_driveTrain)));
-                public final Command test4 = new SequentialCommandGroup(
-        new Drive(-3, 0, 0, m_driveTrain),
-        new Drive(-3, -2, 0, m_driveTrain));
+        new Drive(-3, 0, 180, m_driveTrain)
+      )
+    );
+    
     
   }
 

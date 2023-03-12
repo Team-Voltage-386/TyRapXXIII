@@ -10,10 +10,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.utils.AllianceData;
 
 public class Drivetrain extends SubsystemBase {
     public double xDriveTarget = 0;
@@ -103,9 +101,9 @@ public class Drivetrain extends SubsystemBase {
 
     public double getRawHeading() {
         double y = ypr[0];
-        while (y < 0)
+        while (y < -180)
             y += 360;
-        while (y > 360)
+        while (y > 180)
             y -= 360;
         return -y;
     }
@@ -116,7 +114,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.setYaw(AllianceData.resetOrientationOffset);
+        IMU.setYaw(180);
     }
 
     public void feedBotPose(double x, double y, double FieldOrientation){
@@ -174,7 +172,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getHeadingError(double h) {
-        double res = h - getRawHeading() - 180;
+        double res = h - getRawHeading();
         while (angle > 180)
             angle -= 360;
         while (angle < 180)
@@ -196,7 +194,7 @@ public class Drivetrain extends SubsystemBase {
     private void updateWidget() {
         xPosWidget.setDouble(xPos);
         yPosWidget.setDouble(yPos);
-        rotationWidget.setDouble(ypr[0]);
+        rotationWidget.setDouble(getRawHeading());
         pitchWidget.setDouble(ypr[1]);
         rollWidget.setDouble(ypr[2]);
         targetSpeedWidget.setDouble(targetSpeed);

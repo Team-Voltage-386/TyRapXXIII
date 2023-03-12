@@ -486,5 +486,29 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Shuffleboard/ArmFF/ShoulderMaxVoltage",
+    "type": "double",
+    "value": 3.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/ArmFF/ElbowMaxVoltage",
+    "type": "double",
+    "value": 3.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/ArmFF/StowVoltage",
+    "type": "double",
+    "value": -0.01,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

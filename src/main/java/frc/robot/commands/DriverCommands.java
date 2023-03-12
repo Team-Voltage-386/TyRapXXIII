@@ -11,7 +11,6 @@ import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.mapping.*;
 import static frc.robot.Constants.SmoothingConstants.*;
-import static frc.robot.utils.AllianceData.*;
 
 public class DriverCommands extends CommandBase {
 
@@ -23,7 +22,7 @@ public class DriverCommands extends CommandBase {
     private double driveJoystickAngle, driveMagnitude, driveJoystickMagnitude;
     public double m_driveSpeed;
     public double m_rotSpeed;
-    public int m_joystickOrientationMultiplier;
+    public int m_joystickOrientationMultiplier=1;
 
     public DriverCommands(Drivetrain DT) {
         updateShufflables();
@@ -56,7 +55,7 @@ public class DriverCommands extends CommandBase {
         } else {
             driveTrain.doFieldOrientation = true;
         }
-        System.out.println(m_driveSpeed + " " + m_rotSpeed);
+        // System.out.println(m_driveSpeed + " " + m_rotSpeed);
         // driveJoystickAngle = Math.atan2(
         // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
         // kDriver.getRawAxis(kLeftHorizontal));// radians, use atan2 to avoid undefined
@@ -71,11 +70,6 @@ public class DriverCommands extends CommandBase {
         // kMaxDriveSpeed.get();
         // driveTrain.yDriveTarget = (Math.cos((driveJoystickAngle))) * driveMagnitude
         // * kMaxDriveSpeed.get();
-        if (driveTrain.doFieldOrientation) {
-            m_joystickOrientationMultiplier = joystickOrientationMultiplier;
-        } else {
-            m_joystickOrientationMultiplier = 1;
-        }
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,
                 -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);

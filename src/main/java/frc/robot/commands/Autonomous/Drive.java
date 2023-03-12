@@ -12,9 +12,9 @@ import frc.robot.utils.mapping.*;
 
 public class Drive extends CommandBase {
 
-    private final double x;
-    private final double y;
-    private final double h;
+    private double x;
+    private double y;
+    private double h;
     private final Drivetrain dt;
     
     /**
@@ -29,14 +29,17 @@ public class Drive extends CommandBase {
         y = Y;
         h = H;
         dt = DT;
+        System.out.println(x+" " + y +" " +" " + h);
     }
 
     @Override
     public void initialize() {
+        // y *= fieldSideMultiplier;
+        // h += resetOrientationOffset;
         autoPositionX.shuffleUpdatePID();
         autoPositionY.shuffleUpdatePID();
         autoPositionH.shuffleUpdatePID();
-        System.out.println("Drive Starting");
+        System.out.println("Drive Starting" );
     }
 
     @Override
