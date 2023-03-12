@@ -111,13 +111,14 @@ public class ManipulatorCommands extends CommandBase {
         }
 
         // arm do
-        if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed && m_arm.lastKeyframe.keyFrameState!=armKeyFrameStates.stowed) {
-          if (!m_hand.canRetract()) {
-            m_arm.runningKeyframesAndSequences = false;
-          } else {
-            m_arm.runningKeyframesAndSequences = true;
-          }
-        } 
+        // if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed && m_arm.lastKeyframe.keyFrameState!=armKeyFrameStates.stowed) {
+        //   if (!m_hand.canRetract()) {
+        //     m_arm.runningKeyframesAndSequences = false;
+        //     m_arm.ElbowTarget=75;
+        //   } else {
+        //     m_arm.runningKeyframesAndSequences = true;
+        //   }
+        // } 
         // hand tasks
         // zero wrist
         m_hand.handPosition = 0;
