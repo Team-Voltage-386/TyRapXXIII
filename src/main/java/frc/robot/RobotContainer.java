@@ -95,7 +95,7 @@ public class RobotContainer {
   {
     if (DriverStation.getAlliance()==Alliance.Blue)
     {
-      A_flip=-1;
+      A_flip= -1;
       Y_flip=-1;
     }
   }
@@ -117,7 +117,7 @@ public class RobotContainer {
         //new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         //new HandTasks(false, handIntakeStates.doNothing, HandControls),
         //new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, A_flip*180, m_driveTrain)//)
+        new Drive(-3, 0, 0, m_driveTrain)//)
         );
   }
 
