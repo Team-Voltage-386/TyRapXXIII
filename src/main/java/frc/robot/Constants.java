@@ -169,7 +169,7 @@ public final class Constants {
         public static final int kElbowEncoderPin = 0;
         public static final double kShoulderEncOffset = -141.2;
         public static final double kElbowEncOffset = 112;
-        public static final double kInitialShoulderTarget = -116;
+        public static final double kInitialShoulderTarget = -115.2;
         public static final double kInitialElbowTarget = 120;
 
         public static final PersistentShufflableDouble PSDShoulderOffset = new PersistentShufflableDouble(96,
