@@ -57,6 +57,10 @@ public class Drivetrain extends SubsystemBase {
 
                     double x = xDriveTarget;
                     double y = yDriveTarget;
+
+                    double xRotRO = xDriveTarget;
+                    double yRotRO = yDriveTarget;
+
                     double xFin, yFin;
 
                     targetSpeed = Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2));
@@ -68,17 +72,24 @@ public class Drivetrain extends SubsystemBase {
                     if (doFieldOrientation) {
                         xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
                         yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
+
+                        swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
+                        swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
                     } else {
+                        yRotRO = (xRotRO * Math.cos(angleRad)) + (yRotRO * Math.sin(angleRad));
+                        xRotRO = (xRotRO * Math.cos(angleRad + (Math.PI / 2)))
+                                + (yRotRO * Math.sin(angleRad + (Math.PI / 2)));
                         xFin = -x;
                         yFin = -y;
+
+                        swerve.targetSteer = Math.toDegrees(Math.atan2(yRotRO, xRotRO));
+                        swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
                     }
 
-                    swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
-                    swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
                 } else {
                     swerve.targetDrive = 0;
                     swerve.drivePID.reset();
-                    swerve.targetSteer = swerve.angleFromCenter +90 ;// circle lock is add 90, x lock is add 0
+                    swerve.targetSteer = swerve.angleFromCenter + 90;// circle lock is add 90, x lock is add 0
                     // swerve.angleFromCenter + 90
                 }
 
@@ -91,11 +102,10 @@ public class Drivetrain extends SubsystemBase {
             if (wasEnabled)
                 for (SwerveModule swerve : modules)
                     swerve.reset();
-                    
 
             wasEnabled = false;
-            for (SwerveModule swerve : modules) //diagnosing tool, delete later
-                swerve.updateWidget();//diagnosing tool, delete later
+            for (SwerveModule swerve : modules) // diagnosing tool, delete later
+                swerve.updateWidget();// diagnosing tool, delete later
         }
 
         updateWidget();
