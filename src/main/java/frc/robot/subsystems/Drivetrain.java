@@ -172,11 +172,20 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getHeadingError(double h) {
-        if (Math.abs(h - getRawHeading())<5)
-        {
-
-        }
         double res = h - getRawHeading() - 180;
+        if (360-Math.abs(res)<10)
+        {
+            if (res<0)
+            {
+                //Robot wants to do negative 360
+                res=360+res;
+            }
+            else 
+            {
+                //Robot wants to do positive 360
+                res=360-res;
+            }
+        }
         while (angle > 180)
             angle -= 360;
         while (angle < 180)
