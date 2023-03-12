@@ -25,7 +25,7 @@ public class Drivetrain extends SubsystemBase {
     public double yPos = 0;
     public double angle = 0;
 
-    private double ypr[] = new double[3];
+    public double ypr[] = new double[3];
 
     public Pigeon2 IMU = new Pigeon2(kIMUid);
 
