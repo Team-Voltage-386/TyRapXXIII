@@ -119,6 +119,10 @@ public class Drivetrain extends SubsystemBase {
         IMU.setYaw(AllianceData.resetOrientationOffset);
     }
 
+    public void resetFO(double a) {
+        IMU.setYaw(180 + a);
+    }
+
     private void updateOdometry() {
         IMU.getYawPitchRoll(ypr);
         angle = getRawHeading();
