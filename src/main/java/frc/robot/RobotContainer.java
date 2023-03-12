@@ -10,6 +10,7 @@ import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.commands.ZeroOdo;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hand;
@@ -88,6 +89,7 @@ public class RobotContainer {
   public final class AutoRoutines {
 
     public final Command test1 = new SequentialCommandGroup(
+        new ZeroOdo(0,0,A_flip*180, m_driveTrain),
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
@@ -95,6 +97,7 @@ public class RobotContainer {
         new Drive(-3, 0, 0, m_driveTrain)
     );
     public final Command test2 = new SequentialCommandGroup(
+        new ZeroOdo(0,0,A_flip*180, m_driveTrain),
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
