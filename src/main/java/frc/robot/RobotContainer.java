@@ -62,7 +62,7 @@ public class RobotContainer {
     autoChooser.addOption("test2", autos.test2);
     autoChooser.addOption("test3", autos.test3);
     autoChooser.addOption("test4", autos.test4);
-    Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1);
+    Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
 
   }
 
@@ -110,10 +110,10 @@ public class RobotContainer {
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
             new Drive(3 * AllianceData.fieldSideMultiplier, 0,
                 (AllianceData.resetOrientationOffset + 180) % 360, m_driveTrain)));
-    public final Command test4 = new SequentialCommandGroup(
+                public final Command test4 = new SequentialCommandGroup(
         new Drive(-3, 0, 0, m_driveTrain),
         new Drive(-3, -2, 0, m_driveTrain));
-
+    
   }
 
   /**
