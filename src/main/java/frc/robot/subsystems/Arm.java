@@ -93,7 +93,7 @@ public class Arm extends SubsystemBase {
         ElbowEncoder.reset();
 
         ShoulderFeedForward = new AFFShufflable(.288, .12, .36, 0, 0, "ShoulderPIDF", "ArmFF");
-        ElbowFeedForward = new AFFShufflable(.12, .12, .36, 0, 0, "ElbowPIDF", "ArmFF");
+        ElbowFeedForward = new AFFShufflable(.12, .12, .4, 0, 0, "ElbowPIDF", "ArmFF");
 
         sequenceIndex = 0;
 

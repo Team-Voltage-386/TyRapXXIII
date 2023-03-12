@@ -119,6 +119,12 @@ public class Drivetrain extends SubsystemBase {
         IMU.setYaw(AllianceData.resetOrientationOffset);
     }
 
+    public void feedBotPose(double x, double y, double FieldOrientation){
+        xPos=x;
+        yPos=y;
+        IMU.setYaw(FieldOrientation);
+    }
+
     private void updateOdometry() {
         IMU.getYawPitchRoll(ypr);
         angle = getRawHeading();
@@ -188,8 +194,8 @@ public class Drivetrain extends SubsystemBase {
     private double targetSpeed = 0;
 
     private void updateWidget() {
-        xPosWidget.setDouble(xDriveTarget);
-        yPosWidget.setDouble(yDriveTarget);
+        xPosWidget.setDouble(xPos);
+        yPosWidget.setDouble(yPos);
         rotationWidget.setDouble(ypr[0]);
         pitchWidget.setDouble(ypr[1]);
         rollWidget.setDouble(ypr[2]);
