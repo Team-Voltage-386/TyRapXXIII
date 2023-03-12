@@ -139,7 +139,7 @@ public class Hand extends SubsystemBase {
     }
 
     public boolean canRetract() {
-        return (Math.abs(getWristAngle()) < 3.0);
+        return (Math.abs(getWristAngle()) < 5.0);
     }
 
     private void setHandMotor() {
