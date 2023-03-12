@@ -9,6 +9,7 @@ import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.ArmDo;
+import frc.robot.commands.Autonomous.Balance;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.commands.ZeroOdo;
 import frc.robot.subsystems.Arm;
@@ -93,7 +94,9 @@ public class RobotContainer {
   public final class AutoRoutines {
 
     //Code for balancing
-    public final Command test1 = new SequentialCommandGroup();
+    public final Command test1 = new SequentialCommandGroup(
+      new Balance(m_driveTrain)
+    );
 
     //Code for running on the sides
     public final Command test2 = new SequentialCommandGroup(
