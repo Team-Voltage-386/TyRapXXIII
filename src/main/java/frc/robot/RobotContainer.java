@@ -56,7 +56,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    autoChooser.addOption("blue1", autos.Blue1);
+    autoChooser.addOption("ScoreHighReverse", autos.ScoreHighReverse);
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
 
   }
@@ -84,14 +84,14 @@ public class RobotContainer {
 
   // all auto routines go here, make sure to add to sendable chooseer
   public final class AutoRoutines {
-    public final Command Blue1 = new SequentialCommandGroup(
+    public final Command ScoreHighReverse = new SequentialCommandGroup(
       new HandTasks(true, handIntakeStates.stow, HandControls),
       new ArmDo(m_Arm, kfseqConeStowToConeHigh),
       new HandTasks(false, handIntakeStates.doNothing, HandControls),
 
       new ParallelCommandGroup(
         new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, 180, m_driveTrain)
+        new Drive(-3, 0, 0, m_driveTrain)
       )
     );
     

@@ -172,7 +172,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getHeadingError(double h) {
-        double res = h - getRawHeading();
+        double res = h - getRawHeading() - 180;
         while (angle > 180)
             angle -= 360;
         while (angle < 180)
