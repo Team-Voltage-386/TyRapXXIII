@@ -10,6 +10,7 @@ import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.commands.ZeroOdo;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hand;
@@ -17,6 +18,8 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Hand.handIntakeStates;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
+
+import javax.swing.plaf.TreeUI;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -56,8 +61,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    autoChooser.addOption("test1", autos.test1);
-    autoChooser.addOption("test2", autos.test2);
+    autoChooser.addOption("Middle Auto", autos.test1);
+    autoChooser.addOption("Side Auto", autos.test2);
 
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
 
@@ -87,21 +92,20 @@ public class RobotContainer {
   //all auto routines go here, make sure to add to sendable chooseer
   public final class AutoRoutines {
 
-    public final Command test1 = new SequentialCommandGroup(
-        new HandTasks(true, handIntakeStates.stow, HandControls),
-        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, 0, m_driveTrain)
-    );
+    //Code for balancing
+    public final Command test1 = new SequentialCommandGroup();
+
+    //Code for running on the sides
     public final Command test2 = new SequentialCommandGroup(
+        new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, 0, m_driveTrain))
+        new Drive(3.5, 0, 180, m_driveTrain))
         );
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

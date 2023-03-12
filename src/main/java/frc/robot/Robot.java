@@ -100,7 +100,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     AllianceData.defineOrientations();
 
-    m_robotContainer.m_driveTrain.resetFO();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
