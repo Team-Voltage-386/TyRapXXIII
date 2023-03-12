@@ -112,12 +112,12 @@ public class RobotContainer {
         new Drive(-3, 0, 0, m_driveTrain)
     );
     public final Command test2 = new SequentialCommandGroup(
-        new ZeroOdo(0,0,A_flip*180, m_driveTrain), 
+        new ZeroOdo(0,0, 0, m_driveTrain), 
         //new HandTasks(true, handIntakeStates.stow, HandControls),
         //new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         //new HandTasks(false, handIntakeStates.doNothing, HandControls),
         //new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(3.5, 0, A_flip*(180), m_driveTrain)//)
+        new Drive(3.5, 0, 180, m_driveTrain)//)
         );
   }
 

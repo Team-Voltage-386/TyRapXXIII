@@ -22,7 +22,7 @@ public class ZeroOdo extends CommandBase {
     public void initialize() {
         dt.xPos = x;
         dt.yPos = y;
-        dt.resetFO();
+        dt.resetFO(a);
         done = true;
     }
 
