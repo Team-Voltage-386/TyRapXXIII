@@ -61,8 +61,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    autoChooser.addOption("test1", autos.test1);
-    autoChooser.addOption("test2", autos.test2);
+    autoChooser.addOption("Middle Auto", autos.test1);
+    autoChooser.addOption("Side Auto", autos.test2);
 
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
 
@@ -92,14 +92,10 @@ public class RobotContainer {
   //all auto routines go here, make sure to add to sendable chooseer
   public final class AutoRoutines {
 
-    public final Command test1 = new SequentialCommandGroup(
-        new ZeroOdo(0,0, 0, m_driveTrain), 
-        new HandTasks(true, handIntakeStates.stow, HandControls),
-        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(3.5, 0, 180, m_driveTrain)
-    );
+    //Code for balancing
+    public final Command test1 = new SequentialCommandGroup();
+
+    //Code for running on the sides
     public final Command test2 = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
