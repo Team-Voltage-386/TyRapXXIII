@@ -2,36 +2,70 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+
 import static frc.robot.Constants.LEDConstants.*;
+import static frc.robot.utils.Flags.*;
 
-public class LEDSubsystem extends SubsystemBase{
-
+public class LEDSubsystem extends SubsystemBase
+{
+    //Intializes led length and port
     private static final int LEDPort = kLEDPort;
     private static final int LEDLength = kLEDLength;
+    private boolean LEDConeMode;
     private double BWCycle = 0.0;
 
-    
+    //LEDs will alternate every LED_Speed milliseconds
+    private static int LED_Speed=50;
+
+    //Sets up the LEDs so we can write values to them
     AddressableLED led = new AddressableLED(LEDPort);
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LEDLength);
 
-
+    //Sets up all the LED values and starts the LEDs
     public LEDSubsystem() {
         led.setLength(LEDLength);
         led.setData(ledBuffer);
         led.start();
     }
 
+    public void updateLEDS()
+    {
+        if (Robot.inst.isEnabled())
+        {
+            if (LEDConeMode==true)
+            {
+                allYellow();
+            }
+            if (LEDConeMode==false)
+            {
+                allBlue();
+            }
+        } else {
+            allOff(); //i added this while ryan was afk
+        }
+    }
+
+    //Sets the single LED at index to purple
     public void setOnePurple(int index) {
         ledBuffer.setRGB(index, 208, 58, 224);
     }
 
+    //Sets the single LED at index to yellow
     public void setOneYellow(int index) {
         ledBuffer.setRGB(index, 241, 245, 7);
     }
     
+    //Sets the single LED at index to blue
     public void setOneBlue(int index) {
         ledBuffer.setRGB(index, 0, 0, 255);
+    }
+
+    //Turns the single LED at index off
+    public void setOneOff(int index) {
+        ledBuffer.setRGB(index, 0, 0, 0);
     }
 
     // public void alternateBlueYellow() {
@@ -41,25 +75,97 @@ public class LEDSubsystem extends SubsystemBase{
     //     }
     //     led.setData(ledBuffer);
     // }
-    
+    public void setLEDConeMode(boolean ManipulatorConemode){
+        LEDConeMode=ManipulatorConemode;
+    }
+    //Sets all of the LEDs on the strip to purple
     public void allPurple() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
           setOnePurple(i);
         }
     }
     
+    //Turns off all of the LEDs on the strip
     public void allOff() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-          ledBuffer.setRGB(i, 0, 0, 0);
+          setOneOff(i);
         }
     }
     
+    //Sets all of the Leds on the strip to Yellow
     public void allYellow() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
           setOneYellow(i);
         }
     }
 
+    //Sets all of the Leds on the strip to blue
+    public void allBlue() {
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+          setOneBlue(i);
+        }
+    }
+
+    //Alternates all of the LEDs between off and blue for when the Robot is in cube mode
+    public void AlternatingBlue() {
+        int LED_Mode=0;
+        if ((Timer.getFPGATimestamp()/(LED_Speed*2))>LED_Speed)
+        {
+            LED_Mode=0;
+        }
+        else
+        {
+            LED_Mode=1;
+        }
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            if (i%2==LED_Mode)
+            {
+                setOneBlue(i);
+            }
+            else
+            {
+                setOneOff(i);
+            }
+        }
+    }
+
+    //Alternates all of the LEDs between off and purple for when the Robot is in cone mode
+    public void AlternatingYellow() {
+        int LED_Mode=0;
+        if ((int)(Timer.getFPGATimestamp()/(LED_Speed*2))>LED_Speed)
+        {
+            LED_Mode=0;
+        }
+        else
+        {
+            LED_Mode=1;
+        }
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            if (i%2==LED_Mode)
+            {
+                setOneYellow(i);
+            }
+            else
+            {
+                setOneOff(i);
+            }
+        }
+    }
+
+    public void FadingBlue(){
+        for (int i=0; i < ledBuffer.getLength(); i++)
+        {
+            ledBuffer.setHSV(i, 270, 100, ((int)(Timer.getFPGATimestamp()*100)%100));
+        }
+    }
+
+    public void FadingYellow(){
+        for (int i=0; i < ledBuffer.getLength(); i++)
+        {
+            ledBuffer.setHSV(i, 90, 100, ((int)(Timer.getFPGATimestamp()*100)%100));
+        }
+    }
+    //Huh? (Ask Lucas idk what he was trying to do)
     public void BlueYellow()
     {
         for(int i = 0; i < ledBuffer.getLength(); i++)
@@ -96,7 +202,8 @@ public class LEDSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        led.setData(ledBuffer);    
+        led.setData(ledBuffer);
+        updateLEDS();
     }
 
 

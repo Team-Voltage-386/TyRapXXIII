@@ -70,9 +70,7 @@ public class Hand extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (handCanRotate) {
-            setHandMotor();
-        }
+        setHandMotor();
         runIntakeMotorState();
         updateWidgets();
     }
@@ -141,28 +139,32 @@ public class Hand extends SubsystemBase {
     }
 
     public boolean canRetract() {
-        return (Math.abs(getWristAngle()) < 3.0);
+        return (Math.abs(getWristAngle()) < 5.0);
     }
 
     private void setHandMotor() {
-        if (handPosition == 1 && !getHandLimitSwitch() && getWristAngle() < 75) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == 0 && getWristAngle() > 0 && !canRetract()) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        } else if (handPosition == 0 && getWristAngle() < 0 && !canRetract()) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-        } else if (handPosition == -1 && !getHandLimitSwitch() && getWristAngle() > -75) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-            // fix hand positions
-        } else if (handPosition == 1 && getWristAngle() > 78) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-        } else if (handPosition == -1 && getWristAngle() < -78) {
-            HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-            // do nothing
-        } else {
+        if (handCanRotate) {
+            if (handPosition == 1 && !getHandLimitSwitch() && getWristAngle() < 75) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+            } else if (handPosition == 0 && getWristAngle() > 0 && !canRetract() && !getHandLimitSwitch()) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            } else if (handPosition == 0 && getWristAngle() < 0 && !canRetract() && !getHandLimitSwitch()) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+            } else if (handPosition == -1 && !getHandLimitSwitch() && getWristAngle() > -75) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+                // fix hand positions
+            } else if (handPosition == 1 && getWristAngle() > 78) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
+            } else if (handPosition == -1 && getWristAngle() < -78) {
+                HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
+                // do nothing
+            } else {
+                HandRotationalMotor.set(ControlMode.PercentOutput, 0);
+            }
+        }
+        else {
             HandRotationalMotor.set(ControlMode.PercentOutput, 0);
         }
-
     }
 
     public void setRotateHand(boolean isRightBumper) {
@@ -211,6 +213,8 @@ public class Hand extends SubsystemBase {
                 return "lettingGo";
             case doNothing:
                 return "doNothing";
+            case stow:
+                return "stow";
             default:
                 return "uh oh";
         }
