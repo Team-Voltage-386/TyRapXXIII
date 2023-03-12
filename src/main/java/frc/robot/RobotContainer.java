@@ -55,8 +55,6 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final AutoRoutines autos = this.new AutoRoutines();
 
-  private static int Y_flip = 1;
-  private static int A_flip = 1;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -91,33 +89,24 @@ public class RobotContainer {
     return m_teleop;
   }
 
-  private void modifyFlip()
-  {
-    if (DriverStation.getAlliance()==Alliance.Blue)
-    {
-      A_flip= -1;
-      Y_flip=-1;
-    }
-  }
-
   //all auto routines go here, make sure to add to sendable chooseer
   public final class AutoRoutines {
 
     public final Command test1 = new SequentialCommandGroup(
-        new ZeroOdo(0,0,A_flip*180, m_driveTrain),
+        new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, 0, m_driveTrain)
+        new Drive(3.5, 0, 180, m_driveTrain)
     );
     public final Command test2 = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
-        //new HandTasks(true, handIntakeStates.stow, HandControls),
-        //new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        //new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        //new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(3.5, 0, 180, m_driveTrain)//)
+        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        new Drive(3.5, 0, 180, m_driveTrain))
         );
   }
 
@@ -128,7 +117,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    modifyFlip();
     return autoChooser.getSelected();
   }
 }

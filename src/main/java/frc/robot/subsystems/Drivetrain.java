@@ -120,7 +120,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO(double a) {
-        IMU.setYaw(180 + a);
+        IMU.setYaw(a);
     }
 
     private void updateOdometry() {
@@ -173,9 +173,18 @@ public class Drivetrain extends SubsystemBase {
 
     public double getHeadingError(double h) {
         double res = h - getRawHeading() - 180;
-        if (Math.abs(getRawHeading()-h)< 5)
+        if (360-Math.abs(res)<10)
         {
-            res=0;
+            if (res<0)
+            {
+                //Robot wants to do negative 360
+                res=360+res;
+            }
+            else 
+            {
+                //Robot wants to do positive 360
+                res=360-res;
+            }
         }
         while (angle > 180)
             angle -= 360;
