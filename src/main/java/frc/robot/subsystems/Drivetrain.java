@@ -58,9 +58,7 @@ public class Drivetrain extends SubsystemBase {
                     double x = xDriveTarget;
                     double y = yDriveTarget;
 
-                    double xRotRO = xDriveTarget;
-                    double yRotRO = yDriveTarget;
-
+                    double xRotRO, yRotRO;
                     double xFin, yFin;
 
                     targetSpeed = Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2));
@@ -76,9 +74,8 @@ public class Drivetrain extends SubsystemBase {
                         swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
                         swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
                     } else {
-                        yRotRO = (xRotRO * Math.cos(angleRad)) + (yRotRO * Math.sin(angleRad));
-                        xRotRO = (xRotRO * Math.cos(angleRad + (Math.PI / 2)))
-                                + (yRotRO * Math.sin(angleRad + (Math.PI / 2)));
+                        yRotRO = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
+                        xRotRO = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
                         xFin = -x;
                         yFin = -y;
 
