@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
     UsbCamera m_camera = CameraServer.startAutomaticCapture(0);
     m_camera.setResolution(400, 300);
     m_camera.setFPS(30);
-    Shuffleboard.getTab("Main").add(m_camera).withWidget(BuiltInWidgets.kCameraStream).withProperties(Map.of("Rotation","QUARTER_CCW"));
+    Shuffleboard.getTab("Main").add(m_camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4).withProperties(Map.of("Rotation","QUARTER_CW"));
     totalAmpHours = 0;
     current = 0;
     // Instantiate our RobotContainer. This will perform all our button bindings,
