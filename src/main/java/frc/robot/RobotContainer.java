@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
+import frc.robot.commands.Autonomous.DriveUntilAngleDec;
+import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.Autonomous.Balance;
@@ -95,6 +97,7 @@ public class RobotContainer {
 
     //Code for balancing
     public final Command test1 = new SequentialCommandGroup(
+      new DriveUntilAngleInc(1, 0, 0, m_driveTrain, 13, 2),
       new Balance(m_driveTrain)
     );
 
