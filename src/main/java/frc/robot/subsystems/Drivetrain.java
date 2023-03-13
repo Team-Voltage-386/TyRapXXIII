@@ -193,13 +193,13 @@ public class Drivetrain extends SubsystemBase {
         return res;
     }
 
-    private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
+    private static final ShuffleboardTab OdomeTab = Shuffleboard.getTab("Odometry");
     private static final ShuffleboardTab speedTab = Shuffleboard.getTab("Speed");
-    private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
-    private static final GenericEntry yPosWidget = mainTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
-    private static final GenericEntry rotationWidget = mainTab.add("yaw", 0).getEntry();
-    private static final GenericEntry pitchWidget = mainTab.add("pitch", 0).getEntry();
-    private static final GenericEntry rollWidget = mainTab.add("roll", 0).getEntry();
+    private static final GenericEntry xPosWidget = OdomeTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
+    private static final GenericEntry yPosWidget = OdomeTab.add("Y", 0).withPosition(1, 0).withSize(1, 1).getEntry();
+    private static final GenericEntry rotationWidget = OdomeTab.add("yaw", 0).getEntry();
+    private static final GenericEntry pitchWidget = OdomeTab.add("pitch", 0).getEntry();
+    private static final GenericEntry rollWidget = OdomeTab.add("roll", 0).getEntry();
     private static final GenericEntry targetSpeedWidget = speedTab.add("target", 0).getEntry();
     private static final GenericEntry speedWidget = speedTab.add("current", 0).getEntry();
     private double targetSpeed = 0;

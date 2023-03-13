@@ -64,7 +64,7 @@ public class RobotContainer {
     autoChooser.addOption("Middle Auto", autos.test1);
     autoChooser.addOption("Side Auto", autos.test2);
 
-    Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1);
+    Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1).withPosition(4, 2);
 
   }
 
