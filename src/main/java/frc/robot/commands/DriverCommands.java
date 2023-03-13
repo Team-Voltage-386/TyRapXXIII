@@ -25,6 +25,10 @@ public class DriverCommands extends CommandBase {
     public double m_rotSpeed;
     public int m_joystickOrientationMultiplier;
 
+    public double leftJoystickVertical;
+    public double leftJoystickHorizontal;
+    public double rightJoystickHorizontal;
+
     public DriverCommands(Drivetrain DT) {
         updateShufflables();
         driveTrain = DT;
@@ -44,6 +48,20 @@ public class DriverCommands extends CommandBase {
     public void execute() {
         updateShufflables();
         updateWidget();
+
+        if (kDriver.getRawAxis(kLeftVertical) > kJoystickDeadband)
+            leftJoystickVertical = kDriver.getRawAxis(kLeftVertical);
+        else
+            leftJoystickVertical = 0;
+        if (kDriver.getRawAxis(kLeftHorizontal) > kJoystickDeadband)
+            leftJoystickHorizontal = kDriver.getRawAxis(kLeftHorizontal);
+        else
+            leftJoystickHorizontal = 0;
+        if (kDriver.getRawAxis(kRightHorizontal) > kJoystickDeadband)
+            rightJoystickHorizontal = kDriver.getRawAxis(kRightHorizontal);
+        else
+            rightJoystickHorizontal = 0;
+
         if (kDriver.getRawAxis(kLeftTrigger) > kDeadband) {
             m_driveSpeed = kSlowDriveSpeed;
             m_rotSpeed = kSlowRotSpeed;
@@ -78,12 +96,12 @@ public class DriverCommands extends CommandBase {
         }
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,
-                -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
+                -m_joystickOrientationMultiplier * leftJoystickVertical * m_driveSpeed);
         driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.yDriveTarget,
-                m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
+                m_joystickOrientationMultiplier * leftJoystickHorizontal * m_driveSpeed);
         driveTrain.rotationTarget = -1
-                * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
+                * curveJoystickAxis(rightJoystickHorizontal, rotationCurvingPower.get())
                 * m_rotSpeed;
 
         // comment out before tryouts
