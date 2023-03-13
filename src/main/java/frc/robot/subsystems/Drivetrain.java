@@ -78,7 +78,7 @@ public class Drivetrain extends SubsystemBase {
                 } else {
                     swerve.targetDrive = 0;
                     swerve.drivePID.reset();
-                    swerve.targetSteer = swerve.angleFromCenter +90 ;// circle lock is add 90, x lock is add 0
+                    swerve.targetSteer = swerve.angleFromCenter + 90;// circle lock is add 90, x lock is add 0
                     // swerve.angleFromCenter + 90
                 }
 
@@ -91,11 +91,10 @@ public class Drivetrain extends SubsystemBase {
             if (wasEnabled)
                 for (SwerveModule swerve : modules)
                     swerve.reset();
-                    
 
             wasEnabled = false;
-            for (SwerveModule swerve : modules) //diagnosing tool, delete later
-                swerve.updateWidget();//diagnosing tool, delete later
+            for (SwerveModule swerve : modules) // diagnosing tool, delete later
+                swerve.updateWidget();// diagnosing tool, delete later
         }
 
         updateWidget();
@@ -119,9 +118,9 @@ public class Drivetrain extends SubsystemBase {
         IMU.setYaw(AllianceData.resetOrientationOffset);
     }
 
-    public void feedBotPose(double x, double y, double FieldOrientation){
-        xPos=x;
-        yPos=y;
+    public void feedBotPose(double x, double y, double FieldOrientation) {
+        xPos = x;
+        yPos = y;
         IMU.setYaw(FieldOrientation);
     }
 
@@ -197,7 +196,7 @@ public class Drivetrain extends SubsystemBase {
         xPosWidget.setDouble(xPos);
         yPosWidget.setDouble(yPos);
         rotationWidget.setDouble(ypr[0]);
-        pitchWidget.setDouble(ypr[1]);
+        pitchWidget.setDouble(ypr[2]);
         rollWidget.setDouble(ypr[2]);
         targetSpeedWidget.setDouble(targetSpeed);
         speedWidget.setDouble(speed);

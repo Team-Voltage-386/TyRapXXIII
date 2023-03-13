@@ -66,6 +66,7 @@ public class RobotContainer {
     autoChooser.addOption("test3", autos.test3);
     autoChooser.addOption("test4", autos.test4);
     autoChooser.addOption("Logic Balance FACE FORWARD", autos.logicBalance);
+    autoChooser.addOption("Drive Until", autos.driveUntil);
     Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1);
 
   }
@@ -120,6 +121,9 @@ public class RobotContainer {
     public final Command logicBalance = new SequentialCommandGroup(
         new DriveUntil(true, m_driveTrain),
         new LogicBalance(m_driveTrain));
+    public final Command driveUntil = new SequentialCommandGroup(
+        new DriveUntil(false, m_driveTrain));
+    public final
   }
 
   /**

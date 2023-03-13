@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class LogicBalance extends CommandBase {
+public class LogicBalancev2 extends CommandBase {
 
     private final Drivetrain dt;
     // Store gyro values from pigeon
@@ -28,7 +28,7 @@ public class LogicBalance extends CommandBase {
     // variables to display on shuffleboard
     private boolean isDrivingForward;
 
-    public LogicBalance(Drivetrain DT) {
+    public LogicBalancev2(Drivetrain DT) {
         dt = DT;
     }
 
@@ -39,11 +39,6 @@ public class LogicBalance extends CommandBase {
 
     @Override
     public void execute() {
-        // The Pigeon is mounted 90 degrees off, so pitch and roll are reversed
-        pigeon.getYawPitchRoll(ypr);
-        // Slows down the robot as the balance progresses
-        driveMultiplier = Math.pow(0.5, numTimesDirectionChanged);
-
         if (Math.abs(ypr[2]) > balanceTarget) {
             if (ypr[2] > balanceTarget) {
                 // driveMultiplier = Math.pow(0.8, numTimesDirectionChanged);
@@ -72,9 +67,7 @@ public class LogicBalance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        // Checks to make sure that the robot pitch is within the acceptable range
-        // return Math.abs(ypr[2]) < balanceTarget;
-        return false;
+        return (numTimesDirectionChanged >= 1);
     }
 
     @Override
