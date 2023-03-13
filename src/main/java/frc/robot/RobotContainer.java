@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
+import frc.robot.commands.Autonomous.DriveAtSpeed;
 import frc.robot.commands.Autonomous.DriveUntilAngleDec;
 import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.Autonomous.HandTasks;
@@ -97,13 +98,13 @@ public class RobotContainer {
 
     //Code for balancing
     public final Command test1 = new SequentialCommandGroup(
-      new DriveUntilAngleInc(2, 0, 0, m_driveTrain, 5.5, 2),
-      new Drive(2.6, 0, 0, m_driveTrain)
+      new DriveUntilAngleInc(-1.9, 0, 0, 0.2, m_driveTrain, 9, 2),
+      new DriveAtSpeed(-2.345, 0, 0, 0.2, m_driveTrain)
     );
 
     //Code for running on the sides
     public final Command test2 = new SequentialCommandGroup(
-        new ZeroOdo(0,0, 0, m_driveTrain), 
+        new ZeroOdo(0,0, 180, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),

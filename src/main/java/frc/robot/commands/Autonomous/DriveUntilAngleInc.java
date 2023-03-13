@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
+import frc.robot.utils.mapping;
 
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.AutoConstants.*;
@@ -16,6 +17,7 @@ public class DriveUntilAngleInc extends CommandBase {
     private final double x;
     private final double y;
     private final double h;
+    private final double speed;
     private final Drivetrain dt;
     private final double targAngle;
     private final int yprAxis;
@@ -24,10 +26,11 @@ public class DriveUntilAngleInc extends CommandBase {
     private final PID autoPositionH = new PID(kAutoHeadingPID[0], kAutoHeadingPID[1], kAutoHeadingPID[2]);
     private boolean flag = false;
 
-    public DriveUntilAngleInc(double X, double Y, double H, Drivetrain DT, double A, int ypra) {
+    public DriveUntilAngleInc(double X, double Y, double H, double S, Drivetrain DT, double A, int ypra) {
         x = X;
         y = Y;
         h = H;
+        speed = S;
         dt = DT;
         targAngle = A;
         yprAxis = ypra;
@@ -44,9 +47,11 @@ public class DriveUntilAngleInc extends CommandBase {
         SmartDashboard.putNumber("angle", dt.ypr[yprAxis]);
         SmartDashboard.putBoolean("error reached", dt.distanceTo(x, y) < driveTolerance && dt.getHeadingError(h) < headingTolerance);
         
-        dt.xDriveTarget = autoPositionX.calc(x - dt.xPos);
-        dt.yDriveTarget = autoPositionY.calc(y - dt.yPos);
-        dt.rotationTarget = -autoPositionH.calc(dt.getHeadingError(h));
+        dt.xDriveTarget = mapping.clamp(autoPositionX.calc(x - dt.xPos),-kMaxDriveSpeed*speed,kMaxDriveSpeed*speed);
+        dt.yDriveTarget = mapping.clamp(autoPositionY.calc(y - dt.yPos), -kMaxDriveSpeed*speed, kMaxDriveSpeed*speed);
+        dt.rotationTarget = mapping.clamp(-autoPositionH.calc(dt.getHeadingError(h)), -kMaxRotSpeed,kMaxRotSpeed);
+
+
     }
 
     @Override

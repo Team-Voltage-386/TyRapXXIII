@@ -120,7 +120,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO(double a) {
-        IMU.setYaw(a);
+        IMU.setYaw(a-180);
     }
 
     private void updateOdometry() {
@@ -202,16 +202,18 @@ public class Drivetrain extends SubsystemBase {
     private static final GenericEntry rollWidget = mainTab.add("roll", 0).getEntry();
     private static final GenericEntry targetSpeedWidget = speedTab.add("target", 0).getEntry();
     private static final GenericEntry speedWidget = speedTab.add("current", 0).getEntry();
+    private static final GenericEntry RotateWidget = speedTab.add("Rotate", 0).getEntry();
     private double targetSpeed = 0;
 
     private void updateWidget() {
-        xPosWidget.setDouble(xDriveTarget);
-        yPosWidget.setDouble(yDriveTarget);
+        xPosWidget.setDouble(xPos);
+        yPosWidget.setDouble(yPos);
         rotationWidget.setDouble(ypr[0]);
-        pitchWidget.setDouble(ypr[1]);
-        rollWidget.setDouble(ypr[2]);
+        pitchWidget.setDouble(ypr[2]);
+        rollWidget.setDouble(ypr[1]);
         targetSpeedWidget.setDouble(targetSpeed);
         speedWidget.setDouble(speed);
+        RotateWidget.setDouble(getHeadingError(180));
     }
 
 }
