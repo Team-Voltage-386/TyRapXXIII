@@ -11,6 +11,7 @@ import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.LogicBalance;
 import frc.robot.commands.Autonomous.ManualFeedOdometry;
+import frc.robot.commands.Autonomous.SetConemode;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.commands.ZeroOdo;
@@ -156,6 +157,10 @@ public class RobotContainer {
         new Drive(2, 2, 90, m_driveTrain),
         new Drive(0, 2, 270, m_driveTrain),
         new Drive(0, 0, 90, m_driveTrain));
+    public final Command spitOutCube = new SequentialCommandGroup(
+      new SetConemode(false),
+      new HandTasks(false, handIntakeStates.letitgo, HandControls)
+    );
   }
 
 
