@@ -68,6 +68,7 @@ public class RobotContainer {
     configureBindings();
     autoChooser.addOption("test1", autos.test1);
     autoChooser.addOption("test2", autos.test2);
+    autoChooser.addOption("Score cube low and backup", autos.ScoreCubeSides);
     // autoChooser.addOption("test3", autos.test3);
     autoChooser.addOption("test4", autos.test4);
     autoChooser.addOption("Logic Balance FACE FORWARD", autos.logicBalance);
@@ -110,14 +111,21 @@ public class RobotContainer {
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, 0, m_driveTrain));
+        new Drive(3.5, 0, 0, m_driveTrain));
     public final Command test2 = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-            new Drive(-3, 0, 0, m_driveTrain)));
+        new Drive(3.5, 0, 0, m_driveTrain)));
+    public final Command ScoreCubeSides = new SequentialCommandGroup(
+        new ZeroOdo(0,0, 0, m_driveTrain), 
+        new HandTasks(false, handIntakeStates.stow, HandControls),
+        new SetConemode(false),
+        new HandTasks(false, handIntakeStates.letitgo, HandControls),
+        new Drive(3.5, 0, 0, m_driveTrain));
+
     // public final Command test3 = new SequentialCommandGroup(
     //     new ManualFeedOdometry(m_driveTrain, 0, 0, (AllianceData.resetOrientationOffset + 180) % 360),
     //     new HandTasks(true, handIntakeStates.stow, HandControls),
