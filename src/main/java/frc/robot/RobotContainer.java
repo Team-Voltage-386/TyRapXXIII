@@ -66,7 +66,8 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     autoChooser.addOption("test1", autos.test1);
-    autoChooser.addOption("Cone Score High and Backup", autos.test2);
+    autoChooser.addOption("Cone score high and backup", autos.ScoreConeSides);
+    autoChooser.addOption("Cone score high and backup on to charger", autos.ScoreConeCharger);
     // autoChooser.addOption("test3", autos.test3);
     autoChooser.addOption("test4", autos.test4);
     autoChooser.addOption("Logic Balance FACE FORWARD", autos.logicBalance);
@@ -76,7 +77,6 @@ public class RobotContainer {
     autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
 
     autoChooser.addOption("Middle Auto", autos.test1);
-    autoChooser.addOption("Side Auto", autos.test2);
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1).withPosition(4, 2);
   }
 
@@ -110,7 +110,7 @@ public class RobotContainer {
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ArmDo(m_Arm, kfseqConeHightoCubeStow),
         new Drive(-3, 0, 0, m_driveTrain));
-    public final Command test2 = new SequentialCommandGroup(
+    public final Command ScoreConeSides = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
@@ -118,6 +118,14 @@ public class RobotContainer {
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
         new Drive(1.5, 0, 0, m_driveTrain),
         new Drive(3.5, 0, 0, m_driveTrain)));
+    public final Command ScoreConeCharger = new SequentialCommandGroup(
+        new ZeroOdo(0,0, 0, m_driveTrain), 
+        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        new Drive(2.07, 0, 180, m_driveTrain)));
+        
     // public final Command test3 = new SequentialCommandGroup(
     //     new ManualFeedOdometry(m_driveTrain, 0, 0, (AllianceData.resetOrientationOffset + 180) % 360),
     //     new HandTasks(true, handIntakeStates.stow, HandControls),
