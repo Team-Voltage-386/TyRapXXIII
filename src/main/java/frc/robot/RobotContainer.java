@@ -79,7 +79,6 @@ public class RobotContainer {
     autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
 
     autoChooser.addOption("Middle Auto", autos.test1);
-    autoChooser.addOption("Side Auto", autos.test2);
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1).withPosition(4, 2);
   }
 
@@ -119,7 +118,6 @@ public class RobotContainer {
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(1.5, 0, 0, m_driveTrain),
         new Drive(3.5, 0, 0, m_driveTrain)));
     public final Command ScoreConeCharger = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
