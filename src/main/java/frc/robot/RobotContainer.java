@@ -8,10 +8,14 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.DriveUntil;
+import frc.robot.commands.Autonomous.DriveAtSpeed;
+import frc.robot.commands.Autonomous.DriveUntilAngleDec;
+import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.LogicBalance;
 import frc.robot.commands.Autonomous.ManualFeedOdometry;
 import frc.robot.commands.Autonomous.ArmDo;
+import frc.robot.commands.Autonomous.Balance;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.commands.ZeroOdo;
 import frc.robot.subsystems.Arm;
@@ -104,14 +108,16 @@ public class RobotContainer {
   // all auto routines go here, make sure to add to sendable chooseer
   public final class AutoRoutines {
 
+    //Code for balancing
     public final Command test1 = new SequentialCommandGroup(
-        new HandTasks(true, handIntakeStates.stow, HandControls),
-        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, 0, m_driveTrain));
+      new DriveAtSpeed(-4.3, 0, 0, 0.15, m_driveTrain),
+      new DriveUntilAngleInc(-1.9, 0, 0, 0.2, m_driveTrain, 9, 2),
+      new DriveAtSpeed(-2.345,  0, 0, 0.2, m_driveTrain)
+    );
+
+    //Code for running on the sides
     public final Command test2 = new SequentialCommandGroup(
-        new ZeroOdo(0,0, 0, m_driveTrain), 
+        new ZeroOdo(0,0, 180, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
