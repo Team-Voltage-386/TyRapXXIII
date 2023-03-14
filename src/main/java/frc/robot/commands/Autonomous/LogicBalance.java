@@ -48,7 +48,7 @@ public class LogicBalance extends CommandBase {
             if (ypr[2] > balanceTarget) {
                 // driveMultiplier = Math.pow(0.8, numTimesDirectionChanged);
                 dt.xDriveTarget = 0.5 * driveMultiplier;
-                // Increments numTimesDirectionChanged
+                // Increments numTasdimesDirectionChanged
                 if (!wasGoingForward) {
                     wasGoingForward = true;
                     numTimesDirectionChanged++;
