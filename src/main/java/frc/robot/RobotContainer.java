@@ -109,21 +109,13 @@ public class RobotContainer {
 
     //Code for balancing
     public final Command test1 = new SequentialCommandGroup(
-<<<<<<< HEAD
       new ZeroOdo(0, 0, 180, m_driveTrain),
       new DriveAtSpeed(4.2, 0, 0, 0.15, m_driveTrain),
       new DriveUntilAngleInc(1.9, 0, 180, 0.2, m_driveTrain, 9, 2),
       new DriveAtSpeed(2.345,  0, 0, 0.2, m_driveTrain)
     );
 
-    //Code for running on the sides
-=======
-        new HandTasks(true, handIntakeStates.stow, HandControls),
-        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(3, 0, 0, m_driveTrain));
->>>>>>> main
+    //Code for running on the sides      
     public final Command test2 = new SequentialCommandGroup(
         new ZeroOdo(0,0, 180, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
