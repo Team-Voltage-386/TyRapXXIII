@@ -7,7 +7,9 @@ package frc.robot;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
+import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.Autonomous.HandTasks;
+import frc.robot.commands.Autonomous.LogicBalance;
 import frc.robot.commands.Autonomous.ManualFeedOdometry;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.ManipulatorCommands;
@@ -30,9 +32,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
-import frc.robot.commands.Autonomous.DriveUntil;
-import frc.robot.commands.Autonomous.LogicBalance;
 import javax.swing.plaf.TreeUI;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
