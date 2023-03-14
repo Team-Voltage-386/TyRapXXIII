@@ -16,7 +16,7 @@ public class LogicBalance extends CommandBase {
 
     boolean balanceDone = false;
     // This is zone in degrees when the charging station is considered balanced
-    private double balanceTarget = 2.5;
+    private double balanceTarget = 10;
     // Counts the number of times that the direction has changed (going forward and
     // backward on the charge station)
     private int numTimesDirectionChanged = 0;
@@ -25,7 +25,7 @@ public class LogicBalance extends CommandBase {
     // This value is used to slow down the drive as the balance progresses
     public double driveMultiplier;
 
-    // variables to display on shuffleboard
+    // variables to display on shuffleboardQ
     private boolean isDrivingForward;
 
     public LogicBalance(Drivetrain DT) {
@@ -42,7 +42,7 @@ public class LogicBalance extends CommandBase {
         // The Pigeon is mounted 90 degrees off, so pitch and roll are reversed
         pigeon.getYawPitchRoll(ypr);
         // Slows down the robot as the balance progresses
-        driveMultiplier = Math.pow(0.5, numTimesDirectionChanged);
+        driveMultiplier = Math.pow(0.6, numTimesDirectionChanged);
 
         if (Math.abs(ypr[2]) > balanceTarget) {
             if (ypr[2] > balanceTarget) {

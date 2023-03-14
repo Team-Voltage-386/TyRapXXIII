@@ -11,7 +11,6 @@ import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.mapping.*;
 import static frc.robot.Constants.SmoothingConstants.*;
-import static frc.robot.utils.AllianceData.*;
 
 public class DriverCommands extends CommandBase {
 
@@ -51,12 +50,8 @@ public class DriverCommands extends CommandBase {
             m_driveSpeed = kMaxDriveSpeed;
             m_rotSpeed = kMaxRotSpeed;
         }
-        if (kDriver.getRawAxis(kRightTrigger) > kDeadband) {
-            driveTrain.doFieldOrientation = false;
-        } else {
-            driveTrain.doFieldOrientation = true;
-        }
-        System.out.println(m_driveSpeed + " " + m_rotSpeed);
+
+        driveTrain.doFieldOrientation = kDriver.getRawAxis(kRightTrigger) < 0.5;        
         // driveJoystickAngle = Math.atan2(
         // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
         // kDriver.getRawAxis(kLeftHorizontal));// radians, use atan2 to avoid undefined
@@ -72,9 +67,9 @@ public class DriverCommands extends CommandBase {
         // driveTrain.yDriveTarget = (Math.cos((driveJoystickAngle))) * driveMagnitude
         // * kMaxDriveSpeed.get();
         if (driveTrain.doFieldOrientation) {
-            m_joystickOrientationMultiplier = joystickOrientationMultiplier;
-        } else {
             m_joystickOrientationMultiplier = 1;
+        } else {
+            m_joystickOrientationMultiplier = -1;
         }
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,

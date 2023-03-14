@@ -43,7 +43,7 @@ public class Drive extends CommandBase {
     public void execute() {
         dt.xDriveTarget = mapping.clamp(autoPositionX.calc(x - dt.xPos),-kMaxDriveSpeed,kMaxDriveSpeed);
         dt.yDriveTarget = mapping.clamp(autoPositionY.calc(y - dt.yPos), -kMaxDriveSpeed, kMaxDriveSpeed);
-        dt.rotationTarget = mapping.clamp(-autoPositionH.calc(dt.getHeadingError(h)), -kMaxRotSpeed,kMaxRotSpeed);
+        dt.rotationTarget = mapping.clamp(autoPositionH.calc(dt.getHeadingError(h)), -kMaxRotSpeed,kMaxRotSpeed);
 
         // System.out.println("x value: " + dt.xDriveTarget + " " + "y value: " +
         // dt.yDriveTarget);
