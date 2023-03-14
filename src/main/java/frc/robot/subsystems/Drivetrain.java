@@ -27,7 +27,7 @@ public class Drivetrain extends SubsystemBase {
 
     private double ypr[] = new double[3];
 
-    public Pigeon2 IMU = new Pigeon2(kIMUid);
+    public static Pigeon2 IMU = new Pigeon2(kIMUid);
 
     private boolean wasEnabled = false;
 

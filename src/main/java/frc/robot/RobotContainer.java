@@ -63,6 +63,7 @@ public class RobotContainer {
     configureBindings();
     autoChooser.addOption("Middle Auto", autos.test1);
     autoChooser.addOption("Side Auto", autos.test2);
+    autoChooser.addOption("Ryan's Middle Auto", autos.test3);
 
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1).withPosition(4, 2);
 
@@ -104,6 +105,14 @@ public class RobotContainer {
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
         new Drive(3.5, 0, 180, m_driveTrain))
         );
+
+    public final Command test3 = new SequentialCommandGroup(
+          new ZeroOdo(0,0, 0, m_driveTrain), 
+          new HandTasks(true, handIntakeStates.stow, HandControls),
+          new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+          new HandTasks(false, handIntakeStates.doNothing, HandControls),
+          new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+          new Drive(2.07, 0, 180, m_driveTrain)));
   }
 
 
