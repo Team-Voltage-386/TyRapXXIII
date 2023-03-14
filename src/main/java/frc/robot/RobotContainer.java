@@ -111,7 +111,7 @@ public class RobotContainer {
     //Code for balancing
     /**drives over the drive station, comes back, and balances. By Lucas */
     public final Command test1 = new SequentialCommandGroup(
-      new ZeroOdo(0, 0, 180, m_driveTrain),
+      new ZeroOdo(0, 0, 0, m_driveTrain),
       new DriveAtSpeed(4.2, 0, 0, 0.15, m_driveTrain),
       new DriveUntilAngleInc(1.9, 0, 180, 0.2, m_driveTrain, 9, 2),
       new DriveAtSpeed(2.345,  0, 0, 0.2, m_driveTrain)
