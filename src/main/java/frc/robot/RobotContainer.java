@@ -11,6 +11,7 @@ import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.ManualFeedOdometry;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.commands.ZeroOdo;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hand;
@@ -19,6 +20,8 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Hand.handIntakeStates;
 // import frc.robot.utils.AllianceData;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,9 +30,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
-
 import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.Autonomous.LogicBalance;
+import javax.swing.plaf.TreeUI;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -70,8 +73,10 @@ public class RobotContainer {
     autoChooser.addOption("Place and Balance", autos.placeAndBalance);
     autoChooser.addOption("TuningSquare", autos.TuningSquare);
     autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
-    Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1);
 
+    autoChooser.addOption("Middle Auto", autos.test1);
+    autoChooser.addOption("Side Auto", autos.test2);
+    Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1).withPosition(4, 2);
   }
 
   /**
@@ -105,6 +110,7 @@ public class RobotContainer {
         new ArmDo(m_Arm, kfseqConeHightoCubeStow),
         new Drive(-3, 0, 0, m_driveTrain));
     public final Command test2 = new SequentialCommandGroup(
+        new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
@@ -150,6 +156,7 @@ public class RobotContainer {
         new Drive(0, 2, 270, m_driveTrain),
         new Drive(0, 0, 90, m_driveTrain));
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

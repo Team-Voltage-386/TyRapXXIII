@@ -31,7 +31,7 @@ public class SwerveModule {
 
     public int swerveModuleID;
     public static int swerveModuleCount = 0;
-    public final ShuffleboardTab mainTab;
+    public final ShuffleboardTab swerveTab;
     public final GenericEntry steerMotorCurrentWidget;
     public final GenericEntry driveMotorCurrentWidget;
     public final GenericEntry driveMotorSetWidget;
@@ -57,17 +57,17 @@ public class SwerveModule {
 
         this.calcPosition(0, 0);
 
-        mainTab = Shuffleboard.getTab("Main");
-        steerMotorCurrentWidget = mainTab.add("steerMotor" + SwerveModuleName, 0).withPosition(5, swerveModuleID)
+        swerveTab = Shuffleboard.getTab("SwerveModules");
+        steerMotorCurrentWidget = swerveTab.add("steerMotor" + SwerveModuleName, 0).withPosition(5, swerveModuleID)
                 .withSize(1, 1)
                 .getEntry();
-        driveMotorCurrentWidget = mainTab.add("drive motor" + SwerveModuleName, 0).withPosition(6,
+        driveMotorCurrentWidget = swerveTab.add("drive motor" + SwerveModuleName, 0).withPosition(6,
                 swerveModuleID).withSize(1, 1)
                 .getEntry();
-        posiitonWidget = mainTab.add("orientation" + SwerveModuleName, 0).withPosition(7,
+        posiitonWidget = swerveTab.add("orientation" + SwerveModuleName, 0).withPosition(7,
                 swerveModuleID).withSize(1, 1)
                 .getEntry();
-        driveMotorSetWidget = mainTab.add("dmSET" + SwerveModuleName, 0).withPosition(8, swerveModuleID).withSize(1, 1)
+        driveMotorSetWidget = swerveTab.add("dmSET" + SwerveModuleName, 0).withPosition(8, swerveModuleID).withSize(1, 1)
                 .getEntry();
         swerveModuleCount++;
 

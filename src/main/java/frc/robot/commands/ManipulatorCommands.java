@@ -151,10 +151,10 @@ public class ManipulatorCommands extends CommandBase {
         }
         // hand tasks
         // wrist position setter
-        if (kManipulator.getRawButtonPressed(kRightBumper)) {
+        if (kManipulator.getRawButtonPressed(kRightBumper) && ConeMode) {
           m_hand.setRotateHand(true);
         }
-        if (kManipulator.getRawButtonPressed(kLeftBumper)) {
+        if (kManipulator.getRawButtonPressed(kLeftBumper) && ConeMode) {
           m_hand.setRotateHand(false);
         }
         // change elbow angle if wrist is rotated

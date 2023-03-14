@@ -230,28 +230,29 @@ public final class Constants {
                                         new ArmKeyframe(new double[] { -115.2, 120 }, armKeyFrameStates.stowed, 15)
                         };
                         public static ArmKeyframe[] kfseqCubehightoCubeStow = {
-                                        new ArmKeyframe(new double[] { -54.5, 90 }, armKeyFrameStates.intermediary, 7),
-                                        new ArmKeyframe(new double[] { -115.2, 120 }, armKeyFrameStates.stowed, 15)
+                                        new ArmKeyframe(new double[] { -54.5, 90 }, armKeyFrameStates.intermediary, 3),
+                                        new ArmKeyframe(new double[] { -115.2, 120 }, armKeyFrameStates.stowed, 5)
                         };
                         public static ArmKeyframe[] kfseqCubeMidtoCubeStow = {
-                                        new ArmKeyframe(new double[] { -91, 130 }, armKeyFrameStates.intermediary, 7),
-                                        new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
-                                                        7),
-                                        new ArmKeyframe(new double[] { -115.2, 120 }, armKeyFrameStates.stowed, 15)
+                                        new ArmKeyframe(new double[] { -91, 130 }, armKeyFrameStates.intermediary, 3),
+                                        // new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
+                                        //                 7),
+                                        // new ArmKeyframe(new double[] { -115.2, 120 }, armKeyFrameStates.stowed, 15)
+                                        new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.stowed, 3)
                         };
                         // scoring sequences
                         public static ArmKeyframe[] kfseqCubeStowToCubeMid = {
                                         new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
-                                                        7),
-                                        new ArmKeyframe(new double[] { -91, 140 }, armKeyFrameStates.intermediary, 5),
-                                        new ArmKeyframe(new double[] { -70, 99 }, armKeyFrameStates.scoreCubeMid, 15),
+                                                        3),
+                                        new ArmKeyframe(new double[] { -91, 140 }, armKeyFrameStates.intermediary, 3),
+                                        new ArmKeyframe(new double[] { -70, 99 }, armKeyFrameStates.scoreCubeMid, 3),
                         };
                         public static ArmKeyframe[] kfseqCubeStowToCubeHigh = {
                                         new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
-                                                        7),
-                                        new ArmKeyframe(new double[] { -100, 128 }, armKeyFrameStates.intermediary, 5),
-                                        new ArmKeyframe(new double[] { -52, 96 }, armKeyFrameStates.intermediary, 7),
-                                        new ArmKeyframe(new double[] { -33, 68 }, armKeyFrameStates.scoreCubeHigh, 15),
+                                                        3),
+                                        new ArmKeyframe(new double[] { -100, 128 }, armKeyFrameStates.intermediary, 3),
+                                        new ArmKeyframe(new double[] { -52, 110 }, armKeyFrameStates.intermediary, 3),
+                                        new ArmKeyframe(new double[] { -33, 68 }, armKeyFrameStates.scoreCubeHigh, 3),
                         };
                         public static ArmKeyframe[] kfseqConeStowToConeMid = {
                                         new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
@@ -262,11 +263,11 @@ public final class Constants {
                         };
                         public static ArmKeyframe[] kfseqConeStowToConeHigh = {
                                         new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
-                                                        8),
-                                        new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 8),
-                                        new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary, 8),
-                                        new ArmKeyframe(new double[] { 10, 27 }, armKeyFrameStates.intermediary, 8),
-                                        new ArmKeyframe(new double[] { 0, 0 }, armKeyFrameStates.scoreConeHigh, 15),
+                                                        7),
+                                        // new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary, 8),
+                                        new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary, 7),
+                                        new ArmKeyframe(new double[] { 10, 23 }, armKeyFrameStates.intermediary, 7),
+                                        new ArmKeyframe(new double[] { 0, 0 }, armKeyFrameStates.scoreConeHigh, 3),
 
                         };
                 }
