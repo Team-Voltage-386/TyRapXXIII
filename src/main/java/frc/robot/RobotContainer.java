@@ -105,12 +105,11 @@ public class RobotContainer {
     return m_teleop;
   }
 
-  // all auto routines go here, make sure to add to sendable chooseer
   public final class AutoRoutines {
 
     //Code for balancing
     public final Command test1 = new SequentialCommandGroup(
-      new ZeroOdo(0, 0, 0, m_driveTrain),
+      new ZeroOdo(0, 0, 180, m_driveTrain),
       new DriveAtSpeed(4.3, 0, 0, 0.15, m_driveTrain),
       new DriveUntilAngleInc(1.9, 0, 0, 0.2, m_driveTrain, 9, 2),
       new DriveAtSpeed(2.345,  0, 0, 0.2, m_driveTrain)
