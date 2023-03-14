@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.utils.AllianceData;
 
 public class Drivetrain extends SubsystemBase {
     public double xDriveTarget = 0;
@@ -57,20 +56,24 @@ public class Drivetrain extends SubsystemBase {
 
                     double x = xDriveTarget;
                     double y = yDriveTarget;
-                    double xFin, yFin;
 
                     targetSpeed = Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2));
 
                     double r = ((2 * Math.PI * swerve.distFromCenter) / 360) * rotationTarget; // rotation speed
-                    double rAngle = swerve.angleFromCenter + angle + 90;
+
+                    double rAngle = swerve.angleFromCenter + 90;
+                    if (doFieldOrientation) rAngle += angle;
+
+
                     x += r * Math.cos(Math.toRadians(rAngle));
                     y += r * Math.sin(Math.toRadians(rAngle));
+
+                    double xFin = x;
+                    double yFin = y;
+
                     if (doFieldOrientation) {
                         xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
                         yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
-                    } else {
-                        xFin = -x;
-                        yFin = -y;
                     }
 
                     swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
@@ -78,7 +81,7 @@ public class Drivetrain extends SubsystemBase {
                 } else {
                     swerve.targetDrive = 0;
                     swerve.drivePID.reset();
-                    swerve.targetSteer = swerve.angleFromCenter +90 ;// circle lock is add 90, x lock is add 0
+                    swerve.targetSteer = swerve.angleFromCenter + 90;// circle lock is add 90, x lock is add 0
                     // swerve.angleFromCenter + 90
                 }
 
@@ -91,11 +94,10 @@ public class Drivetrain extends SubsystemBase {
             if (wasEnabled)
                 for (SwerveModule swerve : modules)
                     swerve.reset();
-                    
 
             wasEnabled = false;
-            for (SwerveModule swerve : modules) //diagnosing tool, delete later
-                swerve.updateWidget();//diagnosing tool, delete later
+            for (SwerveModule swerve : modules) // diagnosing tool, delete later
+                swerve.updateWidget();// diagnosing tool, delete later
         }
 
         updateWidget();
@@ -116,7 +118,13 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.setYaw(AllianceData.resetOrientationOffset);
+        IMU.setYaw(0);
+    }
+
+    public void feedBotPose(double x, double y, double FieldOrientation) {
+        xPos = x;
+        yPos = y;
+        IMU.setYaw(FieldOrientation);
     }
 
     public void resetFO(double a) {
@@ -205,10 +213,10 @@ public class Drivetrain extends SubsystemBase {
     private double targetSpeed = 0;
 
     private void updateWidget() {
-        xPosWidget.setDouble(xDriveTarget);
-        yPosWidget.setDouble(yDriveTarget);
+        xPosWidget.setDouble(xPos);
+        yPosWidget.setDouble(yPos);
         rotationWidget.setDouble(ypr[0]);
-        pitchWidget.setDouble(ypr[1]);
+        pitchWidget.setDouble(ypr[2]);
         rollWidget.setDouble(ypr[2]);
         targetSpeedWidget.setDouble(targetSpeed);
         speedWidget.setDouble(speed);
