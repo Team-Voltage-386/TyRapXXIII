@@ -35,7 +35,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 import javax.swing.plaf.TreeUI;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -77,7 +76,7 @@ public class RobotContainer {
     autoChooser.addOption("Place and Balance", autos.placeAndBalance);
     autoChooser.addOption("TuningSquare", autos.TuningSquare);
     autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
-
+    autoChooser.addOption("Place and Balance No Mobility", autos.placeAndBalanceNoMobility);
     autoChooser.addOption("Middle Auto", autos.test1);
     Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1).withPosition(4, 2);
   }
@@ -136,13 +135,14 @@ public class RobotContainer {
         new Drive(3, 0, 0, m_driveTrain));
 
     // public final Command test3 = new SequentialCommandGroup(
-    //     new ManualFeedOdometry(m_driveTrain, 0, 0, (AllianceData.resetOrientationOffset + 180) % 360),
-    //     new HandTasks(true, handIntakeStates.stow, HandControls),
-    //     new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-    //     new HandTasks(false, handIntakeStates.doNothing, HandControls),
-    //     new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-    //         new Drive(3 * AllianceData.fieldSideMultiplier, 0,
-    //             (AllianceData.resetOrientationOffset + 180) % 360, m_driveTrain)));
+    // new ManualFeedOdometry(m_driveTrain, 0, 0,
+    // (AllianceData.resetOrientationOffset + 180) % 360),
+    // new HandTasks(true, handIntakeStates.stow, HandControls),
+    // new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+    // new HandTasks(false, handIntakeStates.doNothing, HandControls),
+    // new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+    // new Drive(3 * AllianceData.fieldSideMultiplier, 0,
+    // (AllianceData.resetOrientationOffset + 180) % 360, m_driveTrain)));
     public final Command test4 = new SequentialCommandGroup(
         new Drive(-3, 0, 0, m_driveTrain),
         new Drive(-3, -2, 0, m_driveTrain));
@@ -166,8 +166,17 @@ public class RobotContainer {
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-            new Drive(3, 0, 0, m_driveTrain))
-    );
+            new Drive(3, 0, 0, m_driveTrain)),
+        new Drive(1, 0, 180, m_driveTrain));
+    public final Command placeAndBalanceNoMobility = new SequentialCommandGroup(
+        new ZeroOdo(0, 0, 0, m_driveTrain),
+        // new HandTasks(true, handIntakeStates.stow, HandControls),
+        // new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        // new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        // new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        //     new Drive(1, 0, 0, m_driveTrain)),
+        new DriveUntil(true, m_driveTrain),
+        new LogicBalance(m_driveTrain));
 
     public final Command TuningSquare = new SequentialCommandGroup(
         new Drive(2, 0, 0, m_driveTrain),
@@ -179,7 +188,6 @@ public class RobotContainer {
       new HandTasks(false, handIntakeStates.letitgo, HandControls)
     );
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
