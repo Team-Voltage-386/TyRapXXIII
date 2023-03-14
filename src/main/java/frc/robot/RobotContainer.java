@@ -152,11 +152,11 @@ public class RobotContainer {
         new Drive(1, 0, 180, m_driveTrain));
     public final Command placeAndBalanceNoMobility = new SequentialCommandGroup(
         new ZeroOdo(0, 0, 0, m_driveTrain),
-        new HandTasks(true, handIntakeStates.stow, HandControls),
-        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-            new Drive(1, 0, 0, m_driveTrain)),
+        // new HandTasks(true, handIntakeStates.stow, HandControls),
+        // new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        // new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        // new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        //     new Drive(1, 0, 0, m_driveTrain)),
         new DriveUntil(true, m_driveTrain),
         new LogicBalance(m_driveTrain));
 
