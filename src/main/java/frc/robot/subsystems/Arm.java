@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utils.AFFShufflable;
-import frc.robot.utils.PersistentShufflableDouble;
+// import frc.robot.utils.AFFShufflable;
+import frc.robot.utils.AFFFinal;
 import static frc.robot.utils.TrajectoryMaker.*;
 import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 import frc.robot.utils.ArmKeyframe;
@@ -38,8 +38,8 @@ import java.util.Map;
 
 public class Arm extends SubsystemBase {
 
-    public AFFShufflable ShoulderFeedForward;
-    public AFFShufflable ElbowFeedForward;
+    public AFFFinal ShoulderFeedForward;
+    public AFFFinal ElbowFeedForward;
     public double ShoulderTarget;
     public double ElbowTarget;
 
@@ -92,8 +92,8 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
-        ShoulderFeedForward = new AFFShufflable(.288, .12, .36, 0, 0, "ShoulderPIDF", "ArmFF");
-        ElbowFeedForward = new AFFShufflable(.12, .12, .30, -.36, 0, "ElbowPIDF", "ArmFF");
+        ShoulderFeedForward = new AFFFinal(kArmShoulderPID[0], kArmShoulderPID[1], kArmShoulderPID[2],kArmShoulderPID[3], kArmShoulderPID[4]);
+        ElbowFeedForward = new AFFFinal(kArmElbowPID[0],kArmElbowPID[1],kArmElbowPID[2],kArmElbowPID[3],kArmElbowPID[4]);
 
         sequenceIndex = 0;
 
@@ -101,8 +101,8 @@ public class Arm extends SubsystemBase {
 
         // ShoulderTarget = kInitialShoulderTarget;
         // ElbowTarget = kInitialElbowTarget;
-        ShoulderTarget=getLocalArmAngles()[0];
-        ElbowTarget=getLocalArmAngles()[1];
+        ShoulderTarget = getLocalArmAngles()[0];
+        ElbowTarget = getLocalArmAngles()[1];
         targetSequence = new double[][] { { kInitialShoulderTarget, kInitialElbowTarget } };
         lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
         nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
@@ -223,7 +223,7 @@ public class Arm extends SubsystemBase {
                         safeZoneDrive(
                                 ShoulderFeedForward.calc(
                                         shouldErr,
-                                        (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()), // 0 is a constant
+                                        (getLocalArmAngles()[0])),
                                 getLocalArmAngles()[0], kShoulderSafezone),
                         -PSDShoulderMaxVoltage.get(), PSDShoulderMaxVoltage.get())));
     }
@@ -670,7 +670,7 @@ public class Arm extends SubsystemBase {
         ConeModeWidget.setBoolean(ConeMode);
         runningKeyframesAndSequencesWidget.setBoolean(runningKeyframesAndSequences);
         scoreHighWidget.setBoolean(scoreHighTarget);
-        //main tab widgets
+        // main tab widgets
         mainTabConeModeWidget.setBoolean(ConeMode);
         mainTabscoreHighWidget.setBoolean(scoreHighTarget);
         mainTabscoreMidWidget.setBoolean(!scoreHighTarget);
@@ -679,10 +679,10 @@ public class Arm extends SubsystemBase {
     }
 
     public void updateShufflables() {
-        if (ElbowFeedForward.detectChange())
-            ElbowFeedForward.shuffleUpdatePID();
-        if (ShoulderFeedForward.detectChange())
-            ShoulderFeedForward.shuffleUpdatePID();
+        // if (ElbowFeedForward.detectChange())
+        // ElbowFeedForward.shuffleUpdatePID();
+        // if (ShoulderFeedForward.detectChange())
+        // ShoulderFeedForward.shuffleUpdatePID();
         if (PSDArmTolerace.detectChanges())
             PSDArmTolerace.subscribeAndSet();
         if (PSDElbowOffset.detectChanges())

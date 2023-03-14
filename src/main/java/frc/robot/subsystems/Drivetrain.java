@@ -86,7 +86,7 @@ public class Drivetrain extends SubsystemBase {
                 }
 
                 swerve.drive();
-                swerve.updateShufflables();
+                // swerve.updateShufflables();
             }
 
             wasEnabled = true;

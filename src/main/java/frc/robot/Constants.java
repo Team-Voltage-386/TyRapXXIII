@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.utils.ArmKeyframe;
+import frc.robot.utils.PID;
 import frc.robot.utils.PIDShufflable;
 import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.PersistentShufflableInteger;
@@ -55,17 +56,17 @@ public final class Constants {
                 public static final double driveTolerance = 0.1;
                 public static final double headingTolerance = 90;
 
-                public static final double[] kAutoPositionPID = { 1, 2.5, 0.2 };
-                public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
-                public static final PIDShufflable autoPositionX = new PIDShufflable(kAutoPositionPID[0],
+                public static final double[] kAutoPositionPID = { .3, .3, .01 };
+                public static final double[] kAutoHeadingPID = { 0.01, 0, 0 };
+                public static final PID autoPositionX = new PID(kAutoPositionPID[0],
                                 kAutoPositionPID[1],
-                                kAutoPositionPID[2], "autoPosX", "autotab");
-                public static final PIDShufflable autoPositionY = new PIDShufflable(kAutoPositionPID[0],
+                                kAutoPositionPID[2]);
+                public static final PID autoPositionY = new PID(kAutoPositionPID[0],
                                 kAutoPositionPID[1],
-                                kAutoPositionPID[2], "autoPosY", "autotab");
-                public static final PIDShufflable autoPositionH = new PIDShufflable(kAutoHeadingPID[0],
+                                kAutoPositionPID[2]);
+                public static final PID autoPositionH = new PID(kAutoHeadingPID[0],
                                 kAutoHeadingPID[1],
-                                kAutoHeadingPID[2], "autoPosH", "autotab");
+                                kAutoHeadingPID[2]);
         }
 
         public static final class HandConstants {
@@ -158,8 +159,8 @@ public final class Constants {
                 public static final double KStowPressVelocity = -.1;
                 public static final int KTrajectorySteps = 3;
                 public static final double kArmTolerance = 5;// in degrees
-                public static final double[] kArmShoulderPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
-                public static final double[] kArmElbowPID = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+                public static final double[] kArmShoulderPID = { .288, .12, .36, 0, 0 };
+                public static final double[] kArmElbowPID = { .12, .12, .3, -.36, 0 };
 
                 public static final double[] kShoulderSafezone = { -120, 20 };// lower limit is index 0, upper limit is
                                                                               // index 1
