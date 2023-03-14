@@ -132,7 +132,8 @@ public class RobotContainer {
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(3, 0, 0, m_driveTrain)));
+        new Drive(3, 0, 0, m_driveTrain)),
+        new Drive(3.5, 0, 0, m_driveTrain));
     public final Command ScoreConeCharger = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
         new SetConemode(true),
@@ -140,13 +141,14 @@ public class RobotContainer {
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(2.07, 0, 180, m_driveTrain)));
+        new Drive(2.5, 0, 180, m_driveTrain)));
     public final Command ScoreCubeSides = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(false, handIntakeStates.stow, HandControls),
         new SetConemode(false),
         new HandTasks(false, handIntakeStates.letitgo, HandControls),
-        new Drive(3, 0, 0, m_driveTrain));
+        new Drive(3, 0, 0, m_driveTrain),
+        new Drive(3.5, 0, 0, m_driveTrain));
 
     // public final Command test3 = new SequentialCommandGroup(
     // new ManualFeedOdometry(m_driveTrain, 0, 0,
@@ -166,6 +168,7 @@ public class RobotContainer {
     public final Command driveUntil = new SequentialCommandGroup(
         new DriveUntil(false, m_driveTrain));
     public final Command placeAndBalance = new SequentialCommandGroup(
+        new ZeroOdo(0,0,0,m_driveTrain),
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
@@ -173,7 +176,7 @@ public class RobotContainer {
             new Drive(1, 0, 0, m_driveTrain)),
         new Drive(2, 0, 0, m_driveTrain),
         new Drive(2, 0, 0, m_driveTrain),
-        new DriveUntil(true, m_driveTrain),
+        new DriveUntil(false, m_driveTrain),
         new LogicBalance(m_driveTrain));
     public final Command placeAndCrossLine = new SequentialCommandGroup(
         new HandTasks(true, handIntakeStates.stow, HandControls),
@@ -184,11 +187,11 @@ public class RobotContainer {
         new Drive(1, 0, 180, m_driveTrain));
     public final Command placeAndBalanceNoMobility = new SequentialCommandGroup(
         new ZeroOdo(0, 0, 0, m_driveTrain),
-        // new HandTasks(true, handIntakeStates.stow, HandControls),
-        // new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-        // new HandTasks(false, handIntakeStates.doNothing, HandControls),
-        // new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        //     new Drive(1, 0, 0, m_driveTrain)),
+        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+            new Drive(1, 0, 0, m_driveTrain)),
         new DriveUntil(true, m_driveTrain),
         new LogicBalance(m_driveTrain));
 

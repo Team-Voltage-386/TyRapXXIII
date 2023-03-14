@@ -16,7 +16,7 @@ public class LogicBalance extends CommandBase {
 
     boolean balanceDone = false;
     // This is zone in degrees when the charging station is considered balanced
-    private double balanceTarget = 10;
+    private double balanceTarget = 5;
     // Counts the number of times that the direction has changed (going forward and
     // backward on the charge station)
     private int numTimesDirectionChanged = 0;
