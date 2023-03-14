@@ -98,8 +98,9 @@ public class RobotContainer {
 
     //Code for balancing
     public final Command test1 = new SequentialCommandGroup(
+      new DriveAtSpeed(-4.3, 0, 0, 0.15, m_driveTrain),
       new DriveUntilAngleInc(-1.9, 0, 0, 0.2, m_driveTrain, 9, 2),
-      new DriveAtSpeed(-2.345, 0, 0, 0.2, m_driveTrain)
+      new DriveAtSpeed(-2.345,  0, 0, 0.2, m_driveTrain)
     );
 
     //Code for running on the sides
