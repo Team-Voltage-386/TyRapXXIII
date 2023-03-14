@@ -24,7 +24,7 @@ public class Drivetrain extends SubsystemBase {
     public double yPos = 0;
     public double angle = 0;
 
-    private double ypr[] = new double[3];
+    public double ypr[] = new double[3];
 
     public Pigeon2 IMU = new Pigeon2(kIMUid);
 
@@ -210,6 +210,7 @@ public class Drivetrain extends SubsystemBase {
     private static final GenericEntry rollWidget = OdomeTab.add("roll", 0).getEntry();
     private static final GenericEntry targetSpeedWidget = speedTab.add("target", 0).getEntry();
     private static final GenericEntry speedWidget = speedTab.add("current", 0).getEntry();
+    private static final GenericEntry RotateWidget = speedTab.add("Rotate", 0).getEntry();
     private double targetSpeed = 0;
 
     private void updateWidget() {
@@ -217,9 +218,10 @@ public class Drivetrain extends SubsystemBase {
         yPosWidget.setDouble(yPos);
         rotationWidget.setDouble(ypr[0]);
         pitchWidget.setDouble(ypr[2]);
-        rollWidget.setDouble(ypr[2]);
+        rollWidget.setDouble(ypr[1]);
         targetSpeedWidget.setDouble(targetSpeed);
         speedWidget.setDouble(speed);
+        RotateWidget.setDouble(getHeadingError(180));
     }
 
 }
