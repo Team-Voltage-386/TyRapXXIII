@@ -11,6 +11,7 @@ import frc.robot.commands.Autonomous.DriveUntil;
 import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.LogicBalance;
 import frc.robot.commands.Autonomous.ManualFeedOdometry;
+import frc.robot.commands.Autonomous.SetConemode;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.commands.ZeroOdo;
@@ -65,7 +66,9 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     autoChooser.addOption("test1", autos.test1);
-    autoChooser.addOption("test2", autos.test2);
+    autoChooser.addOption("Score cone high and backup", autos.ScoreConeSides);
+    autoChooser.addOption("Score cone high and backup onto the the charger", autos.ScoreConeCharger);
+    autoChooser.addOption("Score cube low and backup", autos.ScoreCubeSides);
     // autoChooser.addOption("test3", autos.test3);
     autoChooser.addOption("test4", autos.test4);
     autoChooser.addOption("Logic Balance FACE FORWARD", autos.logicBalance);
@@ -75,8 +78,7 @@ public class RobotContainer {
     autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
     autoChooser.addOption("Place and Balance No Mobility", autos.placeAndBalanceNoMobility);
     autoChooser.addOption("Middle Auto", autos.test1);
-    autoChooser.addOption("Side Auto", autos.test2);
-    Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1).withPosition(4, 2);
+    Shuffleboard.getTab("Main").add("AutoRoutine",autoChooser).withSize(3,1).withPosition(4, 2);
   }
 
   /**
@@ -108,14 +110,30 @@ public class RobotContainer {
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-        new Drive(-3, 0, 0, m_driveTrain));
-    public final Command test2 = new SequentialCommandGroup(
-        new ZeroOdo(0, 0, 0, m_driveTrain),
+        new Drive(3.5, 0, 0, m_driveTrain));
+    public final Command ScoreConeSides = new SequentialCommandGroup(
+        new ZeroOdo(0,0, 0, m_driveTrain), 
+        new SetConemode(true),
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-            new Drive(-3, 0, 0, m_driveTrain)));
+        new Drive(3, 0, 0, m_driveTrain)));
+    public final Command ScoreConeCharger = new SequentialCommandGroup(
+        new ZeroOdo(0,0, 0, m_driveTrain), 
+        new SetConemode(true),
+        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        new Drive(2.07, 0, 180, m_driveTrain)));
+    public final Command ScoreCubeSides = new SequentialCommandGroup(
+        new ZeroOdo(0,0, 0, m_driveTrain), 
+        new HandTasks(false, handIntakeStates.stow, HandControls),
+        new SetConemode(false),
+        new HandTasks(false, handIntakeStates.letitgo, HandControls),
+        new Drive(3, 0, 0, m_driveTrain));
+
     // public final Command test3 = new SequentialCommandGroup(
     // new ManualFeedOdometry(m_driveTrain, 0, 0,
     // (AllianceData.resetOrientationOffset + 180) % 360),
@@ -165,6 +183,10 @@ public class RobotContainer {
         new Drive(2, 2, 90, m_driveTrain),
         new Drive(0, 2, 270, m_driveTrain),
         new Drive(0, 0, 90, m_driveTrain));
+    public final Command spitOutCube = new SequentialCommandGroup(
+      new SetConemode(false),
+      new HandTasks(false, handIntakeStates.letitgo, HandControls)
+    );
   }
 
   /**
