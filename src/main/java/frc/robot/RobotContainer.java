@@ -67,7 +67,8 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     autoChooser.addOption("test1", autos.test1);
-    autoChooser.addOption("test2", autos.test2);
+    autoChooser.addOption("Score cone high and backup", autos.ScoreConeSides);
+    autoChooser.addOption("Score cone high and backup onto the the charger", autos.ScoreConeCharger);
     autoChooser.addOption("Score cube low and backup", autos.ScoreCubeSides);
     // autoChooser.addOption("test3", autos.test3);
     autoChooser.addOption("test4", autos.test4);
@@ -112,13 +113,21 @@ public class RobotContainer {
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ArmDo(m_Arm, kfseqConeHightoCubeStow),
         new Drive(3.5, 0, 0, m_driveTrain));
-    public final Command test2 = new SequentialCommandGroup(
+    public final Command ScoreConeSides = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(true, handIntakeStates.stow, HandControls),
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        new Drive(1.5, 0, 0, m_driveTrain),
         new Drive(3.5, 0, 0, m_driveTrain)));
+    public final Command ScoreConeCharger = new SequentialCommandGroup(
+        new ZeroOdo(0,0, 0, m_driveTrain), 
+        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+        new HandTasks(false, handIntakeStates.doNothing, HandControls),
+        new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+        new Drive(2.07, 0, 180, m_driveTrain)));
     public final Command ScoreCubeSides = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
         new HandTasks(false, handIntakeStates.stow, HandControls),
