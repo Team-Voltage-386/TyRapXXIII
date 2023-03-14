@@ -73,7 +73,7 @@ public class RobotContainer {
     autoChooser.addOption("Place and Balance", autos.placeAndBalance);
     autoChooser.addOption("TuningSquare", autos.TuningSquare);
     autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
-
+    autoChooser.addOption("Drive Down the Field", autos.driveDownTheFieldGK);
     autoChooser.addOption("Middle Auto", autos.test1);
     autoChooser.addOption("Side Auto", autos.test2);
     Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1).withPosition(4, 2);
@@ -148,8 +148,7 @@ public class RobotContainer {
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-            new Drive(3, 0, 0, m_driveTrain)));
-
+            new Drive(4, 0, 0, m_driveTrain)));
     public final Command TuningSquare = new SequentialCommandGroup(
         new Drive(2, 0, 0, m_driveTrain),
         new Drive(2, 2, 90, m_driveTrain),
