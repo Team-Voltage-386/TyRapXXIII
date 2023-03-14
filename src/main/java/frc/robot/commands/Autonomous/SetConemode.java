@@ -28,6 +28,7 @@ public class SetConemode extends InstantCommand {
   @Override
   public void initialize() {
     ConeMode=m_ConeMode;
-    m_LED.setLEDConeMode(ConeMode);
+    if(m_LED!=null){
+    m_LED.setLEDConeMode(ConeMode);}
   }
 }
