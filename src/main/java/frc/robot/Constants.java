@@ -181,8 +181,8 @@ public final class Constants {
                 public static final int kElbowEncoderPin = 0;
                 public static final double kShoulderEncOffset = -141.2;
                 public static final double kElbowEncOffset = 112;
-                public static final double kInitialShoulderTarget = -115.2;
-                public static final double kInitialElbowTarget = 120;
+                public static final double kInitialShoulderTarget = -112.3;
+                public static final double kInitialElbowTarget = 97.6;
 
                 public static final PersistentShufflableDouble PSDShoulderOffset = new PersistentShufflableDouble(96,
                                 "shoulderOffset", "ArmFF"); // degrees offset
@@ -223,7 +223,8 @@ public final class Constants {
                         };
                         public static ArmKeyframe[] kfseqConeHightoCubeStow = {
                                         new ArmKeyframe(new double[] { 10, 15 }, armKeyFrameStates.intermediary, 3),
-                                        new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary, 5),
+                                        // new ArmKeyframe(new double[] {-21.5,70}, armKeyFrameStates.intermediary, 3),
+                                        new ArmKeyframe(new double[] { -52.5, 105 }, armKeyFrameStates.intermediary, 7),
                                         // new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary,
                                         // 10),
                                         new ArmKeyframe(new double[] { -115.2, 120 }, armKeyFrameStates.stowed, 7)

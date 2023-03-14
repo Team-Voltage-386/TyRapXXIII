@@ -99,8 +99,10 @@ public class Arm extends SubsystemBase {
 
         updateShufflables();
 
-        ShoulderTarget = kInitialShoulderTarget;
-        ElbowTarget = kInitialElbowTarget;
+        // ShoulderTarget = kInitialShoulderTarget;
+        // ElbowTarget = kInitialElbowTarget;
+        ShoulderTarget=getLocalArmAngles()[0];
+        ElbowTarget=getLocalArmAngles()[1];
         targetSequence = new double[][] { { kInitialShoulderTarget, kInitialElbowTarget } };
         lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
         nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
