@@ -93,12 +93,17 @@ public class RobotContainer {
   public final class AutoRoutines {
 
     //Code for balancing
-    public final Command test1 = new SequentialCommandGroup();
+    public final Command test1 = new SequentialCommandGroup(new ZeroOdo(0,0,0 ,m_driveTrain),
+    new Drive(2,0,0, m_driveTrain),
+    new Drive(2,2,0,m_driveTrain),
+    new Drive(0,2,0,m_driveTrain),
+    new Drive(0,0,0,m_driveTrain)
+    );
 
     //Code for running on the sides
     public final Command test2 = new SequentialCommandGroup(
         new ZeroOdo(0,0, 0, m_driveTrain), 
-        new HandTasks(true, handIntakeStates.stow, HandControls),
+        new HandTasks(true, handIntakeStates.stow, HandControls), 
         new ArmDo(m_Arm, kfseqConeStowToConeHigh),
         new HandTasks(false, handIntakeStates.doNothing, HandControls),
         new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),

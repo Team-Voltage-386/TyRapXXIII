@@ -23,7 +23,7 @@ public class DriverCommands extends CommandBase {
     private double driveJoystickAngle, driveMagnitude, driveJoystickMagnitude;
     public double m_driveSpeed;
     public double m_rotSpeed;
-    public int m_joystickOrientationMultiplier;
+    public int m_joystickOrientationMultiplier = 1;
 
     public DriverCommands(Drivetrain DT) {
         updateShufflables();
@@ -51,11 +51,10 @@ public class DriverCommands extends CommandBase {
             m_driveSpeed = kMaxDriveSpeed;
             m_rotSpeed = kMaxRotSpeed;
         }
-        if (kDriver.getRawAxis(kRightTrigger) > kDeadband) {
-            driveTrain.doFieldOrientation = false;
-        } else {
-            driveTrain.doFieldOrientation = true;
-        }
+
+
+        driveTrain.doFieldOrientation = kDriver.getRawAxis(kRightTrigger) < 0.5;
+
         System.out.println(m_driveSpeed + " " + m_rotSpeed);
         // driveJoystickAngle = Math.atan2(
         // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
@@ -71,11 +70,10 @@ public class DriverCommands extends CommandBase {
         // kMaxDriveSpeed.get();
         // driveTrain.yDriveTarget = (Math.cos((driveJoystickAngle))) * driveMagnitude
         // * kMaxDriveSpeed.get();
-        if (driveTrain.doFieldOrientation) {
-            m_joystickOrientationMultiplier = joystickOrientationMultiplier;
-        } else {
-            m_joystickOrientationMultiplier = 1;
-        }
+
+        if (driveTrain.doFieldOrientation) m_joystickOrientationMultiplier = 1;
+        else m_joystickOrientationMultiplier = -1;
+        
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,
                 -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
@@ -85,6 +83,7 @@ public class DriverCommands extends CommandBase {
         driveTrain.rotationTarget = -1
                 * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
                 * m_rotSpeed;
+
 
         // comment out before tryouts
         // if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {

@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.utils.ArmKeyframe;
+import frc.robot.utils.PID;
 import frc.robot.utils.PIDShufflable;
 import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.PersistentShufflableInteger;
@@ -56,16 +57,12 @@ public final class Constants {
                 public static final double headingTolerance = 90;
 
                 public static final double[] kAutoPositionPID = { 1, 2.5, 0.2 };
-                public static final double[] kAutoHeadingPID = { 2, 0.1, 0.1 };
-                public static final PIDShufflable autoPositionX = new PIDShufflable(kAutoPositionPID[0],
-                                kAutoPositionPID[1],
-                                kAutoPositionPID[2], "autoPosX", "autotab");
-                public static final PIDShufflable autoPositionY = new PIDShufflable(kAutoPositionPID[0],
-                                kAutoPositionPID[1],
-                                kAutoPositionPID[2], "autoPosY", "autotab");
-                public static final PIDShufflable autoPositionH = new PIDShufflable(kAutoHeadingPID[0],
+                public static final double[] kAutoHeadingPID = { 1, 0.1, 0.1 };
+                public static final PID autoPositionX = new PID(kAutoPositionPID[0], kAutoPositionPID[1], kAutoPositionPID[2]);
+                public static final PID autoPositionY = new PID(kAutoPositionPID[0], kAutoPositionPID[1], kAutoPositionPID[2]);
+                public static final PID autoPositionH = new PID(kAutoHeadingPID[0],
                                 kAutoHeadingPID[1],
-                                kAutoHeadingPID[2], "autoPosH", "autotab");
+                                kAutoHeadingPID[2]);
         }
 
         public static final class HandConstants {

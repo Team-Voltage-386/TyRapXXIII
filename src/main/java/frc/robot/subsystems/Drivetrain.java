@@ -5,15 +5,10 @@ import static frc.robot.Constants.DriveConstants.*;
 import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.utils.AllianceData;
 
 public class Drivetrain extends SubsystemBase {
     public double xDriveTarget = 0;
@@ -31,7 +26,6 @@ public class Drivetrain extends SubsystemBase {
 
     private boolean wasEnabled = false;
 
-    private Timer odometryTimer = new Timer();
     private long odoTimerLast = 0;
     public boolean doFieldOrientation = true;
 
@@ -53,26 +47,31 @@ public class Drivetrain extends SubsystemBase {
         if (Robot.inst.isEnabled()) {
             for (SwerveModule swerve : modules) {
                 if (Math.abs(xDriveTarget) > 0.05 || Math.abs(yDriveTarget) > 0.05 || Math.abs(rotationTarget) > 1) {
-                    double angleRad = Math.toRadians(angle);
-
+                    double angleRad = Math.toRadians(angle); // get angle in radians
+                    // fist add translation
                     double x = xDriveTarget;
                     double y = yDriveTarget;
-                    double xFin, yFin;
+                    
+                    // then add rotation
+                    double r = ((2*Math.PI*swerve.distFromCenter)/360)*rotationTarget; // rotation speed (should be m/s of module I think)
+                    
+                    double rAngle = swerve.angleFromCenter + 90;
+                    if (doFieldOrientation) rAngle = swerve.angleFromCenter + angle + 90;
+                    
+                    x += r*Math.cos(Math.toRadians(rAngle));
+                    y += r*Math.sin(Math.toRadians(rAngle));
 
-                    targetSpeed = Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2));
+                    // apply vectors to the rotation of the robot (making it field-oriented)
 
-                    double r = ((2 * Math.PI * swerve.distFromCenter) / 360) * rotationTarget; // rotation speed
-                    double rAngle = swerve.angleFromCenter + angle + 90;
-                    x += r * Math.cos(Math.toRadians(rAngle));
-                    y += r * Math.sin(Math.toRadians(rAngle));
+                    double xFin = x;
+                    double yFin = y;
+
                     if (doFieldOrientation) {
-                        xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
-                        yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
-                    } else {
-                        xFin = -x;
-                        yFin = -y;
-                    }
+                        xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad)); 
+                        yFin = (x * Math.cos(angleRad + (Math.PI/2))) + (y * Math.sin(angleRad + (Math.PI/2)));
+                    } 
 
+                    //extract angle and power
                     swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
                     swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
                 } else {
@@ -102,12 +101,12 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getRawHeading() {
-        double y = ypr[0];
+        double y = -ypr[0];
         while (y < 0)
             y += 360;
         while (y > 360)
             y -= 360;
-        return -y;
+        return y;
     }
 
     public void setOffset(double offX, double offY) {
@@ -116,11 +115,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.setYaw(AllianceData.resetOrientationOffset);
+        IMU.setYaw(180);
     }
 
     public void resetFO(double a) {
-        IMU.setYaw(a);
+        IMU.setYaw(a + 180);
     }
 
     private void updateOdometry() {
@@ -172,20 +171,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getHeadingError(double h) {
-        double res = h - getRawHeading() - 180;
-        if (360-Math.abs(res)<10)
-        {
-            if (res<0)
-            {
-                //Robot wants to do negative 360
-                res=360+res;
-            }
-            else 
-            {
-                //Robot wants to do positive 360
-                res=360-res;
-            }
-        }
+        double res = h - angle;
         while (angle > 180)
             angle -= 360;
         while (angle < 180)
