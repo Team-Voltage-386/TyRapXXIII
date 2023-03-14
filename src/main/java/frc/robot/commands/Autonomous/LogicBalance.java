@@ -47,7 +47,7 @@ public class LogicBalance extends CommandBase {
         if (Math.abs(ypr[2]) > balanceTarget) {
             if (ypr[2] > balanceTarget) {
                 // driveMultiplier = Math.pow(0.8, numTimesDirectionChanged);
-                dt.xDriveTarget = 0.5 * driveMultiplier;
+                dt.xDriveTarget = -0.5 * driveMultiplier;
                 // Increments numTimesDirectionChanged
                 if (!wasGoingForward) {
                     wasGoingForward = true;
@@ -56,7 +56,7 @@ public class LogicBalance extends CommandBase {
                 isDrivingForward = true;
             } else if (ypr[2] < balanceTarget) {
                 // driveMultiplier = Math.pow(0.8, numTimesDirectionChanged);
-                dt.xDriveTarget = -0.5 * driveMultiplier;
+                dt.xDriveTarget = 0.5 * driveMultiplier;
                 // Increments numTimesDirectionChanged
                 if (wasGoingForward) {
                     wasGoingForward = false;
