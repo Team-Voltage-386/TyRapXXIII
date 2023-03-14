@@ -108,6 +108,7 @@ public class RobotContainer {
   public final class AutoRoutines {
 
     //Code for balancing
+    /**drives over the drive station, comes back, and balances. By Lucas */
     public final Command test1 = new SequentialCommandGroup(
       new ZeroOdo(0, 0, 180, m_driveTrain),
       new DriveAtSpeed(4.2, 0, 0, 0.15, m_driveTrain),
