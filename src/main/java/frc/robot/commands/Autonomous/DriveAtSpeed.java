@@ -35,9 +35,9 @@ public class DriveAtSpeed extends CommandBase {
 
     @Override
     public void initialize() {
-        autoPositionX.shuffleUpdatePID();
-        autoPositionY.shuffleUpdatePID();
-        autoPositionH.shuffleUpdatePID();
+        // autoPositionX.shuffleUpdatePID();
+        // autoPositionY.shuffleUpdatePID();
+        // autoPositionH.shuffleUpdatePID();
         System.out.println("Drive Starting");
     }
 

@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utils.AFFShufflable;
-import frc.robot.utils.PersistentShufflableDouble;
+// import frc.robot.utils.AFFShufflable;
+import frc.robot.utils.AFFFinal;
 import static frc.robot.utils.TrajectoryMaker.*;
 import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 import frc.robot.utils.ArmKeyframe;
@@ -38,8 +38,8 @@ import java.util.Map;
 
 public class Arm extends SubsystemBase {
 
-    public AFFShufflable ShoulderFeedForward;
-    public AFFShufflable ElbowFeedForward;
+    public AFFFinal ShoulderFeedForward;
+    public AFFFinal ElbowFeedForward;
     public double ShoulderTarget;
     public double ElbowTarget;
 
@@ -92,15 +92,17 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
-        ShoulderFeedForward = new AFFShufflable(.288, .12, .36, 0, 0, "ShoulderPIDF", "ArmFF");
-        ElbowFeedForward = new AFFShufflable(.12, .12, .36, 0, 0, "ElbowPIDF", "ArmFF");
+        ShoulderFeedForward = new AFFFinal(kArmShoulderPID[0], kArmShoulderPID[1], kArmShoulderPID[2],kArmShoulderPID[3], kArmShoulderPID[4]);
+        ElbowFeedForward = new AFFFinal(kArmElbowPID[0],kArmElbowPID[1],kArmElbowPID[2],kArmElbowPID[3],kArmElbowPID[4]);
 
         sequenceIndex = 0;
 
         updateShufflables();
 
-        ShoulderTarget = kInitialShoulderTarget;
-        ElbowTarget = kInitialElbowTarget;
+        // ShoulderTarget = kInitialShoulderTarget;
+        // ElbowTarget = kInitialElbowTarget;
+        ShoulderTarget = getLocalArmAngles()[0];
+        ElbowTarget = getLocalArmAngles()[1];
         targetSequence = new double[][] { { kInitialShoulderTarget, kInitialElbowTarget } };
         lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
         nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
@@ -187,7 +189,7 @@ public class Arm extends SubsystemBase {
         double elbowErr = ElbowTarget - getLocalArmAngles()[1];
         double shouldErr = ShoulderTarget - getLocalArmAngles()[0];
         // if (Math.abs(elbowErr) > 15)
-        //     ElbowFeedForward.integralAcc = 0;
+        // ElbowFeedForward.integralAcc = 0;
         if (Math.abs(shouldErr) > 15)
             ShoulderFeedForward.integralAcc = 0;
         switch (nextKeyframe.keyFrameState) {
@@ -221,7 +223,7 @@ public class Arm extends SubsystemBase {
                         safeZoneDrive(
                                 ShoulderFeedForward.calc(
                                         shouldErr,
-                                        (getLocalArmAngles()[0]), 0 * ElbowFeedForward.getLoad()), // 0 is a constant
+                                        (getLocalArmAngles()[0])),
                                 getLocalArmAngles()[0], kShoulderSafezone),
                         -PSDShoulderMaxVoltage.get(), PSDShoulderMaxVoltage.get())));
     }
@@ -278,7 +280,7 @@ public class Arm extends SubsystemBase {
             lastKeyframe = nextKeyframe;
             // break, it is done
             runningKeyframesAndSequences = false;
-            armIsAtTarget=true;
+            armIsAtTarget = true;
         }
         // between keyframes
         else if (sequenceIndex != 0 && sequenceIndex < targetSequence.length) {
@@ -295,22 +297,31 @@ public class Arm extends SubsystemBase {
         }
     }
 
-    /**whether the arm protectors are up or not. true = theyre up, false = theyre down.*/
+    /**
+     * whether the arm protectors are up or not. true = theyre up, false = theyre
+     * down.
+     */
     public boolean armIsProtected = false;
-    /**deploys the arm protectors.
-     * ONLY RUN THIS IN PICKUP. IF YOU RUN THIS IN ANYTHING BUT PICKUP, THINGS WILL EXPLODE.
+
+    /**
+     * deploys the arm protectors.
+     * ONLY RUN THIS IN PICKUP. IF YOU RUN THIS IN ANYTHING BUT PICKUP, THINGS WILL
+     * EXPLODE.
      */
     public void protectArm() {
-        if(!armIsProtected) {
-        armprotector.set(Value.kForward);
-        armIsProtected = true;
+        if (!armIsProtected) {
+            armprotector.set(Value.kForward);
+            armIsProtected = true;
         }
     }
-    /**UN-DEPLOYS the arm protectors, and keeps them undeployed.
-     * ONLY RUN THIS IN PICKUP. IF YOU RUN THIS IN ANYTHING BUT PICKUP, THINGS WILL EXPLODE.
+
+    /**
+     * UN-DEPLOYS the arm protectors, and keeps them undeployed.
+     * ONLY RUN THIS IN PICKUP. IF YOU RUN THIS IN ANYTHING BUT PICKUP, THINGS WILL
+     * EXPLODE.
      */
     public void dontProtectArm() {
-        if(armIsProtected) {
+        if (armIsProtected) {
             armprotector.set(Value.kReverse);
             armIsProtected = false;
         }
@@ -394,9 +405,10 @@ public class Arm extends SubsystemBase {
             sequenceIndex = 0;
             keyFrameSequence = inputKeyFrames;
             runningKeyframesAndSequences = true;
-            armIsAtTarget=false;
+            armIsAtTarget = false;
             return true;
-        } return false;
+        }
+        return false;
     }
 
     // /**
@@ -529,6 +541,7 @@ public class Arm extends SubsystemBase {
     // }
 
     private ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
+    private ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
     private GenericPublisher shoulderAngleWidget = armTab.add("ShoulderAngle", 0.0).withPosition(0, 0).withSize(1, 1)
             .getEntry();
     private GenericPublisher elbowAngleWidget = armTab.add("elbowAngle", 0.0).withPosition(1, 0).withSize(1, 1)
@@ -600,8 +613,25 @@ public class Arm extends SubsystemBase {
             .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#9900FF")).withPosition(5, 1)
             .getEntry();
     public GenericEntry scoreHighWidget = armTab.add("scoreHigh", false).withWidget(BuiltInWidgets.kBooleanBox)
-            .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#999999")).withPosition(5, 2)
+            .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#777777")).withPosition(5, 2)
             .getEntry();
+    // for Main tab
+    public GenericEntry mainTabConeModeWidget = mainTab.add("ConeMode", false).withWidget(BuiltInWidgets.kBooleanBox)
+            .withSize(2, 2)
+            .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#9900FF")).withPosition(4, 0)
+            .getEntry();
+    public GenericEntry mainTabscoreHighWidget = mainTab.add("scoreHigh", false).withWidget(BuiltInWidgets.kBooleanBox)
+            .withProperties(Map.of("Color when true", "#00FF00", "Color when false", "#550000")).withPosition(6, 0)
+            .withSize(2, 1)
+            .getEntry();
+    public GenericEntry mainTabscoreMidWidget = mainTab.add("scoreMid", false).withWidget(BuiltInWidgets.kBooleanBox)
+            .withProperties(Map.of("Color when true", "#00FF00", "Color when false", "#550000")).withPosition(6, 1)
+            .withSize(2, 1)
+            .getEntry();
+    private GenericPublisher mainTabLastKeyframeWidget = mainTab.add("LAST armstate", "").withSize(1, 1)
+            .withPosition(8, 0).getEntry();
+    private GenericPublisher mainTabNextKeyframeWidget = mainTab.add("NEXT armstate", "").withSize(1, 1)
+            .withPosition(9, 0).getEntry();
 
     public void updateWidgets() {
         shoulderAngleWidget.setDouble(getLocalArmAngles()[0]);
@@ -639,15 +669,20 @@ public class Arm extends SubsystemBase {
         }
         ConeModeWidget.setBoolean(ConeMode);
         runningKeyframesAndSequencesWidget.setBoolean(runningKeyframesAndSequences);
-
         scoreHighWidget.setBoolean(scoreHighTarget);
+        // main tab widgets
+        mainTabConeModeWidget.setBoolean(ConeMode);
+        mainTabscoreHighWidget.setBoolean(scoreHighTarget);
+        mainTabscoreMidWidget.setBoolean(!scoreHighTarget);
+        mainTabLastKeyframeWidget.setString(lastKeyframe.stateString());
+        mainTabNextKeyframeWidget.setString(nextKeyframe.stateString());
     }
 
     public void updateShufflables() {
-        if (ElbowFeedForward.detectChange())
-            ElbowFeedForward.shuffleUpdatePID();
-        if (ShoulderFeedForward.detectChange())
-            ShoulderFeedForward.shuffleUpdatePID();
+        // if (ElbowFeedForward.detectChange())
+        // ElbowFeedForward.shuffleUpdatePID();
+        // if (ShoulderFeedForward.detectChange())
+        // ShoulderFeedForward.shuffleUpdatePID();
         if (PSDArmTolerace.detectChanges())
             PSDArmTolerace.subscribeAndSet();
         if (PSDElbowOffset.detectChanges())

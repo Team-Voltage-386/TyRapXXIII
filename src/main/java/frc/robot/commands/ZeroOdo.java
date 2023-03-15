@@ -12,7 +12,7 @@ public class ZeroOdo extends CommandBase {
     Drivetrain dt;
 
     public ZeroOdo(double X, double Y, double A, Drivetrain DT) {
-        x =X;
+        x = X;
         y = Y;
         a = A;
         dt = DT;

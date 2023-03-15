@@ -7,17 +7,18 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.utils.PIDShufflable;
+// import frc.robot.utils.PIDShufflable;
 import static frc.robot.utils.mapping.*;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.utils.PID;
 
 public class SwerveModule {
 
     public final CANSparkMax steerMotor;
     public final CANSparkMax driveMotor;
     public final CANCoder encoder;
-    public final PIDShufflable steerPID;
-    public final PIDShufflable drivePID;
+    public final PID steerPID;
+    public final PID drivePID;
     public final double x;
     public final double y;
     public final double encoderOffs;
@@ -31,7 +32,7 @@ public class SwerveModule {
 
     public int swerveModuleID;
     public static int swerveModuleCount = 0;
-    public final ShuffleboardTab mainTab;
+    public final ShuffleboardTab swerveTab;
     public final GenericEntry steerMotorCurrentWidget;
     public final GenericEntry driveMotorCurrentWidget;
     public final GenericEntry driveMotorSetWidget;
@@ -41,10 +42,8 @@ public class SwerveModule {
             double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName) {
         swerveModuleID = swerveModuleCount;
 
-        steerPID = new PIDShufflable(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2],
-                "DTSteer" + swerveModuleID);
-        drivePID = new PIDShufflable(drivePIDValue[0], drivePIDValue[1], drivePIDValue[2],
-                "DTDrive" + swerveModuleID);
+        steerPID = new PID(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2]);
+        drivePID = new PID(drivePIDValue[0], drivePIDValue[1], drivePIDValue[2]);
         steerMotor = new CANSparkMax(STEERMOTOR, MotorType.kBrushless);
         driveMotor = new CANSparkMax(DRIVEMOTOR, MotorType.kBrushless);
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);
@@ -57,21 +56,21 @@ public class SwerveModule {
 
         this.calcPosition(0, 0);
 
-        mainTab = Shuffleboard.getTab("Main");
-        steerMotorCurrentWidget = mainTab.add("steerMotor" + SwerveModuleName, 0).withPosition(5, swerveModuleID)
+        swerveTab = Shuffleboard.getTab("SwerveModules");
+        steerMotorCurrentWidget = swerveTab.add("steerMotor" + SwerveModuleName, 0).withPosition(5, swerveModuleID)
                 .withSize(1, 1)
                 .getEntry();
-        driveMotorCurrentWidget = mainTab.add("drive motor" + SwerveModuleName, 0).withPosition(6,
+        driveMotorCurrentWidget = swerveTab.add("drive motor" + SwerveModuleName, 0).withPosition(6,
                 swerveModuleID).withSize(1, 1)
                 .getEntry();
-        posiitonWidget = mainTab.add("orientation" + SwerveModuleName, 0).withPosition(7,
+        posiitonWidget = swerveTab.add("orientation" + SwerveModuleName, 0).withPosition(7,
                 swerveModuleID).withSize(1, 1)
                 .getEntry();
-        driveMotorSetWidget = mainTab.add("dmSET" + SwerveModuleName, 0).withPosition(8, swerveModuleID).withSize(1, 1)
+        driveMotorSetWidget = swerveTab.add("dmSET" + SwerveModuleName, 0).withPosition(8, swerveModuleID).withSize(1, 1)
                 .getEntry();
         swerveModuleCount++;
 
-        updateShufflables();
+        // updateShufflables();
     }
 
     public double getEncoderPosition() {
@@ -125,13 +124,13 @@ public class SwerveModule {
         posiitonWidget.setDouble(getEncoderPosition());
     }
 
-    public void updateShufflables() {
-        if (steerPID.detectChange()) {
-            steerPID.shuffleUpdatePID();
-        }
-        if (drivePID.detectChange()) {
-            drivePID.shuffleUpdatePID();
-        }
-    }
+    // public void updateShufflables() {
+    //     // if (steerPID.detectChange()) {
+    //     //     steerPID.shuffleUpdatePID();
+    //     // }
+    //     // if (drivePID.detectChange()) {
+    //     //     drivePID.shuffleUpdatePID();
+    //     // }
+    // }
 
 }

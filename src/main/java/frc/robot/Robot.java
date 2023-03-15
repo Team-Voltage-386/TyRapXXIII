@@ -4,19 +4,24 @@
 
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
-import frc.robot.utils.AllianceData;
 import frc.robot.utils.Flags;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -47,7 +52,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    CameraServer.startAutomaticCapture(0);
+    // CameraServer.startAutomaticCapture(0);
+    UsbCamera m_camera = CameraServer.startAutomaticCapture(0);
+    m_camera.setResolution(400, 300);
+    m_camera.setFPS(30);
+    Shuffleboard.getTab("Main").add(m_camera).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(4, 4).withProperties(Map.of("Rotation","QUARTER_CW"));
     totalAmpHours = 0;
     current = 0;
     // Instantiate our RobotContainer. This will perform all our button bindings,
@@ -98,7 +107,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    AllianceData.defineOrientations();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -116,7 +124,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    AllianceData.defineOrientations();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

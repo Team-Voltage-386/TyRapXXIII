@@ -11,7 +11,6 @@ import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.mapping.*;
 import static frc.robot.Constants.SmoothingConstants.*;
-import static frc.robot.utils.AllianceData.*;
 
 public class DriverCommands extends CommandBase {
 
@@ -51,12 +50,8 @@ public class DriverCommands extends CommandBase {
             m_driveSpeed = kMaxDriveSpeed;
             m_rotSpeed = kMaxRotSpeed;
         }
-        if (kDriver.getRawAxis(kRightTrigger) > kDeadband) {
-            driveTrain.doFieldOrientation = false;
-        } else {
-            driveTrain.doFieldOrientation = true;
-        }
-        System.out.println(m_driveSpeed + " " + m_rotSpeed);
+
+        driveTrain.doFieldOrientation = kDriver.getRawAxis(kRightTrigger) < 0.5;        
         // driveJoystickAngle = Math.atan2(
         // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
         // kDriver.getRawAxis(kLeftHorizontal));// radians, use atan2 to avoid undefined
@@ -72,9 +67,9 @@ public class DriverCommands extends CommandBase {
         // driveTrain.yDriveTarget = (Math.cos((driveJoystickAngle))) * driveMagnitude
         // * kMaxDriveSpeed.get();
         if (driveTrain.doFieldOrientation) {
-            m_joystickOrientationMultiplier = joystickOrientationMultiplier;
-        } else {
             m_joystickOrientationMultiplier = 1;
+        } else {
+            m_joystickOrientationMultiplier = -1;
         }
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,
@@ -127,30 +122,30 @@ public class DriverCommands extends CommandBase {
         driveTrain.rotationTarget = 0;
     }
 
-    private static final ShuffleboardTab mainTab = Shuffleboard.getTab("Main");
-    private static final GenericEntry leftVerticalWidget = mainTab.add("left vertical", 0).withPosition(0, 2)
-            .withSize(1, 1)
-            .getEntry();
-    private static final GenericEntry leftHorizontalWidget = mainTab.add("left horizontal", 0).withPosition(1, 2)
-            .withSize(1, 1)
-            .getEntry();
-    private static final GenericEntry rightHorizontalWidget = mainTab.add("right horizontal", 0).withPosition(2, 2)
-            .withSize(1, 1)
-            .getEntry();
-    private static final GenericEntry driveVectorOrientWidget = mainTab.add("driveVectorAngle", 0).withPosition(1, 1)
-            .withSize(1, 1).getEntry();
-    private static final GenericEntry driveVectorMagnitudeWidget = mainTab.add("dvMagni", 0).withPosition(2, 1)
-            .withSize(1, 1).getEntry();
-    private static final GenericEntry JoystickVectorMagnitudeWidget = mainTab.add("JSMagni", 0).withPosition(3, 1)
-            .withSize(1, 1).getEntry();
+    // private static final ShuffleboardTab joystickInfoTab = Shuffleboard.getTab("JSINFO");
+    // private static final GenericEntry leftVerticalWidget = joystickInfoTab.add("left vertical", 0).withPosition(0, 2)
+    //         .withSize(1, 1)
+    //         .getEntry();
+    // private static final GenericEntry leftHorizontalWidget = joystickInfoTab.add("left horizontal", 0).withPosition(1, 2)
+    //         .withSize(1, 1)
+    //         .getEntry();
+    // private static final GenericEntry rightHorizontalWidget = joystickInfoTab.add("right horizontal", 0).withPosition(2, 2)
+    //         .withSize(1, 1)
+    //         .getEntry();
+    // private static final GenericEntry driveVectorOrientWidget = joystickInfoTab.add("driveVectorAngle", 0).withPosition(1, 1)
+    //         .withSize(1, 1).getEntry();
+    // private static final GenericEntry driveVectorMagnitudeWidget = joystickInfoTab.add("dvMagni", 0).withPosition(2, 1)
+    //         .withSize(1, 1).getEntry();
+    // private static final GenericEntry JoystickVectorMagnitudeWidget = joystickInfoTab.add("JSMagni", 0).withPosition(3, 1)
+    //         .withSize(1, 1).getEntry();
 
     private void updateWidget() {
-        leftVerticalWidget.setDouble(kDriver.getRawAxis(kLeftVertical));
-        leftHorizontalWidget.setDouble(kDriver.getRawAxis(kLeftHorizontal));
-        rightHorizontalWidget.setDouble(kDriver.getRawAxis(kRightHorizontal));
-        driveVectorOrientWidget.setDouble(driveJoystickAngle);
-        driveVectorMagnitudeWidget.setDouble(driveMagnitude);
-        JoystickVectorMagnitudeWidget.setDouble(driveJoystickMagnitude);
+        // leftVerticalWidget.setDouble(kDriver.getRawAxis(kLeftVertical));
+        // leftHorizontalWidget.setDouble(kDriver.getRawAxis(kLeftHorizontal));
+        // rightHorizontalWidget.setDouble(kDriver.getRawAxis(kRightHorizontal));
+        // driveVectorOrientWidget.setDouble(driveJoystickAngle);
+        // driveVectorMagnitudeWidget.setDouble(driveMagnitude);
+        // JoystickVectorMagnitudeWidget.setDouble(driveJoystickMagnitude);
     }
 
     private void updateShufflables() {
