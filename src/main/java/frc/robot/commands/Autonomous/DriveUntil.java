@@ -1,5 +1,6 @@
 package frc.robot.commands.Autonomous;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
@@ -24,6 +25,8 @@ public class DriveUntil extends CommandBase {
 
     private boolean isForward;
 
+    private Timer finishTimer = new Timer();
+
     public DriveUntil(boolean ISFORWARD, Drivetrain DT) {
         dt = DT;
         isForward = ISFORWARD;
@@ -31,6 +34,8 @@ public class DriveUntil extends CommandBase {
 
     @Override
     public void initialize() {
+        finishTimer.stop();
+        finishTimer.reset();
         System.out.println("Driving until done starting");
     }
 
@@ -48,19 +53,25 @@ public class DriveUntil extends CommandBase {
         } else {
             // Changing this will change the speed of the robot's approach
             if (isForward) {
-                dt.xDriveTarget = 0.5;
+                dt.xDriveTarget = 0.7;
             } else {
-                dt.xDriveTarget = -0.5;
+                dt.xDriveTarget = -0.7;
             }
 
         }
         // PID to keep the robot driving straight
         // dt.yDriveTarget = autoPositionY.calc(0 - dt.yPos);
+        checkFinished();
+    }
+
+    private void checkFinished() {
+        if (changeDetected)
+            finishTimer.start();
     }
 
     @Override
     public boolean isFinished() {
-        return changeDetected;
+        return finishTimer.hasElapsed(0.75);
     }
 
     @Override
