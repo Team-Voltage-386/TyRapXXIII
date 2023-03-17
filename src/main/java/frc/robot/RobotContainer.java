@@ -14,6 +14,7 @@ import frc.robot.commands.Autonomous.DriveUntilAngleInc;
 import frc.robot.commands.Autonomous.HandTasks;
 import frc.robot.commands.Autonomous.LogicBalance;
 import frc.robot.commands.Autonomous.ManualFeedOdometry;
+import frc.robot.commands.Autonomous.RotationalAuto;
 import frc.robot.commands.Autonomous.SetConemode;
 import frc.robot.commands.Autonomous.ArmDo;
 import frc.robot.commands.Autonomous.Balance;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.Hand;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Hand.handIntakeStates;
+import frc.robot.commands.Autonomous.RotationalAuto;
 // import frc.robot.utils.AllianceData;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -111,6 +113,7 @@ public class RobotContainer {
     }
 
     public final class AutoRoutines {
+        RotationalAuto RotateAutos = new RotationalAuto(m_driveTrain, HandControls, m_Arm);
 
         // Code for balancing
         /** drives over the drive station, comes back, and balances. By Lucas */
@@ -146,33 +149,11 @@ public class RobotContainer {
                 new Drive(3.5, 0, 0, m_driveTrain));
         //Code to place pieces and spin around on the sides
         //Made by Ryan for testing during or after the Orlando Regional
-        public final Command ConeSideRotate = new SequentialCommandGroup(
-                new ZeroOdo(0, 0, 0, m_driveTrain),
-                new SetConemode(true),
-                new HandTasks(true, handIntakeStates.stow, HandControls),
-                new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-                new HandTasks(false, handIntakeStates.doNothing, HandControls),
-                new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-                new Drive(3, 135, 0, m_driveTrain)),
-                new Drive(3.5, 180, 0, m_driveTrain));
-        public final Command CubeSideRotate = new SequentialCommandGroup(
-                new ZeroOdo(0, 0, 0, m_driveTrain),
-                new HandTasks(false, handIntakeStates.stow, HandControls),
-                new SetConemode(false),
-                new HandTasks(false, handIntakeStates.letitgo, HandControls),
-                new Drive(3, 135, 0, m_driveTrain),
-                new Drive(3.5, 180, 0, m_driveTrain));
+        public final Command ConeSideRotate = RotateAutos.getRotationalAuto(1);
+        public final Command CubeSideRotate = RotateAutos.getRotationalAuto(2);
         //Code to place pieces and spin around on the charger
         //Made by Ryan for testing during or after the Orlando Regional
-        public final Command ConeChargerRotate = new SequentialCommandGroup(
-                new ZeroOdo(0, 0, 0, m_driveTrain),
-                new SetConemode(true),
-                new HandTasks(true, handIntakeStates.stow, HandControls),
-                new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-                new HandTasks(false, handIntakeStates.doNothing, HandControls),
-                new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-                new Drive(0.5, 0, 180, m_driveTrain),
-                new Drive(2.5, 0, 180, m_driveTrain)));
+        public final Command ConeChargerRotate = RotateAutos.getRotationalAuto(3);
         //Code for charger autos
         public final Command ScoreConeCharger = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
