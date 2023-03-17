@@ -108,8 +108,8 @@ public class Arm extends SubsystemBase {
                 kArmShoulderPID[3], kArmShoulderPID[4]);
         ElbowFeedForward = new AFFFinal(kArmElbowPID[0], kArmElbowPID[1], kArmElbowPID[2], kArmElbowPID[3],
                 kArmElbowPID[4]);
-        ShoulderVelocityFeedForward = new AFFVelocityShufflable(0, 0, 0, 0, "ShoulderFFV", "AFV");
-        ElbowVelocityFeedForward = new AFFVelocityShufflable(0, 0, 0, 0, "ElbowFFV", "AFV");
+        ShoulderVelocityFeedForward = new AFFVelocityShufflable(.288, 0, 0, 0, "ShoulderFFV", "AFV");
+        ElbowVelocityFeedForward = new AFFVelocityShufflable(.12, 0, 0, -.36, "ElbowFFV", "AFV");
 
         sequenceIndex = 0;
 
