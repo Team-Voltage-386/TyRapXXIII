@@ -126,8 +126,17 @@ public class ManipulatorCommands extends CommandBase {
         m_hand.IntakeMotorControl(handIntakeStates.stow);
         if (kManipulator.getRawAxis(kRightTrigger) > kDeadband) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
-          m_hand.pcmCompressor.set(Value.kReverse);
-
+          if(!ConeMode){
+            m_hand.pcmCompressor.set(Value.kForward);
+          } else {
+            m_hand.pcmCompressor.set(Value.kReverse);
+          }
+        } else {
+          if(!ConeMode){
+            m_hand.pcmCompressor.set(Value.kReverse);
+          } else {
+            m_hand.pcmCompressor.set(Value.kForward);
+          }
         }
 
         if(ConeMode){
