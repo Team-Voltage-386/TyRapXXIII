@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.utils.AFFShufflable;
 import frc.robot.utils.AFFFinal;
+import frc.robot.utils.AFFVelocityShufflable;
+
 import static frc.robot.utils.TrajectoryMaker.*;
 import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 import frc.robot.utils.ArmKeyframe;
@@ -40,6 +42,10 @@ public class Arm extends SubsystemBase {
 
     public AFFFinal ShoulderFeedForward;
     public AFFFinal ElbowFeedForward;
+
+    public AFFVelocityShufflable ShoulderVelocityFeedForward;
+    public AFFVelocityShufflable ElbowVelocityFeedForward;
+
     public double ShoulderTarget;
     public double ElbowTarget;
 
@@ -54,6 +60,7 @@ public class Arm extends SubsystemBase {
     // change angle offsets and arm segment lengths in constants
     public ArmKeyframe[] keyFrameSequence;
     public double[][] targetSequence;
+    public double[][] velocitySequence;
     public ArmKeyframe lastKeyframe, nextKeyframe;
     public double[][] fkCoords;
     public int keyFrameIndex, sequenceIndex;
@@ -62,6 +69,11 @@ public class Arm extends SubsystemBase {
 
     // public PersistentShufflableDouble PSDInitialShoulderTarget,
     // PSDInitialElbowTarget;
+    public long lastTime = 0;
+    public long time = 0;
+    public double timeStep;
+    public double[] angles, lastAngles, velocities;
+    public double ElbowVelocityTarget, ShoulderVelocityTarget;
 
     /** Creates a new Arm. */
     public Arm() {
@@ -92,8 +104,12 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
-        ShoulderFeedForward = new AFFFinal(kArmShoulderPID[0], kArmShoulderPID[1], kArmShoulderPID[2],kArmShoulderPID[3], kArmShoulderPID[4]);
-        ElbowFeedForward = new AFFFinal(kArmElbowPID[0],kArmElbowPID[1],kArmElbowPID[2],kArmElbowPID[3],kArmElbowPID[4]);
+        ShoulderFeedForward = new AFFFinal(kArmShoulderPID[0], kArmShoulderPID[1], kArmShoulderPID[2],
+                kArmShoulderPID[3], kArmShoulderPID[4]);
+        ElbowFeedForward = new AFFFinal(kArmElbowPID[0], kArmElbowPID[1], kArmElbowPID[2], kArmElbowPID[3],
+                kArmElbowPID[4]);
+        ShoulderVelocityFeedForward = new AFFVelocityShufflable(0, 0, 0, 0, "ShoulderFFV", "AFV");
+        ElbowVelocityFeedForward = new AFFVelocityShufflable(0, 0, 0, 0, "ElbowFFV", "AFV");
 
         sequenceIndex = 0;
 
@@ -103,18 +119,28 @@ public class Arm extends SubsystemBase {
         // ElbowTarget = kInitialElbowTarget;
         ShoulderTarget = getLocalArmAngles()[0];
         ElbowTarget = getLocalArmAngles()[1];
+
+        ElbowVelocityTarget = 0;
+        ShoulderVelocityTarget = 0;
+
         targetSequence = new double[][] { { kInitialShoulderTarget, kInitialElbowTarget } };
         lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
         nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
         keyFrameSequence = new ArmKeyframe[] { lastKeyframe };
         // keyFrameSequence = onlyIntermediary1(akfStowed);
         runningKeyframesAndSequences = false;
+        lastTime = System.currentTimeMillis();
+        angles = getLocalArmAngles();
+        lastAngles = getLocalArmAngles();
+        velocities = new double[] { 0.0, 0.0 };
     }
 
     @Override
     // This method will be called once per scheduler run
 
     public void periodic() {
+        makeTimeStep();
+        makeVelocities();
         limitLogic();
         setFlags();
         fkCoords = forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths);
@@ -141,6 +167,25 @@ public class Arm extends SubsystemBase {
                         - kShoulderEncOffset),
                 armAnglesIncludeDepression(ElbowEncoder.getAbsolutePosition() * 360 - kElbowEncOffset) };
         return result;
+    }
+
+    public double makeTimeStep() {
+        time = System.currentTimeMillis();
+        timeStep = (double) (time - lastTime);
+        timeStep /= 1000.0;// milliseconds to seconds
+        lastTime = time;
+        return timeStep;
+    }
+
+    public double[] makeVelocities() {
+        ShoulderMotor.getEncoder().getVelocity();
+        angles = getLocalArmAngles();
+        for (int i = 0; i < angles.length; i++) {
+            double delta = angles[i] - lastAngles[i];
+            velocities[i] = delta / timeStep;
+        }
+        lastAngles = angles;
+        return velocities;
     }
 
     /**
@@ -188,6 +233,9 @@ public class Arm extends SubsystemBase {
     public void ArmDrive() {
         double elbowErr = ElbowTarget - getLocalArmAngles()[1];
         double shouldErr = ShoulderTarget - getLocalArmAngles()[0];
+        double elbowVelocityError = ElbowVelocityTarget - velocities[1];
+        double shoulderVelocityError = ShoulderVelocityTarget - velocities[0];
+
         // if (Math.abs(elbowErr) > 15)
         // ElbowFeedForward.integralAcc = 0;
         if (Math.abs(shouldErr) > 15)
@@ -201,18 +249,22 @@ public class Arm extends SubsystemBase {
                     ElbowMotor.setVoltage(
                             clamp(
                                     safeZoneDrive(
-                                            ElbowFeedForward.calc(elbowErr,
-                                                    (getSpatialArmAngles(getLocalArmAngles())[1])),
+                                            // ElbowFeedForward.calc(elbowErr,
+                                            //         (getSpatialArmAngles(getLocalArmAngles())[1])),
+                                            ElbowVelocityFeedForward.calc(elbowErr,elbowVelocityError,angles[1]),
                                             getLocalArmAngles()[1], kElbowSafezone),
                                     -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
+
                 }
                 break;
             default:
                 ElbowMotor.setVoltage(
                         clamp(
                                 safeZoneDrive(
-                                        ElbowFeedForward.calc(elbowErr,
-                                                (getSpatialArmAngles(getLocalArmAngles())[1])),
+                                        // ElbowFeedForward.calc(elbowErr,
+                                        //         (getSpatialArmAngles(getLocalArmAngles())[1])),
+                                        ElbowVelocityFeedForward.calc(elbowErr, elbowVelocityError, angles[1]),
+
                                         getLocalArmAngles()[1], kElbowSafezone),
                                 -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
                 break;
@@ -221,9 +273,10 @@ public class Arm extends SubsystemBase {
         ShoulderMotor.setVoltage(
                 clampShoulderByLimits(clamp(
                         safeZoneDrive(
-                                ShoulderFeedForward.calc(
-                                        shouldErr,
-                                        (getLocalArmAngles()[0])),
+                                // ShoulderFeedForward.calc(
+                                //         shouldErr,
+                                //         (getLocalArmAngles()[0])),
+                                ShoulderVelocityFeedForward.calc(shouldErr,shoulderVelocityError,angles[0]),
                                 getLocalArmAngles()[0], kShoulderSafezone),
                         -PSDShoulderMaxVoltage.get(), PSDShoulderMaxVoltage.get())));
     }
@@ -260,6 +313,11 @@ public class Arm extends SubsystemBase {
                     generateTrajectory(
                             lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1],
                             nextKeyframe.substepsToHere));
+
+            velocitySequence=zipperAngles(
+                generatePositionVelocityTrajectories(lastKeyframe.getKeyFrameAngles()[0], nextKeyframe.getKeyFrameAngles()[0], nextKeyframe.substepsToHere)[1],
+                generatePositionVelocityTrajectories(lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1], nextKeyframe.substepsToHere)[1]);
+
             sequenceIndex++;
         }
         // at a keyframe, not the end or middle
@@ -273,6 +331,13 @@ public class Arm extends SubsystemBase {
                     generateTrajectory(
                             lastKeyframe.getKeyFrameAngles()[1], nextKeyframe.getKeyFrameAngles()[1],
                             nextKeyframe.substepsToHere));
+
+            velocitySequence = zipperAngles(
+                    generatePositionVelocityTrajectories(lastKeyframe.getKeyFrameAngles()[0],
+                            nextKeyframe.getKeyFrameAngles()[0], nextKeyframe.substepsToHere)[1],
+                    generatePositionVelocityTrajectories(lastKeyframe.getKeyFrameAngles()[1],
+                            nextKeyframe.getKeyFrameAngles()[1], nextKeyframe.substepsToHere)[1]);
+
             sequenceIndex++;
         }
         // at end
@@ -287,6 +352,10 @@ public class Arm extends SubsystemBase {
             //
             ShoulderTarget = targetSequence[sequenceIndex][0];
             ElbowTarget = targetSequence[sequenceIndex][1];
+
+            ShoulderVelocityTarget = velocitySequence[sequenceIndex][0];
+            ElbowVelocityTarget = velocitySequence[sequenceIndex][1];
+
             if (atTargets()) {
                 sequenceIndex++;
             }
@@ -615,6 +684,12 @@ public class Arm extends SubsystemBase {
     public GenericEntry scoreHighWidget = armTab.add("scoreHigh", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#777777")).withPosition(5, 2)
             .getEntry();
+
+    public GenericPublisher shoulderVelocityWidget = armTab.add("ShoulderVel",0.0).getEntry();
+    public GenericPublisher ElbowVelocityWidget = armTab.add("ElbowVel",0.0).getEntry();
+    public GenericPublisher shoulderVelocityTargetWidget = armTab.add("STargV",0.0).getEntry();
+    public GenericPublisher ElbowVelocityTargetWidget = armTab.add("ETargV", 0.0).getEntry();
+    
     // for Main tab
     public GenericEntry mainTabConeModeWidget = mainTab.add("ConeMode", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withSize(2, 2)
@@ -632,6 +707,7 @@ public class Arm extends SubsystemBase {
             .withPosition(8, 0).getEntry();
     private GenericPublisher mainTabNextKeyframeWidget = mainTab.add("NEXT armstate", "").withSize(1, 1)
             .withPosition(9, 0).getEntry();
+
 
     public void updateWidgets() {
         shoulderAngleWidget.setDouble(getLocalArmAngles()[0]);
@@ -670,6 +746,10 @@ public class Arm extends SubsystemBase {
         ConeModeWidget.setBoolean(ConeMode);
         runningKeyframesAndSequencesWidget.setBoolean(runningKeyframesAndSequences);
         scoreHighWidget.setBoolean(scoreHighTarget);
+        shoulderVelocityWidget.setDouble(velocities[0]);
+        ElbowVelocityWidget.setDouble(velocities[1]);
+        shoulderVelocityTargetWidget.setDouble(ShoulderVelocityTarget);
+        ElbowVelocityTargetWidget.setDouble(ElbowVelocityTarget);
         // main tab widgets
         mainTabConeModeWidget.setBoolean(ConeMode);
         mainTabscoreHighWidget.setBoolean(scoreHighTarget);
@@ -679,6 +759,12 @@ public class Arm extends SubsystemBase {
     }
 
     public void updateShufflables() {
+        if(ShoulderVelocityFeedForward.detectChange()){
+            ShoulderVelocityFeedForward.shuffleUpdatePID();
+        }
+        if(ElbowVelocityFeedForward.detectChange()){
+            ElbowVelocityFeedForward.shuffleUpdatePID();
+        }
         // if (ElbowFeedForward.detectChange())
         // ElbowFeedForward.shuffleUpdatePID();
         // if (ShoulderFeedForward.detectChange())
