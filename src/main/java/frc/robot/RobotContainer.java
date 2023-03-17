@@ -123,7 +123,7 @@ public class RobotContainer {
                 new ArmDo(m_Arm, kfseqConeStowToConeHigh),
                 new HandTasks(false, handIntakeStates.doNothing, HandControls),
                 new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-                new Drive(3.5, 0, 0, m_driveTrain));
+                new Drive(3.8, 0, 0, m_driveTrain));
         public final Command ScoreConeSides = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
                 new SetConemode(true),
@@ -132,7 +132,7 @@ public class RobotContainer {
                 new HandTasks(false, handIntakeStates.doNothing, HandControls),
                 new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
                         new Drive(3, 0, 0, m_driveTrain)),
-                new Drive(3.5, 0, 0, m_driveTrain));
+                new Drive(3.8, 0, 0, m_driveTrain));
         public final Command ScoreConeCharger = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
                 new SetConemode(true),
@@ -147,7 +147,7 @@ public class RobotContainer {
                 new SetConemode(false),
                 new HandTasks(false, handIntakeStates.letitgo, HandControls),
                 new Drive(3, 0, 0, m_driveTrain),
-                new Drive(3.5, 0, 0, m_driveTrain));
+                new Drive(3.8, 0, 0, m_driveTrain));
 
         // public final Command test3 = new SequentialCommandGroup(
         // new ManualFeedOdometry(m_driveTrain, 0, 0,
@@ -185,7 +185,7 @@ public class RobotContainer {
                 new ArmDo(m_Arm, kfseqConeStowToConeHigh),
                 new HandTasks(false, handIntakeStates.doNothing, HandControls),
                 new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-                        new Drive(3, 0, 0, m_driveTrain)),
+                        new Drive(4.1, 0, 0, m_driveTrain)),
                 new Drive(1, 0, 180, m_driveTrain));
         public final Command placeAndBalanceNoMobility = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),

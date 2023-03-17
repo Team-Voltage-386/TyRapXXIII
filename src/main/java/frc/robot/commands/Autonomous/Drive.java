@@ -51,8 +51,8 @@ public class Drive extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return dt.distanceTo(x, y) < driveTolerance
-                && dt.getHeadingError(h) < headingTolerance;
+        return dt.distanceTo(x, y) < driveTolerance;
+                // && Math.abs(dt.getHeadingError(h)) < headingTolerance;
     }
 
     @Override
