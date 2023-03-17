@@ -81,6 +81,10 @@ public class RobotContainer {
         autoChooser.addOption("TuningSquare", autos.TuningSquare);
         autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
         autoChooser.addOption("Place and Balance No Mobility", autos.placeAndBalanceNoMobility);
+        //autoChooser additions made by Ryan for Orlando Regional
+        autoChooser.addOption("Place cone high and spin around on the sides", autos.ConeSideRotate);
+        autoChooser.addOption("Place cube low and spin around on the sides", autos.CubeSideRotate);
+        autoChooser.addOption("Place cone high and spin around onto the charger", autos.ConeChargerRotate);
         // autoChooser.addOption("Middle Auto", autos.test1);
         Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1).withPosition(4, 2);
     }
@@ -131,16 +135,8 @@ public class RobotContainer {
                 new ArmDo(m_Arm, kfseqConeStowToConeHigh),
                 new HandTasks(false, handIntakeStates.doNothing, HandControls),
                 new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-                        new Drive(3, 0, 0, m_driveTrain)),
+                new Drive(3, 0, 0, m_driveTrain)),
                 new Drive(3.5, 0, 0, m_driveTrain));
-        public final Command ScoreConeCharger = new SequentialCommandGroup(
-                new ZeroOdo(0, 0, 0, m_driveTrain),
-                new SetConemode(true),
-                new HandTasks(true, handIntakeStates.stow, HandControls),
-                new ArmDo(m_Arm, kfseqConeStowToConeHigh),
-                new HandTasks(false, handIntakeStates.doNothing, HandControls),
-                new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
-                        new Drive(2.5, 0, 180, m_driveTrain)));
         public final Command ScoreCubeSides = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
                 new HandTasks(false, handIntakeStates.stow, HandControls),
@@ -148,6 +144,44 @@ public class RobotContainer {
                 new HandTasks(false, handIntakeStates.letitgo, HandControls),
                 new Drive(3, 0, 0, m_driveTrain),
                 new Drive(3.5, 0, 0, m_driveTrain));
+        //Code to place pieces and spin around on the sides
+        //Made by Ryan for testing during or after the Orlando Regional
+        public final Command ConeSideRotate = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+                new SetConemode(true),
+                new HandTasks(true, handIntakeStates.stow, HandControls),
+                new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+                new HandTasks(false, handIntakeStates.doNothing, HandControls),
+                new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+                new Drive(3, 135, 0, m_driveTrain)),
+                new Drive(3.5, 180, 0, m_driveTrain));
+        public final Command CubeSideRotate = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+                new HandTasks(false, handIntakeStates.stow, HandControls),
+                new SetConemode(false),
+                new HandTasks(false, handIntakeStates.letitgo, HandControls),
+                new Drive(3, 135, 0, m_driveTrain),
+                new Drive(3.5, 180, 0, m_driveTrain));
+        //Code to place pieces and spin around on the charger
+        //Made by Ryan for testing during or after the Orlando Regional
+        public final Command ConeChargerRotate = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+                new SetConemode(true),
+                new HandTasks(true, handIntakeStates.stow, HandControls),
+                new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+                new HandTasks(false, handIntakeStates.doNothing, HandControls),
+                new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+                new Drive(0.5, 0, 180, m_driveTrain),
+                new Drive(2.5, 0, 180, m_driveTrain)));
+        //Code for charger autos
+        public final Command ScoreConeCharger = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+                new SetConemode(true),
+                new HandTasks(true, handIntakeStates.stow, HandControls),
+                new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+                new HandTasks(false, handIntakeStates.doNothing, HandControls),
+                new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+                new Drive(2.5, 0, 180, m_driveTrain)));
 
         // public final Command test3 = new SequentialCommandGroup(
         // new ManualFeedOdometry(m_driveTrain, 0, 0,
