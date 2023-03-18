@@ -209,6 +209,23 @@ public class RobotContainer {
         public final Command spitOutCube = new SequentialCommandGroup(
                 new SetConemode(false),
                 new HandTasks(false, handIntakeStates.letitgo, HandControls));
+
+        //Lucas Talahassee PID speed-balance additions
+        //2 piece auto with balance?
+        public final Command NOT_TUNED_YET_placeAndBalanceWithPID = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+
+                // new HandTasks(true, handIntakeStates.stow, HandControls),//cone high
+                // new ArmDo(m_Arm, kfseqConeStowToConeHigh),
+                // new HandTasks(false, handIntakeStates.doNothing, HandControls),
+                // new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
+                new HandTasks(false, handIntakeStates.stow, HandControls), // cube spit
+                new SetConemode(false),
+                new HandTasks(false, handIntakeStates.letitgo, HandControls),
+                new Drive(4.1, 0, 0, m_driveTrain),
+                new HandTasks(false, handIntakeStates.stow, HandControls),
+                new DriveUntil(false, m_driveTrain),
+                new Balance(m_driveTrain));
     }
 
     /**

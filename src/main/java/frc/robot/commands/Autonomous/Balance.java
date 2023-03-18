@@ -18,7 +18,7 @@ public class Balance extends CommandBase {
     private double balanceTarget = 2;
     private final Drivetrain dt;
     private Timer time = new Timer();
-    private final PIDShufflable pid = new PIDShufflable(0.03, 0, 1, "BalanceInfo");
+    private final PIDShufflable pid = new PIDShufflable(0.03, 0, 1.5, "BalanceInfo");
     //controls if the robot is Xlocked or not
     private boolean XLOCK = false;
     //shuffleboard stuff
@@ -69,7 +69,7 @@ public class Balance extends CommandBase {
             isBalanced = false;
         }
 
-        if(time.get() > 0.2) XLOCK = true;
+        if(time.get() > 0.1) XLOCK = true;
         else XLOCK = false;
     }
 
