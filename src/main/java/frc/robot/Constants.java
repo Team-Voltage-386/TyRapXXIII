@@ -155,16 +155,16 @@ public final class Constants {
                                 "armThreshhold",
                                 "ArmFF");
                 public static PersistentShufflableDouble[] ShoulderFFPSDs = {
-                                new PersistentShufflableDouble(0.0, "WShoulderKS", "ArmFF"),
-                                new PersistentShufflableDouble(0.0, "WShoulderKG", "ArmFF"),
-                                new PersistentShufflableDouble(0.0, "WShoulderKV", "ArmFF"),
-                                new PersistentShufflableDouble(0.0, "WShoulderKA", "ArmFF")
+                                new PersistentShufflableDouble(0.0, "WShoulderKS", "WAFV"),
+                                new PersistentShufflableDouble(0.0, "WShoulderKG", "WAFV"),
+                                new PersistentShufflableDouble(0.0, "WShoulderKV", "WAFV"),
+                                new PersistentShufflableDouble(0.0, "WShoulderKA", "WAFV")
                 };
                 public static PersistentShufflableDouble[] ElbowFFPSDs = {
-                                new PersistentShufflableDouble(0.0, "WElbowKS", "ArmFF"),
-                                new PersistentShufflableDouble(0.0, "WElbowKG", "ArmFF"),
-                                new PersistentShufflableDouble(0.0, "WElbowKV", "ArmFF"),
-                                new PersistentShufflableDouble(0.0, "WElbowKA", "ArmFF")
+                                new PersistentShufflableDouble(0.0, "WElbowKS", "WAFV"),
+                                new PersistentShufflableDouble(0.0, "WElbowKG", "WAFV"),
+                                new PersistentShufflableDouble(0.0, "WElbowKV", "WAFV"),
+                                new PersistentShufflableDouble(0.0, "WElbowKA", "WAFV")
                 };
                 public static final int kProtectorUp = 7;
                 public static final int kProtectorDown = 6;
@@ -219,12 +219,12 @@ public final class Constants {
                         // pickup sequences
                         public static ArmKeyframe[] kfseqCubeStowToCubePickup = {
                                         new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
-                                                        5),
+                                                        30),
                                         // new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary,
                                         // 5),
-                                        new ArmKeyframe(new double[] { -99, 103 }, armKeyFrameStates.intermediary, 3),
+                                        new ArmKeyframe(new double[] { -99, 103 }, armKeyFrameStates.intermediary, 30),
                                         new ArmKeyframe(new double[] { -84, kElbowPickupNormal },
-                                                        armKeyFrameStates.pickup, 3),
+                                                        armKeyFrameStates.pickup, 30),
                         };
                         // stowing sequences
                         public static ArmKeyframe[] kfseqCubePickuptoCubeStow = {

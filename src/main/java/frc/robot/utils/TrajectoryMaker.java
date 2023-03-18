@@ -33,7 +33,7 @@ public class TrajectoryMaker {
                                                        // alternatively we
         // can usetf=1 and do 1/stepcount as an increment of step
         a3 = -2.0 / 3.0 * a2;
-        double[][] trajectories = new double[2][steps];
+        double[][] trajectories = new double[3][steps];
         for (int i = 0; i < steps; i++) {
             double ithT = i * tstep;
             trajectories[0][i] = a3 * Math.pow(ithT, 3) + a2 * Math.pow(ithT, 2) + initialPosition;

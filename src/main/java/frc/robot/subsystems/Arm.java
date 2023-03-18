@@ -90,7 +90,7 @@ public class Arm extends SubsystemBase {
         // "Arm");
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
-        
+
         initializeFFPSD();
         ShoulderFeedForward = new ArmFeedforward(
                 ShoulderFFPSDs[0].get(),
@@ -305,7 +305,11 @@ public class Arm extends SubsystemBase {
                             nextKeyframe.getKeyFrameAngles()[0], nextKeyframe.substepsToHere)[1],
                     generatePVATrajectories(lastKeyframe.getKeyFrameAngles()[1],
                             nextKeyframe.getKeyFrameAngles()[1], nextKeyframe.substepsToHere)[1]);
-
+            accelerationSequence = zipperAngles(
+                    generatePVATrajectories(lastKeyframe.getKeyFrameAngles()[0],
+                            nextKeyframe.getKeyFrameAngles()[0], nextKeyframe.substepsToHere)[2],
+                    generatePVATrajectories(lastKeyframe.getKeyFrameAngles()[1],
+                            nextKeyframe.getKeyFrameAngles()[1], nextKeyframe.substepsToHere)[2]);
             sequenceIndex++;
         }
         // at a keyframe, not the end or middle
@@ -680,6 +684,8 @@ public class Arm extends SubsystemBase {
     public GenericEntry scoreHighWidget = armTab.add("scoreHigh", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#777777")).withPosition(5, 2)
             .getEntry();
+    public GenericEntry ElbowSpatialAngleWidget = armTab.add("ElbowSpatialAngle",0.0).getEntry();
+    public GenericEntry ElbowSpatialTargetWidget = armTab.add("ElbowSpatialTarget",0.0).getEntry();
     // for Main tab
     public GenericEntry mainTabConeModeWidget = mainTab.add("ConeMode", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withSize(2, 2)
@@ -703,6 +709,8 @@ public class Arm extends SubsystemBase {
         elbowAngleWidget.setDouble(getLocalArmAngles()[1]);
         shoulderTargetWidget.setDouble(ShoulderTarget);
         elbowTargetWidget.setDouble(ElbowTarget);
+        ElbowSpatialAngleWidget.setDouble(getSpatialArmAngles()[1]);
+        ElbowSpatialTargetWidget.setDouble(spatialTargets()[1]);
         // shoulderRawWidget.setDouble(ShoulderEncoder.getAbsolutePosition());
         // elbowRawWidget.setDouble(ElbowEncoder.getAbsolutePosition());
         elbowDrivePercentWidget.setDouble(ElbowMotor.getAppliedOutput());
