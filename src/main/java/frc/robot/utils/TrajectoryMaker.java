@@ -21,13 +21,13 @@ public class TrajectoryMaker {
     }
 
     /**
-     * 
+     * create position, velocity, acceleration trajectories
      * @param initialPosition
      * @param targetPosition
      * @param steps
-     * @return double arrays, array[0] is positions, array[1] is velocities
+     * @return double arrays, array[0] is positions, array[1] is velocities, array[2] is acceleration
      */
-    public static double[][] generatePositionVelocityTrajectories(double initialPosition, double targetPosition,
+    public static double[][] generatePVATrajectories(double initialPosition, double targetPosition,
             int steps) {
         a2 = 3.0 * (targetPosition - initialPosition); // Juan's math defines tf=arbitrary value we define;
                                                        // alternatively we
@@ -37,7 +37,9 @@ public class TrajectoryMaker {
         for (int i = 0; i < steps; i++) {
             double ithT = i * tstep;
             trajectories[0][i] = a3 * Math.pow(ithT, 3) + a2 * Math.pow(ithT, 2) + initialPosition;
-            trajectories[1][i] = 3 * a3 * Math.pow(ithT, 2) + 2 * a2 * ithT;// instant derivative of position(time)
+            trajectories[1][i] = 3 * a3 * Math.pow(ithT, 2) + 2 * a2 * ithT;// velocity - instant derivative of
+                                                                            // position(time)
+            trajectories[2][i] = 6 * a3 * ithT + a2;// acceleration instant derivative of derivative of position(time)
         }
         trajectories[0][steps - 1] = targetPosition;
         trajectories[1][steps - 1] = 0;

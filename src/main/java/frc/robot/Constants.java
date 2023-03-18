@@ -155,16 +155,16 @@ public final class Constants {
                                 "armThreshhold",
                                 "ArmFF");
                 public static PersistentShufflableDouble[] ShoulderFFPSDs = {
-                        new PersistentShufflableDouble(0.0,"ShoulderKS","ArmFF"),
-                        new PersistentShufflableDouble(0.0, "ShoulderKG","ArmFF"),
-                        new PersistentShufflableDouble(0.0, "ShoulderKV","ArmFF"),
-                        new PersistentShufflableDouble(0.0, "ShoulderKS","ArmFF")
+                                new PersistentShufflableDouble(0.0, "WShoulderKS", "ArmFF"),
+                                new PersistentShufflableDouble(0.0, "WShoulderKG", "ArmFF"),
+                                new PersistentShufflableDouble(0.0, "WShoulderKV", "ArmFF"),
+                                new PersistentShufflableDouble(0.0, "WShoulderKA", "ArmFF")
                 };
                 public static PersistentShufflableDouble[] ElbowFFPSDs = {
-                        new PersistentShufflableDouble(0.0,"ElbowKS","ArmFF"),
-                        new PersistentShufflableDouble(0.0, "ElbowKG","ArmFF"),
-                        new PersistentShufflableDouble(0.0, "ElbowKV","ArmFF"),
-                        new PersistentShufflableDouble(0.0, "ElbowKS","ArmFF")
+                                new PersistentShufflableDouble(0.0, "WElbowKS", "ArmFF"),
+                                new PersistentShufflableDouble(0.0, "WElbowKG", "ArmFF"),
+                                new PersistentShufflableDouble(0.0, "WElbowKV", "ArmFF"),
+                                new PersistentShufflableDouble(0.0, "WElbowKA", "ArmFF")
                 };
                 public static final int kProtectorUp = 7;
                 public static final int kProtectorDown = 6;
