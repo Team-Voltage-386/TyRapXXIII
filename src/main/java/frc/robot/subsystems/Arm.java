@@ -36,8 +36,8 @@ import java.util.Map;
 
 public class Arm extends SubsystemBase {
 
-    public AFFFinal ShoulderFeedForward;
-    public AFFFinal ElbowFeedForward;
+    public ArmFeedforward ShoulderFeedForward;
+    public ArmFeedforward ElbowFeedForward;
     public double ShoulderTarget;
     public double ElbowTarget;
 
@@ -90,8 +90,11 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
-        ShoulderFeedForward = new AFFFinal(kArmShoulderPID[0], kArmShoulderPID[1], kArmShoulderPID[2],kArmShoulderPID[3], kArmShoulderPID[4]);
-        ElbowFeedForward = new AFFFinal(kArmElbowPID[0],kArmElbowPID[1],kArmElbowPID[2],kArmElbowPID[3],kArmElbowPID[4]);
+        ShoulderFeedForward = new ArmFeedforward(ShoulderFFPSDs[0].get(),ShoulderFFPSDs[1].get(),ShoulderFFPSDs[2].get(),ShoulderFFPSDs[3].get());
+        ElbowFeedForward = new ArmFeedforward(ElbowFFPSDs[0].get(), 
+                ElbowFFPSDs[1].get(), 
+                ElbowFFPSDs[2].get(),
+                ElbowFFPSDs[3].get());
 
         sequenceIndex = 0;
 
@@ -192,19 +195,21 @@ public class Arm extends SubsystemBase {
         double shouldErr = ShoulderTarget - getLocalArmAngles()[0];
         // if (Math.abs(elbowErr) > 15)
         // ElbowFeedForward.integralAcc = 0;
-        if (Math.abs(shouldErr) > 15)
-            ShoulderFeedForward.integralAcc = 0;
+        // if (Math.abs(shouldErr) > 15)
+        //     ShoulderFeedForward.integralAcc = 0;
         switch (nextKeyframe.keyFrameState) {
             case stowed:
                 if (!runningKeyframesAndSequences) {
                     ElbowMotor.setVoltage(KStowPressVelocity);
-                    ElbowFeedForward.integralAcc = 0;
+                    // ElbowFeedForward.integralAcc = 0;
                 } else {
                     ElbowMotor.setVoltage(
                             clamp(
                                     safeZoneDrive(
-                                            ElbowFeedForward.calc(elbowErr,
+
+                                            ElbowFeedForward.calculate(spatialTargets()[1],
                                                     (getSpatialArmAngles()[1])),
+
                                             getLocalArmAngles()[1], kElbowSafezone),
                                     -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
                 }
@@ -213,8 +218,10 @@ public class Arm extends SubsystemBase {
                 ElbowMotor.setVoltage(
                         clamp(
                                 safeZoneDrive(
+
                                         ElbowFeedForward.calc(elbowErr,
                                                 (getSpatialArmAngles()[1])),
+                                        
                                         getLocalArmAngles()[1], kElbowSafezone),
                                 -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
                 break;
@@ -223,11 +230,17 @@ public class Arm extends SubsystemBase {
         ShoulderMotor.setVoltage(
                 clampShoulderByLimits(clamp(
                         safeZoneDrive(
+                            
                                 ShoulderFeedForward.calc(
                                         shouldErr,
                                         (getLocalArmAngles()[0])),
+
                                 getLocalArmAngles()[0], kShoulderSafezone),
                         -PSDShoulderMaxVoltage.get(), PSDShoulderMaxVoltage.get())));
+    }
+
+    public double[] spatialTargets(){
+        return new double[]{ShoulderTarget,ShoulderTarget+};
     }
 
     public double[][] zipperAngles(double[] shoulderAngles, double[] elbowAngles) {

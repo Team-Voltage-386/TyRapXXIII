@@ -154,6 +154,18 @@ public final class Constants {
                 public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5,
                                 "armThreshhold",
                                 "ArmFF");
+                public static PersistentShufflableDouble[] ShoulderFFPSDs = {
+                        new PersistentShufflableDouble(0.0,"ShoulderKS","ArmFF"),
+                        new PersistentShufflableDouble(0.0, "ShoulderKG","ArmFF"),
+                        new PersistentShufflableDouble(0.0, "ShoulderKV","ArmFF"),
+                        new PersistentShufflableDouble(0.0, "ShoulderKS","ArmFF")
+                };
+                public static PersistentShufflableDouble[] ElbowFFPSDs = {
+                        new PersistentShufflableDouble(0.0,"ElbowKS","ArmFF"),
+                        new PersistentShufflableDouble(0.0, "ElbowKG","ArmFF"),
+                        new PersistentShufflableDouble(0.0, "ElbowKV","ArmFF"),
+                        new PersistentShufflableDouble(0.0, "ElbowKS","ArmFF")
+                };
                 public static final int kProtectorUp = 7;
                 public static final int kProtectorDown = 6;
                 public static final double KStowPressVelocity = -.1;
