@@ -16,12 +16,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.utils.AFFShufflable;
-import frc.robot.utils.AFFFinal;
 import static frc.robot.utils.TrajectoryMaker.*;
 import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 import frc.robot.utils.ArmKeyframe;
-import frc.robot.utils.Flags;
-
+import edu.wpi.first.math.controller.ArmFeedforward;
 import static frc.robot.utils.Flags.*;
 
 import static frc.robot.Constants.ArmConstants.*;
@@ -117,7 +115,7 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         limitLogic();
         setFlags();
-        fkCoords = forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths);
+        // fkCoords = forwardKinematics(getSpatialArmAngles(getLocalArmAngles()), kArmLengths);
         if (runningKeyframesAndSequences) {
             executeKeyframesAndSequences();
         }
@@ -144,7 +142,7 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * 
+     * @deprecated
      * @return double[] of current spatial arm angles in degrees, indeces 0=shoulder
      *         angle 1=elbow angle, where arm angles are angles of elevation from
      *         global horizon (angle of depression is negative)
@@ -160,26 +158,30 @@ public class Arm extends SubsystemBase {
         return result;
     }
 
-    /**
-     * @return double[][] of coordinates of the endpoint of each arm segment
-     *         relative to origin, 1dimension double[] is xy coordinates;
-     *         example - result[1][0] is the elbow x coordinate
-     * @param spatialArmAngles could be used for either current arm spatial angles
-     *                         or target angles in global space
-     */
-    public double[][] forwardKinematics(double[] spatialArmAngles, double[] armLengths) {
-        double[][] result = new double[spatialArmAngles.length][2];
-        for (int i = 0; i < spatialArmAngles.length; i++) {
-            result[i][0] = armLengths[i] * Math.cos(Math.toRadians(spatialArmAngles[i]));
-            result[i][1] = armLengths[i] * Math.sin(Math.toRadians(spatialArmAngles[i]));
-            if (i > 0) {
-                result[i][0] = result[i][0] + result[i - 1][0];
-                result[i][1] = result[i][1] + result[i - 1][1];
-            }
-        }
-        return result;
-
+    public double[] getSpatialArmAngles(){
+        return new double[]{getLocalArmAngles()[0],getLocalArmAngles()[0]+getLocalArmAngles()[1]};
     }
+
+    // /**
+    //  * @return double[][] of coordinates of the endpoint of each arm segment
+    //  *         relative to origin, 1dimension double[] is xy coordinates;
+    //  *         example - result[1][0] is the elbow x coordinate
+    //  * @param spatialArmAngles could be used for either current arm spatial angles
+    //  *                         or target angles in global space
+    //  */
+    // public double[][] forwardKinematics(double[] spatialArmAngles, double[] armLengths) {
+    //     double[][] result = new double[spatialArmAngles.length][2];
+    //     for (int i = 0; i < spatialArmAngles.length; i++) {
+    //         result[i][0] = armLengths[i] * Math.cos(Math.toRadians(spatialArmAngles[i]));
+    //         result[i][1] = armLengths[i] * Math.sin(Math.toRadians(spatialArmAngles[i]));
+    //         if (i > 0) {
+    //             result[i][0] = result[i][0] + result[i - 1][0];
+    //             result[i][1] = result[i][1] + result[i - 1][1];
+    //         }
+    //     }
+    //     return result;
+
+    // }
 
     /**
      * drive motors to the target angles using PIDF; use subsystem ElbowTarget and
@@ -202,7 +204,7 @@ public class Arm extends SubsystemBase {
                             clamp(
                                     safeZoneDrive(
                                             ElbowFeedForward.calc(elbowErr,
-                                                    (getSpatialArmAngles(getLocalArmAngles())[1])),
+                                                    (getSpatialArmAngles()[1])),
                                             getLocalArmAngles()[1], kElbowSafezone),
                                     -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
                 }
@@ -212,7 +214,7 @@ public class Arm extends SubsystemBase {
                         clamp(
                                 safeZoneDrive(
                                         ElbowFeedForward.calc(elbowErr,
-                                                (getSpatialArmAngles(getLocalArmAngles())[1])),
+                                                (getSpatialArmAngles()[1])),
                                         getLocalArmAngles()[1], kElbowSafezone),
                                 -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
                 break;
