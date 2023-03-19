@@ -34,7 +34,6 @@ public class Balance extends CommandBase {
         time.start();
     }
 
-    //FUN STUFF.
     @Override
     public void execute() {
         //update values 50 times a sec
@@ -68,7 +67,7 @@ public class Balance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return HasBeenBalanced && time.get() > 0.4;
+        return HasBeenBalanced && time.get() > 0.2;
     }
 
     @Override
@@ -78,4 +77,3 @@ public class Balance extends CommandBase {
     }
 
 }
-//Lucas when you wake up and see this in the morning, check slack to refresh your mind on where you were at - Lucas' self note 3/19/23
