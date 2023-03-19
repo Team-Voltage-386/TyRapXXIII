@@ -14,6 +14,8 @@ public class Balance extends CommandBase {
     private Timer time = new Timer();
     //controls if the robot is HasBeenBalanceded or not
     private boolean HasBeenBalanced = false;
+    private boolean isforward;
+    private int directionFlipper;
     //shuffleboard stuff
     public static ShuffleboardTab mainTab = Shuffleboard.getTab("BalanceInfo");
     private static final GenericEntry xPosWidget = mainTab.add("X", 0).withPosition(0, 0).withSize(1, 1).getEntry();
@@ -22,8 +24,12 @@ public class Balance extends CommandBase {
     private static final GenericEntry HasBeenBalancedWid = mainTab.add("HasBeenBalanced",false).withPosition(1,1).withSize(1,1).getEntry();
     private static final GenericEntry Timer = mainTab.add("Timer",0).withPosition(0,2).withSize(1,1).getEntry();
 
-    public Balance(Drivetrain DT) {
+    public Balance(boolean ISFORWARD, Drivetrain DT) {
+        isforward = ISFORWARD;
         dt = DT;
+
+        if(isforward) directionFlipper = 1;
+        else directionFlipper = -1;
     }
 
     //basically starts timer
@@ -45,8 +51,8 @@ public class Balance extends CommandBase {
 
         //balancing if not HasBeenBalanced
         if(!HasBeenBalanced)
-        dt.xDriveTarget = 0.1;
-        else dt.xDriveTarget = -0.05;
+        dt.xDriveTarget = 0.1*directionFlipper;
+        else dt.xDriveTarget = -0.05*directionFlipper;
 
         //BALANCE SYSTEM
         boolean isBalanced = false;
