@@ -82,6 +82,8 @@ public final class Constants {
                 public static double kConeIntakeSpeed = 0.20;
                 public static double kCubeIntakeSpeed = 0.10;
                 public static double kCubeStowSpeed = 0.03;
+                public static double kConeShootSpeed = 0.40;
+                public static double kCubeShootSpeed = 0.25;
                 public static final int kRightPickupID = 33;
                 public static final int kLeftPickupID = 34;
         }

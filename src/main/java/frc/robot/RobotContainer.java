@@ -81,6 +81,8 @@ public class RobotContainer {
         autoChooser.addOption("TuningSquare", autos.TuningSquare);
         autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
         autoChooser.addOption("Place and Balance No Mobility", autos.placeAndBalanceNoMobility);
+        autoChooser.addOption("Score cone mid and score cube low", autos.TwoPieceAutoRight);
+        autoChooser.addOption("Score cone mid and score cube low and balance", autos.TwoPieceAutoWithBalanceRight);
         // autoChooser.addOption("Middle Auto", autos.test1);
         Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1).withPosition(4, 2);
     }
@@ -210,8 +212,39 @@ public class RobotContainer {
                 new SetConemode(false),
                 new HandTasks(false, handIntakeStates.letitgo, HandControls));
 
-        //Lucas Talahassee PID speed-balance additions
+        //Lucas Talahassee PID speed-balance additions & double autos
         //2 piece auto with balance?
+
+        /**Score cone mid and score cube low */
+        public final Command TwoPieceAutoRight = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+                new HandTasks(true, handIntakeStates.stow, HandControls),
+                new ArmDo(m_Arm, kfseqConeStowToConeMid),
+                new HandTasks(false, handIntakeStates.letitgo, HandControls),
+                new ParallelCommandGroup(new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow), new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
+                        new Drive(4.9, 0.4, 0, m_driveTrain)),
+                new ParallelCommandGroup(new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow), new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
+                        new Drive(0.2, 0, 37.5, m_driveTrain)),
+                new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
+                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))  
+        );
+
+        /**Score cone mid and score cube low and then balance */
+        public final Command TwoPieceAutoWithBalanceRight = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+                new HandTasks(true, handIntakeStates.stow, HandControls),
+                new ArmDo(m_Arm, kfseqConeStowToConeMid),
+                new HandTasks(false, handIntakeStates.letitgo, HandControls),
+                new ParallelCommandGroup(new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow), new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
+                        new Drive(4.9, 0.4, 0, m_driveTrain)),
+                new ParallelCommandGroup(new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow), new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
+                        new Drive(0.2, 0, 37.5, m_driveTrain)),
+                new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
+                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow), new Drive(0.2, 1.6, 0, m_driveTrain)),
+                new DriveUntil(true, m_driveTrain),
+                new Balance(m_driveTrain)
+        );
+
         public final Command NOT_TUNED_YET_placeAndBalanceWithPID = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
 

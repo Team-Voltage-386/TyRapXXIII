@@ -85,4 +85,3 @@ public class Balance extends CommandBase {
     }
 
 }
-//Lucas when you wake up and see this in the morning, check slack to refresh your mind on where you were at - Lucas' self note 3/19/23

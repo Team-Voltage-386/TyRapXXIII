@@ -44,6 +44,7 @@ public class Hand extends SubsystemBase {
     double intakeSpeed;
     double ejectSpeed;
     double stowSpeed;
+    double shootSpeed;
 
     boolean handTurningClockwise;
     double targHandPos = 0;
@@ -100,7 +101,7 @@ public class Hand extends SubsystemBase {
     }
 
     public static enum handIntakeStates {
-        letitgo, intake, doNothing, stow
+        letitgo, intake, doNothing, stow, shoot
     }
 
     public void IntakeMotorControl(handIntakeStates intakeTask) {
@@ -109,10 +110,12 @@ public class Hand extends SubsystemBase {
             intakeSpeed = kConeIntakeSpeed;
             ejectSpeed = -kConeIntakeSpeed;
             stowSpeed = kCubeStowSpeed;
+            shootSpeed = kConeShootSpeed;
         } else {
             intakeSpeed = kCubeIntakeSpeed;
             ejectSpeed = -kCubeIntakeSpeed - .2;
             stowSpeed = kCubeStowSpeed;
+            shootSpeed = kCubeShootSpeed;
         }
         
     }
@@ -129,6 +132,10 @@ public class Hand extends SubsystemBase {
             case stow:
                 RPickup.set(stowSpeed);
                 LPickup.set(stowSpeed);
+                break;
+            case shoot:
+                RPickup.set(shootSpeed);
+                LPickup.set(shootSpeed);
                 break;
             default:
                 RPickup.set(0);
@@ -215,6 +222,8 @@ public class Hand extends SubsystemBase {
                 return "doNothing";
             case stow:
                 return "stow";
+            case shoot:
+                return "shooting";
             default:
                 return "uh oh";
         }
