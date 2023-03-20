@@ -225,17 +225,17 @@ public class RobotContainer {
                 new HandTasks(false, handIntakeStates.letitgo, HandControls),
                 //stow and go pick up cube
                 new ParallelCommandGroup(
-                                new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
-                                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
-                                new Drive(4.9, 0.4, 0, m_driveTrain)),
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
+                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
+                        new Drive(4.9, 0.4, 0, m_driveTrain)),
                 //stow and come back, turn to point at cube mid
                 new ParallelCommandGroup(
-                                new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
-                                                new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
-                                new Drive(0.2, 0, 37.5, m_driveTrain)),
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
+                                new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
+                        new Drive(0.2, 0, 37.5, m_driveTrain)),
                 //shoot cube and stow
                 new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
-                                new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
+                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
         );
 
         public final Command TwoPieceAutoLeft = new SequentialCommandGroup(
@@ -245,39 +245,42 @@ public class RobotContainer {
                 new ArmDo(m_Arm, kfseqConeStowToConeMid),
                 new HandTasks(false, handIntakeStates.letitgo, HandControls),
                 // stow and go pick up cube
+                new SetConemode(false),
                 new ParallelCommandGroup(
-                                new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
-                                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
-                                new Drive(4.9, 0.4, 0, m_driveTrain)),
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
+                               new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
+                        new Drive(4.9, 0.4, 0, m_driveTrain)),
                 // stow and come back, turn to point at cube mid
                 new ParallelCommandGroup(
-                                new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
-                                                new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
-                                new Drive(0.2, 0, 37.5, m_driveTrain)),
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
+                                new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
+                        new Drive(0.2, 0, 37.5, m_driveTrain)),
                 // shoot cube and stow
                 new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
-                                new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
+                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
         );
 
         /**Score cone mid and score cube low and then balance */
         public final Command TwoPieceAutoWithBalanceRight = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
+                // score cone mid
                 new HandTasks(true, handIntakeStates.stow, HandControls),
                 new ArmDo(m_Arm, kfseqConeStowToConeMid),
                 new HandTasks(false, handIntakeStates.letitgo, HandControls),
+                // stow and go pick up cube
                 new SetConemode(false),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
-                                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
-                                new Drive(4.9, 0.4, 0, m_driveTrain)),
+                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
+                        new Drive(4.9, 0.4, 0, m_driveTrain)),
+                // stow and come back, turn to point at cube mid
                 new ParallelCommandGroup(
-                                new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
-                                                new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
-                                new Drive(0.2, 0, 37.5, m_driveTrain)),
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
+                                new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
+                        new Drive(0.2, 0, 37.5, m_driveTrain)),
+                // shoot cube and stow
                 new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
-                                new ArmDo(m_Arm, kfseqCubeMidtoCubeStow), new Drive(0.2, 1.6, 0, m_driveTrain)),
-                new DriveUntil(true, m_driveTrain),
-                new Balance(true, m_driveTrain)
+                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
         );
 
         public final Command placeAndFastBalance = new SequentialCommandGroup(
