@@ -224,10 +224,11 @@ public class RobotContainer {
                 new ArmDo(m_Arm, kfseqConeStowToConeMid),
                 new HandTasks(false, handIntakeStates.letitgo, HandControls),
                 //stow and go pick up cube
+                new SetConemode(false),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
                                 new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
-                        new Drive(4.9, 0.4, 0, m_driveTrain)),
+                        new Drive(4.9, 0.4, 180, m_driveTrain)),
                 //stow and come back, turn to point at cube mid
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
@@ -249,7 +250,7 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
-                        new Drive(4.9, 0.4, 0, m_driveTrain)),
+                        new Drive(4.9, -0.4, 180, m_driveTrain)),
                 // stow and come back, turn to point at cube mid
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
