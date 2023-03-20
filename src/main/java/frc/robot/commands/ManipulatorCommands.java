@@ -28,7 +28,7 @@ public class ManipulatorCommands extends CommandBase {
   private LEDSubsystem m_led;
 
   /** Creates a new ManipulatorCommands. */
-  public ManipulatorCommands(Arm arm, Hand Hand,LEDSubsystem LEDSubsystem) {
+  public ManipulatorCommands(Arm arm, Hand Hand, LEDSubsystem LEDSubsystem) {
     m_arm = arm;
     m_hand = Hand;
     m_led = LEDSubsystem;
@@ -40,11 +40,12 @@ public class ManipulatorCommands extends CommandBase {
   public void initialize() {
     scoreHighTarget = true;
     manipulatorSetState = subsystemsStates.runStow;
-    manipulatorConemode=ConeMode;
+    manipulatorConemode = ConeMode;
   }
 
   public GenericEntry manipulationStateWidget = Shuffleboard.getTab("Main").add("manipState", "").getEntry();
-    public boolean manipulatorConemode;
+  public boolean manipulatorConemode;
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -62,15 +63,14 @@ public class ManipulatorCommands extends CommandBase {
     if (kManipulator.getRawButtonPressed(kB)) {
       manipulatorSetState = subsystemsStates.runStow;
     }
-    
+
     if (kManipulator.getRawButtonPressed(kLeftOptions)) {
-      manipulatorConemode= false;
+      manipulatorConemode = false;
     }
     if (kManipulator.getRawButtonPressed(kRightOptions)) {
       manipulatorConemode = true;
     }
     m_led.setLEDConeMode(manipulatorConemode);
-    
 
     // score high, low, left, right, etc
     if (kManipulator.getPOV() == 0) {
@@ -111,14 +111,15 @@ public class ManipulatorCommands extends CommandBase {
         }
 
         // arm do
-        // if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed && m_arm.lastKeyframe.keyFrameState!=armKeyFrameStates.stowed) {
-        //   if (!m_hand.canRetract()) {
-        //     m_arm.runningKeyframesAndSequences = false;
-        //     m_arm.ElbowTarget=75;
-        //   } else {
-        //     m_arm.runningKeyframesAndSequences = true;
-        //   }
-        // } 
+        // if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed &&
+        // m_arm.lastKeyframe.keyFrameState!=armKeyFrameStates.stowed) {
+        // if (!m_hand.canRetract()) {
+        // m_arm.runningKeyframesAndSequences = false;
+        // m_arm.ElbowTarget=75;
+        // } else {
+        // m_arm.runningKeyframesAndSequences = true;
+        // }
+        // }
         // hand tasks
         // zero wrist
         m_hand.handPosition = 0;
@@ -130,16 +131,17 @@ public class ManipulatorCommands extends CommandBase {
 
         }
 
-        if(ConeMode){
+        if (ConeMode) {
           if (kManipulator.getRawAxis(kLeftTrigger) > kDeadband) {
             m_hand.pcmCompressor.set(Value.kReverse);
           }
-          if(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed && kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
+          if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed
+              && kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
             m_hand.pcmCompressor.set(Value.kForward);
           }
         }
 
-        if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
+        if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
           m_arm.dontProtectArm();
         }
 
@@ -160,9 +162,9 @@ public class ManipulatorCommands extends CommandBase {
         // change elbow angle if wrist is rotated
         if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
           if (m_hand.handPosition != 0) {
-            m_arm.ElbowTarget = kElbowWristedPickup;
+            m_arm.ElbowFeedForwardTarget = kElbowWristedPickup;
           } else {
-            m_arm.ElbowTarget = kElbowPickupNormal;
+            m_arm.ElbowFeedForwardTarget = kElbowPickupNormal;
           }
         }
         // intake motors
@@ -177,22 +179,22 @@ public class ManipulatorCommands extends CommandBase {
         }
         // mode switcher
         if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
-          ConeMode=manipulatorConemode;
+          ConeMode = manipulatorConemode;
 
           m_hand.ChangeMode();
 
         }
 
-        if(ConeMode){
-          if (kManipulator.getRawAxis(kLeftTrigger)>kDeadband) {
+        if (ConeMode) {
+          if (kManipulator.getRawAxis(kLeftTrigger) > kDeadband) {
             m_hand.pcmCompressor.set(Value.kReverse);
           }
-          if(kManipulator.getRawAxis(kLeftTrigger)<=kDeadband) {
+          if (kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
             m_hand.pcmCompressor.set(Value.kForward);
           }
         }
 
-        if(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup && !m_arm.runningKeyframesAndSequences) {
+        if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup && !m_arm.runningKeyframesAndSequences) {
           m_arm.protectArm();
         }
 
@@ -234,7 +236,7 @@ public class ManipulatorCommands extends CommandBase {
         m_hand.handPosition = 0;
         // arm tasks
 
-        if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
+        if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
           m_arm.dontProtectArm();
         }
 

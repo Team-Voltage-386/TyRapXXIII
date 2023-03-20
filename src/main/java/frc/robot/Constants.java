@@ -166,11 +166,21 @@ public final class Constants {
                                 new PersistentShufflableDouble(0.0, "WElbowKV", "WAFV"),
                                 new PersistentShufflableDouble(0.0, "WElbowKA", "WAFV")
                 };
+                public static PersistentShufflableDouble[] ShoulderPIDPSDs = {
+                                new PersistentShufflableDouble(0, "WShoulderP","WAFV"),
+                                new PersistentShufflableDouble(0, "WShoulderI", "WAFV"),
+                                new PersistentShufflableDouble(0, "WShoulderD", "WAFV")
+                };
+                public static PersistentShufflableDouble[] ElbowPIDPSDs = {
+                                new PersistentShufflableDouble(0, "WElbowP", "WAFV"),
+                                new PersistentShufflableDouble(0, "WElbowI", "WAFV"),
+                                new PersistentShufflableDouble(0, "WElbowD", "WAFV")
+                };
                 public static final int kProtectorUp = 7;
                 public static final int kProtectorDown = 6;
                 public static final double KStowPressVelocity = -.1;
                 public static final int KTrajectorySteps = 3;
-                public static final double kArmTolerance = 5;// in degrees
+                public static final double kArmTolerance = 1;// in degrees
                 public static final double[] kArmShoulderPID = { .288, .12, .36, 0, 0 };
                 public static final double[] kArmElbowPID = { .12, .12, .3, -.36, 0 };
 
@@ -219,20 +229,24 @@ public final class Constants {
                         // pickup sequences
                         public static ArmKeyframe[] kfseqCubeStowToCubePickup = {
                                         new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
-                                                        30),
+                                                        3),
                                         // new ArmKeyframe(new double[] { -115.2, 115 }, armKeyFrameStates.intermediary,
                                         // 5),
-                                        new ArmKeyframe(new double[] { -99, 103 }, armKeyFrameStates.intermediary, 30),
+                                        new ArmKeyframe(new double[] { -99, 103 }, armKeyFrameStates.intermediary, 
+                                                        3),
                                         new ArmKeyframe(new double[] { -84, kElbowPickupNormal },
-                                                        armKeyFrameStates.pickup, 30),
+                                                        armKeyFrameStates.pickup, 
+                                                        3),
                         };
                         // stowing sequences
                         public static ArmKeyframe[] kfseqCubePickuptoCubeStow = {
 
                                         // new ArmKeyframe(new double[] { -55.5, 118 },
                                         // armKeyFrameStates.intermediary,7),
-                                        new ArmKeyframe(new double[] { -84, 75 }, armKeyFrameStates.intermediary, 3),
-                                        new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.stowed, 3)
+                                        new ArmKeyframe(new double[] { -84, 75 }, armKeyFrameStates.intermediary, 
+                                                        3),
+                                        new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.stowed, 
+                                                        3)
                         };
                         public static ArmKeyframe[] kfseqConeHightoCubeStow = {
                                         new ArmKeyframe(new double[] { 10, 15 }, armKeyFrameStates.intermediary, 3),

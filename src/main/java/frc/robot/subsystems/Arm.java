@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.utils.AFFShufflable;
+import edu.wpi.first.math.controller.PIDController;
 import static frc.robot.utils.TrajectoryMaker.*;
 import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 import frc.robot.utils.ArmKeyframe;
@@ -37,10 +38,10 @@ import java.util.Map;
 
 public class Arm extends SubsystemBase {
 
-    public ArmFeedforward ShoulderFeedForward;
-    public ArmFeedforward ElbowFeedForward;
-    public double ShoulderTarget, ElbowTarget, ShoulderVelocityTarget, ElbowVelocityTarget, ShoulderAccelerationTarget,
-            ElbowAccelerationTarget;
+    public ArmFeedforward ShoulderFeedForward, ElbowFeedForward;
+    public PIDController ShoulderFeedBack, ElbowFeedBack;
+    public double ShoulderFeedForwardTarget, ElbowFeedForwardTarget, ShoulderVelocityTarget, ElbowVelocityTarget,
+            ShoulderAccelerationTarget, ElbowAccelerationTarget, ShoulderFeedBackTarget, ElbowFeedBackTarget;
 
     private CANSparkMax ShoulderMotor; // change to cansparkmax
     private DutyCycleEncoder ShoulderEncoder; // change to absolute encoder
@@ -102,24 +103,39 @@ public class Arm extends SubsystemBase {
                 ElbowFFPSDs[1].get(),
                 ElbowFFPSDs[2].get(),
                 ElbowFFPSDs[3].get());
+        ShoulderFeedBack = new PIDController(
+                ShoulderPIDPSDs[0].get(),
+                ShoulderPIDPSDs[1].get(),
+                ShoulderPIDPSDs[2].get());
+        ElbowFeedBack = new PIDController(
+                ElbowPIDPSDs[0].get(),
+                ElbowPIDPSDs[1].get(),
+                ElbowPIDPSDs[2].get());
 
         sequenceIndex = 0;
 
         updateShufflables();
+        // THE REAL STUFF
+        ShoulderFeedForwardTarget = getLocalArmAngles()[0];
+        ElbowFeedForwardTarget = getLocalArmAngles()[1];
+        ShoulderFeedBackTarget = ShoulderFeedForwardTarget;
+        ElbowFeedBackTarget = ElbowFeedForwardTarget;
+        // ShoulderFeedBackTarget=-90;
+        // ElbowFeedBackTarget=90;
+        // ShoulderFeedForwardTarget = -90;// comment this out later OR ELSE
+        // ElbowFeedForwardTarget = 90;// comment this out later OR ELSE
 
-        // ShoulderTarget = kInitialShoulderTarget;
-        // ElbowTarget = kInitialElbowTarget;
-        ShoulderTarget = getLocalArmAngles()[0];
-        ElbowTarget = getLocalArmAngles()[1];
         ShoulderVelocityTarget = 0;
-        ElbowVelocityTarget = 0;
+        ElbowVelocityTarget = 0;// MAKE THIS ZERO
         ShoulderAccelerationTarget = 0;
         ElbowAccelerationTarget = 0;
         targetSequence = new double[][] { { kInitialShoulderTarget, kInitialElbowTarget } };
         velocitySequence = new double[][] { { 0, 0 } };
         accelerationSequence = new double[][] { { 0, 0 } };
-        lastKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
-        nextKeyframe = new ArmKeyframe(new double[] { ShoulderTarget, ElbowTarget }, armKeyFrameStates.stowed, 0);
+        lastKeyframe = new ArmKeyframe(new double[] { ShoulderFeedForwardTarget, ElbowFeedForwardTarget },
+                armKeyFrameStates.stowed, 0);
+        nextKeyframe = new ArmKeyframe(new double[] { ShoulderFeedForwardTarget, ElbowFeedForwardTarget },
+                armKeyFrameStates.stowed, 0);
         keyFrameSequence = new ArmKeyframe[] { lastKeyframe };
         // keyFrameSequence = onlyIntermediary1(akfStowed);
         runningKeyframesAndSequences = false;
@@ -206,41 +222,45 @@ public class Arm extends SubsystemBase {
      * ShoulderTarget which are local targets
      */
     public void ArmDrive() {
-        double elbowErr = ElbowTarget - getLocalArmAngles()[1];
-        double shouldErr = ShoulderTarget - getLocalArmAngles()[0];
+        double ElbowFeedBackCalculation = 0;
+        double ShoulderFeedBackCalculation = 0;
+        if (!atFeedBackTargets()) {
+            ElbowFeedBackCalculation = ElbowFeedBack.calculate(ElbowFeedBackTarget, getLocalArmAngles()[1]);
+            ShoulderFeedBackCalculation = ShoulderFeedBack.calculate(ShoulderFeedBackTarget, getLocalArmAngles()[0]);
+        }
         // if (Math.abs(elbowErr) > 15)
         // ElbowFeedForward.integralAcc = 0;
         // if (Math.abs(shouldErr) > 15)
         // ShoulderFeedForward.integralAcc = 0;
         switch (nextKeyframe.keyFrameState) {
             case stowed:
-                if (!runningKeyframesAndSequences) {
-                    ElbowMotor.setVoltage(KStowPressVelocity);
-                    // ElbowFeedForward.integralAcc = 0;
-                } else {
-                    ElbowMotor.setVoltage(
-                            clamp(
-                                    safeZoneDrive(
-
-                                            ElbowFeedForward.calculate(
-                                                    Math.toRadians(spatialTargets()[1]),
-                                                    Math.toRadians(ElbowVelocityTarget),
-                                                    Math.toRadians(ElbowAccelerationTarget)),
-
-                                            getLocalArmAngles()[1], kElbowSafezone),
-                                    -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
-                }
+                // if (!runningKeyframesAndSequences) {
+                // // ElbowMotor.setVoltage(KStowPressVelocity);
+                // ElbowMotor.setVoltage(0);// FAKE // ElbowFeedForward.integralAcc = 0;
+                // } else {
+                ElbowMotor.setVoltage(
+                        clamp(
+                                safeZoneDrive(
+                                        (ElbowFeedForward.calculate(
+                                                Math.toRadians(spatialTargets()[1]),
+                                                Math.toRadians(ElbowVelocityTarget),
+                                                Math.toRadians(ElbowAccelerationTarget))
+                                                + ElbowFeedBackCalculation),
+                                        getLocalArmAngles()[1], kElbowSafezone),
+                                -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
+                // }
                 break;
             default:
                 ElbowMotor.setVoltage(
                         clamp(
                                 safeZoneDrive(
 
-                                        ElbowFeedForward.calculate(
+                                        (ElbowFeedForward.calculate(
                                                 Math.toRadians(spatialTargets()[1]),
                                                 Math.toRadians(ElbowVelocityTarget),
-                                                Math.toRadians(ElbowAccelerationTarget)),
-
+                                                Math.toRadians(ElbowAccelerationTarget))
+                                                +
+                                                ElbowFeedBackCalculation),
                                         getLocalArmAngles()[1], kElbowSafezone),
                                 -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
                 break;
@@ -250,10 +270,12 @@ public class Arm extends SubsystemBase {
                 clampShoulderByLimits(clamp(
                         safeZoneDrive(
 
-                                ShoulderFeedForward.calculate(
+                                (ShoulderFeedForward.calculate(
                                         Math.toRadians(spatialTargets()[0]),
                                         Math.toRadians(ShoulderVelocityTarget),
-                                        Math.toRadians(ShoulderAccelerationTarget)),
+                                        Math.toRadians(ShoulderAccelerationTarget))
+                                        +
+                                        ShoulderFeedBack.calculate(ShoulderFeedBackCalculation)),
 
                                 getLocalArmAngles()[0], kShoulderSafezone),
                         -PSDShoulderMaxVoltage.get(), PSDShoulderMaxVoltage.get())));
@@ -264,7 +286,7 @@ public class Arm extends SubsystemBase {
      * @return [0]Shoulder spatial target, [1]Elbow spatial target
      */
     public double[] spatialTargets() {
-        return new double[] { ShoulderTarget, ShoulderTarget + ElbowTarget };
+        return new double[] { ShoulderFeedForwardTarget, ShoulderFeedForwardTarget + ElbowFeedForwardTarget };
     }
 
     public double[][] zipperAngles(double[] shoulderAngles, double[] elbowAngles) {
@@ -285,6 +307,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void executeKeyframesAndSequences() {
+
         // at the very beginning
         // System.out.println(keyFrameIndex + " " + sequenceIndex);
         if (keyFrameIndex == 0 && sequenceIndex == 0) {
@@ -313,7 +336,7 @@ public class Arm extends SubsystemBase {
             sequenceIndex++;
         }
         // at a keyframe, not the end or middle
-        else if (keyFrameIndex != 0 && keyFrameIndex < keyFrameSequence.length && sequenceIndex == 0) {
+        else if (keyFrameIndex != 0 && keyFrameIndex < keyFrameSequence.length && (sequenceIndex == 0)) {
             lastKeyframe = nextKeyframe;
             nextKeyframe = keyFrameSequence[keyFrameIndex];
             targetSequence = zipperAngles(
@@ -347,8 +370,8 @@ public class Arm extends SubsystemBase {
         // between keyframes
         else if (sequenceIndex != 0 && sequenceIndex < targetSequence.length) {
             //
-            ShoulderTarget = targetSequence[sequenceIndex][0];
-            ElbowTarget = targetSequence[sequenceIndex][1];
+            ShoulderFeedForwardTarget = targetSequence[sequenceIndex][0];
+            ElbowFeedForwardTarget = targetSequence[sequenceIndex][1];
 
             ShoulderVelocityTarget = velocitySequence[sequenceIndex][0];
             ElbowVelocityTarget = velocitySequence[sequenceIndex][1];
@@ -356,14 +379,18 @@ public class Arm extends SubsystemBase {
             ShoulderAccelerationTarget = accelerationSequence[sequenceIndex][0];
             ElbowAccelerationTarget = accelerationSequence[sequenceIndex][1];
 
-            if (atTargets()) {
+            if (atFeedForwardtargets()) {
                 sequenceIndex++;
             }
-            if (sequenceIndex >= targetSequence.length) {
+            if (sequenceIndex >= targetSequence.length || atFeedBackTargets()) {
                 sequenceIndex = 0;
                 keyFrameIndex++;
             }
         }
+
+        // always
+        ElbowFeedBackTarget = nextKeyframe.keyFrameAngles[1];
+        ShoulderFeedBackTarget = nextKeyframe.keyFrameAngles[0];
     }
 
     /**
@@ -412,7 +439,7 @@ public class Arm extends SubsystemBase {
                 handCanRotate = true;
                 break;
         }
-        armIsAtTarget = !runningKeyframesAndSequences && atTargets();
+        armIsAtTarget = !runningKeyframesAndSequences && atFeedForwardtargets();
     }
 
     // old turret tyrapXX logic
@@ -459,9 +486,14 @@ public class Arm extends SubsystemBase {
      * 
      * @return if both arm angles are at target values
      */
-    public boolean atTargets() {
-        return Math.abs(getLocalArmAngles()[0] - ShoulderTarget) < kArmTolerance
-                && Math.abs(getLocalArmAngles()[1] - ElbowTarget) < kArmTolerance;
+    public boolean atFeedForwardtargets() {
+        return Math.abs(getLocalArmAngles()[0] - ShoulderFeedForwardTarget) < kArmTolerance
+                && Math.abs(getLocalArmAngles()[1] - ElbowFeedForwardTarget) < kArmTolerance;
+    }
+
+    public boolean atFeedBackTargets() {
+        return Math.abs(getLocalArmAngles()[0] - ShoulderFeedBackTarget) < kArmTolerance
+                && Math.abs(getLocalArmAngles()[1] - ElbowFeedBackTarget) < kArmTolerance;
     }
 
     /**
@@ -684,8 +716,8 @@ public class Arm extends SubsystemBase {
     public GenericEntry scoreHighWidget = armTab.add("scoreHigh", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withProperties(Map.of("Color when true", "#FFFFFF", "Color when false", "#777777")).withPosition(5, 2)
             .getEntry();
-    public GenericEntry ElbowSpatialAngleWidget = armTab.add("ElbowSpatialAngle",0.0).getEntry();
-    public GenericEntry ElbowSpatialTargetWidget = armTab.add("ElbowSpatialTarget",0.0).getEntry();
+    public GenericEntry ElbowSpatialAngleWidget = armTab.add("ElbowSpatialAngle", 0.0).getEntry();
+    public GenericEntry ElbowSpatialTargetWidget = armTab.add("ElbowSpatialTarget", 0.0).getEntry();
     // for Main tab
     public GenericEntry mainTabConeModeWidget = mainTab.add("ConeMode", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withSize(2, 2)
@@ -707,8 +739,8 @@ public class Arm extends SubsystemBase {
     public void updateWidgets() {
         shoulderAngleWidget.setDouble(getLocalArmAngles()[0]);
         elbowAngleWidget.setDouble(getLocalArmAngles()[1]);
-        shoulderTargetWidget.setDouble(ShoulderTarget);
-        elbowTargetWidget.setDouble(ElbowTarget);
+        shoulderTargetWidget.setDouble(ShoulderFeedForwardTarget);
+        elbowTargetWidget.setDouble(ElbowFeedForwardTarget);
         ElbowSpatialAngleWidget.setDouble(getSpatialArmAngles()[1]);
         ElbowSpatialTargetWidget.setDouble(spatialTargets()[1]);
         // shoulderRawWidget.setDouble(ShoulderEncoder.getAbsolutePosition());
@@ -735,7 +767,7 @@ public class Arm extends SubsystemBase {
         nextKeyFrameWidget.setString(nextKeyframe.stateString());
         keyFrameIndexWidget.setInteger(keyFrameIndex);
         targetIndexWidget.setInteger(sequenceIndex);
-        atTargetsWidget.setBoolean(atTargets());
+        atTargetsWidget.setBoolean(atFeedForwardtargets());
         if (targetSequence != null) {
             shoulderTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 0));
             elbowTargetSequenceWidget.setDoubleArray(unzipAngles(targetSequence, 1));
@@ -773,6 +805,16 @@ public class Arm extends SubsystemBase {
             }
         }
         for (PersistentShufflableDouble i : ElbowFFPSDs) {
+            if (i.detectChanges()) {
+                i.subscribeAndSet();
+            }
+        }
+        for (PersistentShufflableDouble i : ShoulderPIDPSDs) {
+            if (i.detectChanges()) {
+                i.subscribeAndSet();
+            }
+        }
+        for (PersistentShufflableDouble i : ElbowPIDPSDs) {
             if (i.detectChanges()) {
                 i.subscribeAndSet();
             }

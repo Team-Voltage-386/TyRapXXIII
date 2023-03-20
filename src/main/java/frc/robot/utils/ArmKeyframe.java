@@ -4,7 +4,7 @@ public class ArmKeyframe {
     public static enum armKeyFrameStates {
         stowed, score, pickup, intermediary, scoreCubeMid, scoreCubeHigh, scoreConeMid, scoreConeHigh
     }
-
+    /**local angle targets */
     public double[] keyFrameAngles;
     public int substepsToHere;
     public armKeyFrameStates keyFrameState;
