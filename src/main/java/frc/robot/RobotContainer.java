@@ -83,6 +83,7 @@ public class RobotContainer {
         autoChooser.addOption("Place and Balance No Mobility", autos.placeAndBalanceNoMobility);
         autoChooser.addOption("Score cone mid and score cube low", autos.TwoPieceAutoRight);
         autoChooser.addOption("Score cone mid and score cube low and balance", autos.TwoPieceAutoWithBalanceRight);
+        autoChooser.addOption("Place and FastBalance", autos.placeAndFastBalance);
         // autoChooser.addOption("Middle Auto", autos.test1);
         Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1).withPosition(4, 2);
     }
@@ -242,10 +243,10 @@ public class RobotContainer {
                 new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
                         new ArmDo(m_Arm, kfseqCubeMidtoCubeStow), new Drive(0.2, 1.6, 0, m_driveTrain)),
                 new DriveUntil(true, m_driveTrain),
-                new Balance(m_driveTrain)
+                new Balance(true, m_driveTrain)
         );
 
-        public final Command NOT_TUNED_YET_placeAndBalanceWithPID = new SequentialCommandGroup(
+        public final Command placeAndFastBalance = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
 
                 // new HandTasks(true, handIntakeStates.stow, HandControls),//cone high
@@ -254,11 +255,11 @@ public class RobotContainer {
                 // new ParallelCommandGroup(new ArmDo(m_Arm, kfseqConeHightoCubeStow),
                 new HandTasks(false, handIntakeStates.stow, HandControls), // cube spit
                 new SetConemode(false),
-                new HandTasks(false, handIntakeStates.letitgo, HandControls),
-                new Drive(4.1, 0, 0, m_driveTrain),
-                new HandTasks(false, handIntakeStates.stow, HandControls),
+                new HandTasks(false, handIntakeStates.letitgo, HandControls), //end cube spit
+                new ParallelCommandGroup(new Drive(4.1, 0, 0, m_driveTrain),
+                        new HandTasks(false, handIntakeStates.stow, HandControls)),
                 new DriveUntil(false, m_driveTrain),
-                new Balance(m_driveTrain));
+                new Balance(false, m_driveTrain));
     }
 
     /**
@@ -269,4 +270,4 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
-}
+} //a

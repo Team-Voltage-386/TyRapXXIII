@@ -13,7 +13,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
 import frc.robot.utils.PIDShufflable;
 
-public class Balance extends CommandBase {
+public class BalancePID extends CommandBase {
     //init vars and methods
     private double balanceTarget = 2;
     private final Drivetrain dt;
@@ -29,7 +29,7 @@ public class Balance extends CommandBase {
     private static final GenericEntry XLOCKWid = mainTab.add("XLOCK",false).withPosition(1,1).withSize(1,1).getEntry();
     private static final GenericEntry Timer = mainTab.add("Timer",0).withPosition(0,2).withSize(1,1).getEntry();
 
-    public Balance(Drivetrain DT) {
+    public BalancePID(Drivetrain DT) {
         dt = DT;
     }
 
