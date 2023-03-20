@@ -412,18 +412,17 @@ public class RobotContainer {
                 new HandTasks(false, handIntakeStates.letitgo, HandControls)
         );
 
-        //WIP
         //*Score cube high and cube low */
         public final Command TwoPieceAutoRight_5 = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
                 new SetConemode(false),
-                // score cube mid
+                // score cube high
                 new HandTasks(false, handIntakeStates.stow, HandControls),
-                new ArmDo(m_Arm, kfseqCubeStowToCubeMid),
+                new ArmDo(m_Arm, kfseqCubeStowToCubeHigh),
                 new HandTasks(false, handIntakeStates.letitgo, HandControls),
                 // stow and go pick up cube
                 new ParallelCommandGroup(
-                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubeMidtoCubeStow),
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubehightoCubeStow),
                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
                         new Drive(4.9, 0.4, 180, m_driveTrain)),
                 // stow and come back
@@ -438,13 +437,13 @@ public class RobotContainer {
         public final Command TwoPieceAutoLeft_5 = new SequentialCommandGroup(
                 new ZeroOdo(0, 0, 0, m_driveTrain),
                 new SetConemode(false),
-                // score cube mid
+                // score cube high
                 new HandTasks(false, handIntakeStates.stow, HandControls),
-                new ArmDo(m_Arm, kfseqCubeStowToCubeMid),
+                new ArmDo(m_Arm, kfseqCubeStowToCubeHigh),
                 new HandTasks(false, handIntakeStates.letitgo, HandControls),
                 // stow and go pick up cube
                 new ParallelCommandGroup(
-                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubeMidtoCubeStow),
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubehightoCubeStow),
                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
                         new Drive(4.9, -0.4, 180, m_driveTrain)),
                 // stow and come back
