@@ -255,7 +255,7 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
                                 new ArmDo(m_Arm, kfseqCubeStowToCubeMid)),
-                        new Drive(0.2, 0, 37.5, m_driveTrain)),
+                        new Drive(0.2, 0, -37.5, m_driveTrain)),
                 // shoot cube and stow
                 new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
                         new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
