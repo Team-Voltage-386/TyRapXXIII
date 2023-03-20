@@ -57,6 +57,7 @@ public class Balance extends CommandBase {
         //BALANCE SYSTEM
         boolean isBalanced = false;
 
+        //sets timer to zero unless youre within balance target. essentially starting timer when youre balanced.
         if(Math.abs(dt.ypr[2]) <= balanceTarget) {
             if(!isBalanced) {
                 isBalanced = true;
