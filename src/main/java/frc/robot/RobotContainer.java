@@ -81,15 +81,19 @@ public class RobotContainer {
         autoChooser.addOption("TuningSquare", autos.TuningSquare);
         autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
         autoChooser.addOption("Place and Balance No Mobility", autos.placeAndBalanceNoMobility);
+
         //LC Auto
         autoChooser.addOption("RIGHT SIDE: Score cone mid and score cube mid", autos.TwoPieceAutoRight_1);
         autoChooser.addOption("LEFT SIDE: Score cone mid and score cube mid", autos.TwoPieceAutoLeft_1);
 
         autoChooser.addOption("RIGHT SIDE: Score cone mid and score cube low", autos.TwoPieceAutoRight_2);
         autoChooser.addOption("LEFT SIDE: Score cone mid and score cube low", autos.TwoPieceAutoLeft_2);
-        
+
         autoChooser.addOption("RIGHT SIDE: Score cone high and score cube low", autos.TwoPieceAutoRight_3);
         autoChooser.addOption("LEFT SIDE: Score cone high and score cube low", autos.TwoPieceAutoLeft_3);
+
+        autoChooser.addOption("RIGHT SIDE: Score cube mid and score cube low", autos.TwoPieceAutoRight_4);
+        autoChooser.addOption("LEFT SIDE: Score cube mid and score cube low", autos.TwoPieceAutoLeft_4);
 
         autoChooser.addOption("EXPERIMENTAL slowdown two cube auto", autos.EXP_TwoPieceAuto_CubeMidCubeLow);
 
@@ -292,13 +296,12 @@ public class RobotContainer {
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
                         new Drive(4.9, 0.4, 180, m_driveTrain)),
-                // stow and come back, turn to point at cube mid
+                // stow and come back
                 new ParallelCommandGroup(
                         new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
                         new Drive(0.1, 0, 0, m_driveTrain)),
-                // shoot cube and stow
-                new ParallelCommandGroup(new HandTasks(false, handIntakeStates.letitgo, HandControls),
-                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
+                // score cube
+                new HandTasks(false, handIntakeStates.letitgo, HandControls)
         );
 
         /**Score cone mid and score cube low */
@@ -314,13 +317,12 @@ public class RobotContainer {
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
                         new Drive(4.9, -0.4, 180, m_driveTrain)),
-                // stow and come back, turn to point at cube mid
+                // stow and come back
                 new ParallelCommandGroup(
                         new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
                         new Drive(0.1, 0, 0, m_driveTrain)),
-                // shoot cube and stow
-                new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
-                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
+                // score cube
+                new HandTasks(false, handIntakeStates.letitgo, HandControls)
         );
 
         //*Score cone high and cube low */
@@ -336,13 +338,12 @@ public class RobotContainer {
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
                         new Drive(4.9, 0.4, 180, m_driveTrain)),
-                // stow and come back, turn to point at cube mid
+                // stow and come back
                 new ParallelCommandGroup(
                         new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
                         new Drive(0.1, 0, 0, m_driveTrain)),
-                // shoot cube and stow
-                new ParallelCommandGroup(new HandTasks(false, handIntakeStates.letitgo, HandControls),
-                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
+                // score cube and stow
+                new HandTasks(false, handIntakeStates.letitgo, HandControls)
         );
 
         //*Score cone high and cube low */
@@ -358,14 +359,59 @@ public class RobotContainer {
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
                         new Drive(4.9, -0.4, 180, m_driveTrain)),
-                // stow and come back, turn to point at cube mid
+                // stow and come back
                 new ParallelCommandGroup(
                         new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
                         new Drive(0.1, 0, 0, m_driveTrain)),
-                // shoot cube and stow
-                new ParallelCommandGroup(new HandTasks(false, handIntakeStates.letitgo, HandControls),
-                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
+                // score cube and stow
+                new HandTasks(false, handIntakeStates.letitgo, HandControls)
         );
+
+        //*Score cube mid and cube low */
+        public final Command TwoPieceAutoRight_4 = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+                new SetConemode(false),
+                // score cube mid
+                new HandTasks(false, handIntakeStates.stow, HandControls),
+                new ArmDo(m_Arm, kfseqCubeStowToCubeMid),
+                new HandTasks(false, handIntakeStates.letitgo, HandControls),
+                // stow and go pick up cube
+                new ParallelCommandGroup(
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubeMidtoCubeStow),
+                               new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
+                        new Drive(4.9, 0.4, 180, m_driveTrain)),
+                // stow and come back
+                new ParallelCommandGroup(
+                        new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
+                        new Drive(0.1, 0, 0, m_driveTrain)),
+                // score cube low
+                new HandTasks(false, handIntakeStates.letitgo, HandControls)
+        );
+
+        //*Score cube mid and cube low */
+        public final Command TwoPieceAutoLeft_4 = new SequentialCommandGroup(
+                new ZeroOdo(0, 0, 0, m_driveTrain),
+                new SetConemode(false),
+                // score cube mid
+                new HandTasks(false, handIntakeStates.stow, HandControls),
+                new ArmDo(m_Arm, kfseqCubeStowToCubeMid),
+                new HandTasks(false, handIntakeStates.letitgo, HandControls),
+                // stow and go pick up cube
+                new ParallelCommandGroup(
+                        new SequentialCommandGroup(new ArmDo(m_Arm, kfseqCubeMidtoCubeStow),
+                               new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
+                        new Drive(4.9, -0.4, 180, m_driveTrain)),
+                // stow and come back
+                new ParallelCommandGroup(
+                        new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
+                        new Drive(0.1, 0, 0, m_driveTrain)),
+                // score cube low
+                new HandTasks(false, handIntakeStates.letitgo, HandControls)
+        );
+
+
+
+
 
         //*EXPERIMENTAL Cube mid and cube low */
         public final Command EXP_TwoPieceAuto_CubeMidCubeLow = new SequentialCommandGroup(
@@ -382,13 +428,12 @@ public class RobotContainer {
                         new Drive(4.5, 0.4, 180, m_driveTrain)),
                 //EXP this is what the experiment is abt, slows down as it approaches the cube, hopefully to pick it up more consistently
                 new DriveAtSpeed(4.9, 0.4, 180, 0.66, m_driveTrain),
-                // stow and come back, turn to point at cube mid
+                // stow and come back
                 new ParallelCommandGroup(
                         new ArmDo(m_Arm, kfseqCubePickuptoCubeStow),
                         new Drive(0.1, 0, 0, m_driveTrain)),
-                // shoot cube and stow
-                new ParallelCommandGroup(new HandTasks(false, handIntakeStates.letitgo, HandControls),
-                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
+                // score cube
+                new HandTasks(false, handIntakeStates.letitgo, HandControls)
         );
 
 
