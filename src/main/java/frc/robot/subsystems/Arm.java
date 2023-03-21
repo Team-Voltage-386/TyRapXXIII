@@ -118,12 +118,11 @@ public class Arm extends SubsystemBase {
         // THE REAL STUFF
         ShoulderFeedForwardTarget = getLocalArmAngles()[0];
         ElbowFeedForwardTarget = getLocalArmAngles()[1];
+
+        // ShoulderFeedForwardTarget = -45;// comment this out later OR ELSE
+        // ElbowFeedForwardTarget = 45;// comment this out later OR ELSE
         ShoulderFeedBackTarget = ShoulderFeedForwardTarget;
         ElbowFeedBackTarget = ElbowFeedForwardTarget;
-        // ShoulderFeedBackTarget=-90;
-        // ElbowFeedBackTarget=90;
-        // ShoulderFeedForwardTarget = -90;// comment this out later OR ELSE
-        // ElbowFeedForwardTarget = 90;// comment this out later OR ELSE
 
         ShoulderVelocityTarget = 0;
         ElbowVelocityTarget = 0;// MAKE THIS ZERO
@@ -224,10 +223,10 @@ public class Arm extends SubsystemBase {
     public void ArmDrive() {
         double ElbowFeedBackCalculation = 0;
         double ShoulderFeedBackCalculation = 0;
-        if (!atFeedBackTargets()) {
-            ElbowFeedBackCalculation = ElbowFeedBack.calculate(ElbowFeedBackTarget, getLocalArmAngles()[1]);
-            ShoulderFeedBackCalculation = ShoulderFeedBack.calculate(ShoulderFeedBackTarget, getLocalArmAngles()[0]);
-        }
+        // if (!atFeedBackTargets()) {
+        ElbowFeedBackCalculation = ElbowFeedBack.calculate(getLocalArmAngles()[1], ElbowFeedBackTarget);
+        ShoulderFeedBackCalculation = ShoulderFeedBack.calculate(getLocalArmAngles()[0], ShoulderFeedBackTarget);
+        // }
         // if (Math.abs(elbowErr) > 15)
         // ElbowFeedForward.integralAcc = 0;
         // if (Math.abs(shouldErr) > 15)
@@ -275,7 +274,7 @@ public class Arm extends SubsystemBase {
                                         Math.toRadians(ShoulderVelocityTarget),
                                         Math.toRadians(ShoulderAccelerationTarget))
                                         +
-                                        ShoulderFeedBack.calculate(ShoulderFeedBackCalculation)),
+                                        ShoulderFeedBackCalculation),
 
                                 getLocalArmAngles()[0], kShoulderSafezone),
                         -PSDShoulderMaxVoltage.get(), PSDShoulderMaxVoltage.get())));
@@ -357,11 +356,16 @@ public class Arm extends SubsystemBase {
                             nextKeyframe.getKeyFrameAngles()[0], nextKeyframe.substepsToHere)[2],
                     generatePVATrajectories(lastKeyframe.getKeyFrameAngles()[1],
                             nextKeyframe.getKeyFrameAngles()[1], nextKeyframe.substepsToHere)[2]);
-
             sequenceIndex++;
         }
         // at end
         else if (keyFrameIndex >= keyFrameSequence.length) {
+            ShoulderFeedForwardTarget = nextKeyframe.keyFrameAngles[0];
+            ElbowFeedForwardTarget = nextKeyframe.keyFrameAngles[1];
+            ShoulderVelocityTarget = 0;
+            ElbowVelocityTarget = 0;// MAKE THIS ZERO
+            ShoulderAccelerationTarget = 0;
+            ElbowAccelerationTarget = 0;
             lastKeyframe = nextKeyframe;
             // break, it is done
             runningKeyframesAndSequences = false;
@@ -369,7 +373,7 @@ public class Arm extends SubsystemBase {
         }
         // between keyframes
         else if (sequenceIndex != 0 && sequenceIndex < targetSequence.length) {
-            //
+
             ShoulderFeedForwardTarget = targetSequence[sequenceIndex][0];
             ElbowFeedForwardTarget = targetSequence[sequenceIndex][1];
 
@@ -379,10 +383,10 @@ public class Arm extends SubsystemBase {
             ShoulderAccelerationTarget = accelerationSequence[sequenceIndex][0];
             ElbowAccelerationTarget = accelerationSequence[sequenceIndex][1];
 
-            if (atFeedForwardtargets()) {
-                sequenceIndex++;
-            }
-            if (sequenceIndex >= targetSequence.length || atFeedBackTargets()) {
+            // if (atFeedForwardtargets()) {
+            sequenceIndex++;
+            // }
+            if (sequenceIndex >= targetSequence.length) {
                 sequenceIndex = 0;
                 keyFrameIndex++;
             }
@@ -391,6 +395,8 @@ public class Arm extends SubsystemBase {
         // always
         ElbowFeedBackTarget = nextKeyframe.keyFrameAngles[1];
         ShoulderFeedBackTarget = nextKeyframe.keyFrameAngles[0];
+        // ElbowFeedBackTarget=ElbowFeedForwardTarget;
+        // ShoulderFeedBackTarget=ShoulderFeedForwardTarget;
     }
 
     /**
