@@ -98,10 +98,9 @@ public class RobotContainer {
         autoChooser.addOption("RIGHT SIDE: Score cube high and score cube low", autos.TwoPieceAutoRight_5);
         autoChooser.addOption("LEFT SIDE: Score cube high and score cube low", autos.TwoPieceAutoLeft_5);
 
-        autoChooser.addOption("EXPERIMENTAL slowdown two cube auto", autos.EXP_TwoPieceAuto_CubeMidCubeLow);
-
-        autoChooser.addOption("Score cone mid and score cube low and balance", autos.TwoPieceAutoWithBalanceRight);
-        autoChooser.addOption("Place cube low and FastBalance", autos.placeCubeLowAndFastBalance);
+        autoChooser.addOption("EXPERIMENTAL RIGHT SIDE: slowdown two cube auto", autos.EXP_TwoPieceAuto_CubeMidCubeLow);
+        autoChooser.addOption("EXPERIMENTAL RIGHT SIDE: Score cone mid and score cube low and balance", autos.TwoPieceAutoWithBalanceRight);
+        autoChooser.addOption("EXPERIMENTAL MIDDLE: Place cube low and FastBalance", autos.placeCubeLowAndFastBalance);
         // autoChooser.addOption("Middle Auto", autos.test1);
         Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1).withPosition(4, 2);
     }
