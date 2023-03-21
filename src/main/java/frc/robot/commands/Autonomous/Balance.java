@@ -82,5 +82,4 @@ public class Balance extends CommandBase {
         System.out.println("Balancing done.");
         time.stop();
     }
-
 }
