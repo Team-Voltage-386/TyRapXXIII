@@ -505,12 +505,13 @@ public class RobotContainer {
                 // score cone mid
                 new HandTasks(true, handIntakeStates.stow, HandControls),
                 new ArmDo(m_Arm, kfseqConeStowToConeMid),
-                new HandTasks(false, handIntakeStates.letitgo, HandControls),
+                new HandTasks(false, handIntakeStates.doNothing, HandControls),
                 // stow and go pick up cube
                 new SetConemode(false),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(new ArmDo(m_Arm, kfseqConeMidtoCubeStow),
-                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup)),
+                                new ArmDo(m_Arm, kfseqCubeStowToCubePickup),
+                                new HandTasks(false, handIntakeStates.intake, HandControls)),
                         new Drive(4.9, 0.4, 0, m_driveTrain)),
                 // stow and come back, turn to point at cube mid
                 new ParallelCommandGroup(
