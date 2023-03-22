@@ -154,23 +154,27 @@ public final class Constants {
                 public static final PersistentShufflableDouble PSDArmTolerace = new PersistentShufflableDouble(.5,
                                 "armThreshhold",
                                 "ArmFF");
+                public static final double[] kShoulderFF = { 0, .85, 3.2, 0.05 };
                 public static PersistentShufflableDouble[] ShoulderFFPSDs = {
                                 new PersistentShufflableDouble(0.0, "WShoulderKS", "WAFV"),
                                 new PersistentShufflableDouble(0.0, "WShoulderKG", "WAFV"),
                                 new PersistentShufflableDouble(0.0, "WShoulderKV", "WAFV"),
                                 new PersistentShufflableDouble(0.0, "WShoulderKA", "WAFV")
                 };
+                public static final double[] kElbowFF = { 0, .685, 1.8, 0.05 };
                 public static PersistentShufflableDouble[] ElbowFFPSDs = {
                                 new PersistentShufflableDouble(0.0, "WElbowKS", "WAFV"),
                                 new PersistentShufflableDouble(0.0, "WElbowKG", "WAFV"),
                                 new PersistentShufflableDouble(0.0, "WElbowKV", "WAFV"),
                                 new PersistentShufflableDouble(0.0, "WElbowKA", "WAFV")
                 };
+                public static final double[] kShoulderPID = { 0.28, 0.05, 0.003 };
                 public static PersistentShufflableDouble[] ShoulderPIDPSDs = {
                                 new PersistentShufflableDouble(0, "WShoulderP", "WAFV"),
                                 new PersistentShufflableDouble(0, "WShoulderI", "WAFV"),
                                 new PersistentShufflableDouble(0, "WShoulderD", "WAFV")
                 };
+                public static final double[] kElbowPID = { 0.13, 0.01, 0.0015 };
                 public static PersistentShufflableDouble[] ElbowPIDPSDs = {
                                 new PersistentShufflableDouble(0, "WElbowP", "WAFV"),
                                 new PersistentShufflableDouble(0, "WElbowI", "WAFV"),
@@ -181,8 +185,6 @@ public final class Constants {
                 public static final double KStowPressVelocity = -.1;
                 public static final int KTrajectorySteps = 5;
                 public static final double kArmTolerance = 5; // 1;// in degrees
-                public static final double[] kArmShoulderPID = { .288, .12, .36, 0, 0 };
-                public static final double[] kArmElbowPID = { .12, .12, .3, -.36, 0 };
 
                 public static final double[] kShoulderSafezone = { -140, 20 };// lower limit is index 0, upper limit is
                                                                               // index 1

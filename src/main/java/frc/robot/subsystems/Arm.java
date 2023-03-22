@@ -92,25 +92,29 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
-        initializeFFPSD();
+        // initializeFFPSD();
         ShoulderFeedForward = new ArmFeedforward(
-                ShoulderFFPSDs[0].get(),
-                ShoulderFFPSDs[1].get(),
-                ShoulderFFPSDs[2].get(),
-                ShoulderFFPSDs[3].get());
+                kShoulderFF[0], // ShoulderFFPSDs[0].get(),
+                kShoulderFF[1], // ShoulderFFPSDs[1].get(),
+                kShoulderFF[2], // ShoulderFFPSDs[2].get(),
+                kShoulderFF[3] // ShoulderFFPSDs[3].get()
+        );
         ElbowFeedForward = new ArmFeedforward(
-                ElbowFFPSDs[0].get(),
-                ElbowFFPSDs[1].get(),
-                ElbowFFPSDs[2].get(),
-                ElbowFFPSDs[3].get());
+                kElbowFF[0], // ElbowFFPSDs[0].get(),
+                kElbowFF[1], // ElbowFFPSDs[1].get(),
+                kElbowFF[2], // ElbowFFPSDs[2].get(),
+                kElbowFF[3]// ElbowFFPSDs[3].get()
+        );
         ShoulderFeedBack = new PIDController(
-                ShoulderPIDPSDs[0].get(),
-                ShoulderPIDPSDs[1].get(),
-                ShoulderPIDPSDs[2].get());
+                kShoulderPID[0], // ShoulderPIDPSDs[0].get(),
+                kShoulderPID[1], // ShoulderPIDPSDs[1].get(),
+                kShoulderPID[2]// ShoulderPIDPSDs[2].get()
+        );
         ElbowFeedBack = new PIDController(
-                ElbowPIDPSDs[0].get(),
-                ElbowPIDPSDs[1].get(),
-                ElbowPIDPSDs[2].get());
+                kElbowPID[0], // ElbowPIDPSDs[0].get(),
+                kElbowPID[1], // ElbowPIDPSDs[1].get(),
+                kElbowPID[2]// ElbowPIDPSDs[2].get()
+        );
         ShoulderFeedBack.setTolerance(0);
         ElbowFeedBack.setTolerance(0);
         sequenceIndex = 0;
