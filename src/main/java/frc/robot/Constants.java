@@ -245,29 +245,29 @@ public final class Constants {
                                         // armKeyFrameStates.intermediary,7),
                                         new ArmKeyframe(new double[] { -84, 75 }, armKeyFrameStates.intermediary,
                                                         12),
-                                        new ArmKeyframe(new double[] { -90, 80 }, armKeyFrameStates.intermediary,
-                                        12),
+                                        // new ArmKeyframe(new double[] { -90, 80 }, armKeyFrameStates.intermediary,
+                                        // 12),
                                         new ArmKeyframe(new double[] { -115.2, 113 }, armKeyFrameStates.stowed,
                                                         12)
                         };
                         public static ArmKeyframe[] kfseqConeHightoCubeStow = {
                                         new ArmKeyframe(new double[] { 10, 15 }, armKeyFrameStates.intermediary, 50),
-                                        new ArmKeyframe(new double[] {-21.5,70}, armKeyFrameStates.intermediary, 50),
+                                        // new ArmKeyframe(new double[] { -21.5, 70 }, armKeyFrameStates.intermediary,
+                                        // 50),
                                         new ArmKeyframe(new double[] { -52.5, 105 }, armKeyFrameStates.intermediary,
-                                                        100),
-                                        new ArmKeyframe(new double[] { -90, 113 }, armKeyFrameStates.intermediary,
-                                        50),
-                                        new ArmKeyframe(new double[] { -115.2, 113 }, armKeyFrameStates.intermediary, 100),
-                                        new ArmKeyframe(new double[] { -115.2, 104 }, armKeyFrameStates.stowed, 100)
+                                                        50),
+                                        // new ArmKeyframe(new double[] { -90, 113 }, armKeyFrameStates.intermediary,
+                                        // 50),
+                                        new ArmKeyframe(new double[] { -115.2, 113 }, armKeyFrameStates.stowed, 50),
+                                        // new ArmKeyframe(new double[] { -115.2, 104 }, armKeyFrameStates.stowed, 50)
 
-                                        
                         };
                         public static ArmKeyframe[] kfseqConeMidtoCubeStow = {
                                         // new ArmKeyframe(new double[] { -55.5, 118 }, armKeyFrameStates.intermediary,
                                         // 7),
-                                        new ArmKeyframe(new double[] { -90, 113 }, armKeyFrameStates.intermediary,
-                                        50),
-                                        new ArmKeyframe(new double[] { -115.2, 
+                                        // new ArmKeyframe(new double[] { -90, 113 }, armKeyFrameStates.intermediary,
+                                        // 50),
+                                        new ArmKeyframe(new double[] { -115.2,
                                                         113 }, armKeyFrameStates.stowed, 100)
                         };
                         public static ArmKeyframe[] kfseqCubehightoCubeStow = {
@@ -311,8 +311,8 @@ public final class Constants {
                                         // 8),
                                         new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary,
                                                         50),
-                                        new ArmKeyframe(new double[] { 10, 90
-                                         }, armKeyFrameStates.intermediary, 50),
+                                        new ArmKeyframe(new double[] { 10, 20
+                                        }, armKeyFrameStates.intermediary, 50),
                                         new ArmKeyframe(new double[] { 0, 0 }, armKeyFrameStates.scoreConeHigh, 100),
 
                         };
