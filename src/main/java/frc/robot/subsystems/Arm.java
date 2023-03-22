@@ -111,7 +111,8 @@ public class Arm extends SubsystemBase {
                 ElbowPIDPSDs[0].get(),
                 ElbowPIDPSDs[1].get(),
                 ElbowPIDPSDs[2].get());
-
+        ShoulderFeedBack.setTolerance(0);
+        ElbowFeedBack.setTolerance(0);
         sequenceIndex = 0;
 
         updateShufflables();
@@ -223,7 +224,7 @@ public class Arm extends SubsystemBase {
     public void ArmDrive() {
         double ElbowFeedBackCalculation = 0;
         double ShoulderFeedBackCalculation = 0;
-        // if (!atFeedBackTargets()) {
+        // if (!atFeedBackTargets()&&!runningKeyframesAndSequences) {
         ElbowFeedBackCalculation = ElbowFeedBack.calculate(getLocalArmAngles()[1], ElbowFeedBackTarget);
         ShoulderFeedBackCalculation = ShoulderFeedBack.calculate(getLocalArmAngles()[0], ShoulderFeedBackTarget);
         // }
@@ -233,22 +234,24 @@ public class Arm extends SubsystemBase {
         // ShoulderFeedForward.integralAcc = 0;
         switch (nextKeyframe.keyFrameState) {
             case stowed:
-                // if (!runningKeyframesAndSequences) {
-                // // ElbowMotor.setVoltage(KStowPressVelocity);
-                // ElbowMotor.setVoltage(0);// FAKE // ElbowFeedForward.integralAcc = 0;
-                // } else {
-                ElbowMotor.setVoltage(
-                        clamp(
-                                safeZoneDrive(
-                                        (ElbowFeedForward.calculate(
-                                                Math.toRadians(spatialTargets()[1]),
-                                                Math.toRadians(ElbowVelocityTarget),
-                                                Math.toRadians(ElbowAccelerationTarget))
-                                                + ElbowFeedBackCalculation),
-                                        getLocalArmAngles()[1], kElbowSafezone),
-                                -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
-                // }
-                break;
+                if (!runningKeyframesAndSequences) {
+                    ElbowMotor.setVoltage(KStowPressVelocity);
+                    // ElbowMotor.setVoltage(0);// FAKE // ElbowFeedForward.integralAcc = 0;
+                    break;
+                }
+                // else {
+                // ElbowMotor.setVoltage(
+                // clamp(
+                // safeZoneDrive(
+                // (ElbowFeedForward.calculate(
+                // Math.toRadians(spatialTargets()[1]),
+                // Math.toRadians(ElbowVelocityTarget),
+                // Math.toRadians(ElbowAccelerationTarget))
+                // + ElbowFeedBackCalculation),
+                // getLocalArmAngles()[1], kElbowSafezone),
+                // -PSDElbowMaxVoltage.get(), PSDElbowMaxVoltage.get()));
+                // // }
+                // break;
             default:
                 ElbowMotor.setVoltage(
                         clamp(
@@ -393,8 +396,8 @@ public class Arm extends SubsystemBase {
         }
 
         // always
-        ElbowFeedBackTarget = nextKeyframe.keyFrameAngles[1];
-        ShoulderFeedBackTarget = nextKeyframe.keyFrameAngles[0];
+        ElbowFeedBackTarget = ElbowFeedForwardTarget;
+        ShoulderFeedBackTarget = ShoulderFeedForwardTarget;
         // ElbowFeedBackTarget=ElbowFeedForwardTarget;
         // ShoulderFeedBackTarget=ShoulderFeedForwardTarget;
     }
