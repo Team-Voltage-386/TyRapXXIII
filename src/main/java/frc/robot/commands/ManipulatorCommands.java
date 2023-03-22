@@ -169,9 +169,11 @@ public class ManipulatorCommands extends CommandBase {
         // change elbow angle if wrist is rotated
         if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
           if (m_hand.handPosition != 0) {
-            m_arm.ElbowTarget = kElbowWristedPickup;
+            m_arm.ElbowFeedForwardTarget = kElbowWristedPickup;
+            m_arm.ElbowFeedBackTarget = kElbowWristedPickup;
           } else {
-            m_arm.ElbowTarget = kElbowPickupNormal;
+            m_arm.ElbowFeedForwardTarget= kElbowPickupNormal;
+            m_arm.ElbowFeedBackTarget = kElbowPickupNormal;
           }
         }
         // intake motors
