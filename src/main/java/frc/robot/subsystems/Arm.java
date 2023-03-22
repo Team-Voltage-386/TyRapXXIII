@@ -525,6 +525,14 @@ public class Arm extends SubsystemBase {
         return false;
     }
 
+    public void overrideSequence(ArmKeyframe[] inputKeyFrames){
+        keyFrameIndex = 0;
+        sequenceIndex = 0;
+        keyFrameSequence = inputKeyFrames;
+        runningKeyframesAndSequences = true;
+        armIsAtTarget = false;
+    }
+
     // /**
     // * @deprecated
     // * alternative to arm drive, but arm P is not proportional and only
