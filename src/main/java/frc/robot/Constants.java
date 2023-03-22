@@ -318,6 +318,16 @@ public final class Constants {
                                         new ArmKeyframe(new double[] { 0, 0 }, armKeyFrameStates.scoreConeHigh, 100),
 
                         };
+                        public static ArmKeyframe[] kfseqConeStowToConeHighHover = {
+                                        new ArmKeyframe(new double[] { -115.2, 110 }, armKeyFrameStates.intermediary,
+                                                        7),
+                                        // new ArmKeyframe(new double[] { -99, 119 }, armKeyFrameStates.intermediary,
+                                        // 8),
+                                        new ArmKeyframe(new double[] { -52.5, 125 }, armKeyFrameStates.intermediary,
+                                                        50),
+                                        new ArmKeyframe(new double[] { 10, 20
+                                        }, armKeyFrameStates.intermediary, 50),
+                        };
                 }
         }
 
