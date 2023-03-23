@@ -96,8 +96,14 @@ public class ManipulatorCommands extends CommandBase {
           case scoreCubeHigh:
             m_arm.setKeyFrameSequence(kfseqCubehightoCubeStow);
             break;
+          case hoverConeMid:
+            m_arm.setKeyFrameSequence(kfseqConeMidtoCubeStow);
+            break;
           case scoreConeMid:
             m_arm.setKeyFrameSequence(kfseqConeMidtoCubeStow);
+            break;
+          case hoverConeHigh:
+            m_arm.setKeyFrameSequence(kfseqConeHightoCubeStow);
             break;
           case scoreConeHigh:
             m_arm.setKeyFrameSequence(kfseqConeHightoCubeStow);
@@ -247,9 +253,8 @@ public class ManipulatorCommands extends CommandBase {
         }
         // hand tasks
         // intake motors
-        if (kManipulator.getRawAxis(kRightTrigger) > kDeadband &&
-            !(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.hoverConeHigh
-                || m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.hoverConeMid)) {
+        if (kManipulator.getRawAxis(kRightTrigger) > kDeadband && !m_arm.runningKeyframesAndSequences && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.hoverConeHigh
+                && m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.hoverConeMid) {
           if (!ConeMode) {
             m_hand.IntakeMotorControl(handIntakeStates.letitgo);
           } else {
