@@ -2,7 +2,7 @@ package frc.robot.utils;
 
 public class ArmKeyframe {
     public static enum armKeyFrameStates {
-        stowed, score, pickup, intermediary, scoreCubeMid, scoreCubeHigh, scoreConeMid, scoreConeHigh, hoverConeHigh, hoverConeMid
+        stowed, score, pickup, intermediary, scoreCubeMid, scoreCubeHigh, scoreConeMid, scoreConeHigh
     }
 
     public double[] keyFrameAngles;
