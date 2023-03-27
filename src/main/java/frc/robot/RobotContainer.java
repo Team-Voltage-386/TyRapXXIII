@@ -260,7 +260,7 @@ public class RobotContainer {
                         new Drive(0.2, 0, 37.5, m_driveTrain)),
                 //shoot cube and stow
                 new ParallelCommandGroup(new HandTasks(false, handIntakeStates.shoot, HandControls),
-                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))
+                        new ArmDo(m_Arm, kfseqCubeMidtoCubeStow))  
         );
 
         /**Score cone mid and score cube mid */
