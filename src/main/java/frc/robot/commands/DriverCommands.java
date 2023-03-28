@@ -111,7 +111,7 @@ public class DriverCommands extends CommandBase {
         
         //SHOULD lock robot onto a point specified in the call, robot should always be facing towards this point, no matter where the robot is.
         if(kDriver.getRawButton(kA))
-            driveTrain.aimbot(6, 0);
+            driveTrain.aimbot(6, 1);
     }
 
     @Override
