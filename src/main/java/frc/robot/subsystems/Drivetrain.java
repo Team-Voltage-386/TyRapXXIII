@@ -179,6 +179,15 @@ public class Drivetrain extends SubsystemBase {
         return Math.sqrt(Math.pow(x - xPos, 2) + Math.pow(y - yPos, 2));
     }
 
+    public void aimbot(double xPosTarg, double yPosTarg) {
+        double angleToTarget = Math.toDegrees(Math.tanh((yPos - yPosTarg)/(xPos - xPosTarg)));
+        rotationTarget = angleToTarget;
+
+        //double distanceToTarget = distanceTo(xPosTarg, yPosTarg);
+        //double shootSpeed = Math.pow(distanceToTarget, 2);
+        //shoot thingy at shootSpeed
+    }
+
     public double getHeadingError(double h) {
         double res = h - getRawHeading() - 180;
         if (360-Math.abs(res)<10)
