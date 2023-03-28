@@ -179,6 +179,7 @@ public class Drivetrain extends SubsystemBase {
         return Math.sqrt(Math.pow(x - xPos, 2) + Math.pow(y - yPos, 2));
     }
 
+    /**Locks robot onto specified point on feild. Robot should face this point no matter the position, eliminates human error when aiming. */
     public void aimbot(double xPosTarg, double yPosTarg) {
         double angleToTarget = Math.toDegrees(Math.tanh((yPos - yPosTarg)/(xPos - xPosTarg)));
         rotationTarget = angleToTarget;

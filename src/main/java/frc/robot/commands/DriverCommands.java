@@ -108,6 +108,10 @@ public class DriverCommands extends CommandBase {
 
         if (kDriver.getRawButtonPressed(kRightBumper))
             driveTrain.resetFO();
+        
+        //SHOULD lock robot onto a point specified in the call, robot should always be facing towards this point, no matter where the robot is.
+        if(kDriver.getRawButton(kA))
+            driveTrain.aimbot(6, 0);
     }
 
     @Override
