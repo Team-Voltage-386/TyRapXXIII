@@ -100,6 +100,24 @@ public class SwerveModule {
         return res;
     }
 
+    private double getSwerveHeadingError(double toTarget) {
+        double res = toTarget - getEncoderPosition();
+        while (res < -180)
+            res += 360;
+        while (res > 180)
+            res -= 360;
+        if (Math.abs(res) > 90) {
+            driveMult = -1;
+            if (res > 0)
+                res -= 180;
+            else
+                res += 180;
+        } else {
+            driveMult = 1;
+        }
+        return res;
+    }
+
     public void drive() {
         updateWidget();
 
@@ -107,6 +125,15 @@ public class SwerveModule {
 
         driveMotor.set(mapValue(getSwerveHeadingError(), 0, 180, 1, 0)
                 * drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
+    }
+
+    public void set(double anglularVelo, double wheelAngle) {
+        updateWidget();
+        
+        steerMotor.set(steerPID.calc(getSwerveHeadingError(wheelAngle)));
+
+        driveMotor.set(mapValue(getSwerveHeadingError(wheelAngle), 0, 180, 1, 0)
+                * drivePID.calc((driveMult * anglularVelo) - driveMotor.getEncoder().getVelocity()));
     }
 
     public void reset() {

@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -46,6 +47,7 @@ import javax.swing.plaf.TreeUI;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -114,19 +116,23 @@ public class RobotContainer {
         return m_teleop;
     }
 
-    private void configureAutoCommands() {
-        Constants.AutoConstants.autoEventMap.put("event1", new PrintCommand("passed marker 1"));
-        Constants.AutoConstants.autoEventMap.put("event2", new PrintCommand("passed marker 2"));
+//     private void configureAutoCommands() {
+//         Constants.AutoConstants.autoEventMap.put("event1", new PrintCommand("passed marker 1"));
+//         Constants.AutoConstants.autoEventMap.put("event2", new PrintCommand("passed marker 2"));
 
-        //build auto path cmds
-        ArrayList<PathPlannerTrajectory> auto1paths =
-                (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup(
-                        "testpaths1",
-                        4, 
-                        2
-                );
-        Command autotest =
-    }
+//         //build auto path cmds
+//         ArrayList<PathPlannerTrajectory> auto1paths =
+//                 (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup(
+//                         "testpaths1",
+//                         4, 
+//                         2
+//                 );
+//         Command autotest = new SequentialCommandGroup(
+//                 new FollowPathWithEvents(
+                        
+//                 ),
+//         );
+//     }
 
     public final class AutoRoutines {
 
