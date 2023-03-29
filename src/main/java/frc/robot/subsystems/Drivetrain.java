@@ -53,6 +53,10 @@ public class Drivetrain extends SubsystemBase {
     public Translation2d[] swerveLocations = {new Translation2d(0, 0), new Translation2d(2, 0), new Translation2d(2, 2), new Translation2d(0, 2)};
     private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(swerveLocations);
 
+    //PPposition
+    private Rotation2d roboRotation;
+    private Translation2d roboTranslation;
+    private Pose2d roboPose;
     public Drivetrain() {
         this.init();
     }
@@ -116,33 +120,37 @@ public class Drivetrain extends SubsystemBase {
             for (SwerveModule swerve : modules) // diagnosing tool, delete later
                 swerve.updateWidget();// diagnosing tool, delete later
         }
+        
+        roboRotation = new Rotation2d(angle);
+        roboTranslation = new Translation2d(xPos, yPos);
+        roboPose = new Pose2d(roboTranslation, roboRotation);
 
         updateWidget();
     }
 
-    //private Supplier<Pose2d> poseSupplier = () -> new Pose2d(xPos, yPos, new Rotation2d(xPos, yPos));
+    private Supplier<Pose2d> poseSupplier = () -> new Pose2d(xPos, yPos, new Rotation2d(xPos, yPos));
 
-    // public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-    //     return new SequentialCommandGroup(
-    //         new InstantCommand(() -> {
-    //         // Reset odometry for the first path you run during auto
-    //         if(isFirstPath){
-    //             this.resetOdometry(traj.getInitialHolonomicPose());
-    //         }
-    //         }),
-    //         new PPSwerveControllerCommand(
-    //             traj, 
-    //             this::poseSupplier.get(), // Pose supplier
-    //             this.kinematics, // SwerveDriveKinematics
-    //             new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-    //             new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
-    //             new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-    //             this::setModuleStates, // Module states consumer
-    //             true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-    //             this // Requires this drive subsystem
-    //         )
-    //     );
-    // }
+    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+            // Reset odometry for the first path you run during auto
+            if(isFirstPath){
+                this.resetOdometry(traj.getInitialHolonomicPose());
+            }
+            }),
+            new PPSwerveControllerCommand(
+                traj, 
+                this::poseSupplier.get(), // Pose supplier
+                this.kinematics, // SwerveDriveKinematics
+                new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+                new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                this::setModuleStates, // Module states consumer
+                true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                this // Requires this drive subsystem
+            )
+        );
+    }
 
     private void setModuleStates() {
 
