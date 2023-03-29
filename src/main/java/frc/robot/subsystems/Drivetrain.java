@@ -128,7 +128,14 @@ public class Drivetrain extends SubsystemBase {
         updateWidget();
     }
 
-    private Supplier<Pose2d> poseSupplier = () -> new Pose2d(xPos, yPos, new Rotation2d(xPos, yPos));
+    // private Supplier<Pose2d> poseSupplier() {
+    //     return () -> roboPose;
+    // }
+
+    private Pose2d poseSupplier() {
+        return roboPose;
+    }
+    
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
         return new SequentialCommandGroup(
@@ -140,7 +147,7 @@ public class Drivetrain extends SubsystemBase {
             }),
             new PPSwerveControllerCommand(
                 traj, 
-                this::poseSupplier.get(), // Pose supplier
+                this::poseSupplier, // Pose supplier
                 this.kinematics, // SwerveDriveKinematics
                 new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
                 new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
