@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.HashMap;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveModule;
@@ -123,6 +125,13 @@ public final class Constants {
                 // public static final SwerveModule RightRear = new SwerveModule(12, 16,
                 // kSwerveDriveEncConv, kSwerveSteerPID,
                 // kSwerveDrivePID, 22, -0.36, 0.26, 292);
+                public static final Translation2d[] SwerveLocations = {
+                        new Translation2d(0, 0), 
+                        new Translation2d(2, 0), 
+                        new Translation2d(2, 2), 
+                        new Translation2d(0, 2)};
+
+
                 public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
                                 kSwerveDrivePID, 24, 0.365125, -0.263525, 84.03, "LF");
