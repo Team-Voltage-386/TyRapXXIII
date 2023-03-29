@@ -115,8 +115,12 @@ public class Arm extends SubsystemBase {
                 kElbowPID[1], // ElbowPIDPSDs[1].get(),
                 kElbowPID[2]// ElbowPIDPSDs[2].get()
         );
+        // writePID();
         ShoulderFeedBack.setTolerance(0);
         ElbowFeedBack.setTolerance(0);
+        ShoulderFeedBack.setIntegratorRange(-.05, .05);
+        ElbowFeedBack.setIntegratorRange(-.1, .1);
+
         sequenceIndex = 0;
 
         updateShufflables();
@@ -149,6 +153,10 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
 
     public void periodic() {
+        // temp
+        // initializeFFPSD();
+        // writePID();
+
         limitLogic();
         setFlags();
         // fkCoords = forwardKinematics(getSpatialArmAngles(getLocalArmAngles()),
@@ -238,7 +246,7 @@ public class Arm extends SubsystemBase {
         // ShoulderFeedForward.integralAcc = 0;
         switch (nextKeyframe.keyFrameState) {
             case stowed:
-                if (!runningKeyframesAndSequences) {
+                if (!runningKeyframesAndSequences && doPressDown) {
                     ElbowMotor.setVoltage(KStowPressVelocity);
                     // ElbowMotor.setVoltage(0);// FAKE // ElbowFeedForward.integralAcc = 0;
                     break;
@@ -445,7 +453,7 @@ public class Arm extends SubsystemBase {
             case score:
                 handCanRotate = true;
                 break;
-            case pickup:
+            case pickupGround:
                 handCanRotate = true;
                 break;
             default:
@@ -730,6 +738,7 @@ public class Arm extends SubsystemBase {
     private GenericPublisher atTargetsWidget = armTab.add("atTargets", false).withPosition(5, 0).getEntry();
     private GenericPublisher runningKeyframesAndSequencesWidget = armTab.add("running", false).withPosition(4, 0)
             .getEntry();
+            
 
     public GenericEntry ConeModeWidget = armTab.add("coneMode", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withProperties(Map.of("Color when true", "#FFFF00", "Color when false", "#9900FF")).withPosition(5, 1)
@@ -739,6 +748,8 @@ public class Arm extends SubsystemBase {
             .getEntry();
     public GenericEntry ElbowSpatialAngleWidget = armTab.add("ElbowSpatialAngle", 0.0).getEntry();
     public GenericEntry ElbowSpatialTargetWidget = armTab.add("ElbowSpatialTarget", 0.0).getEntry();
+    // public GenericPublisher ElbowIntegratorWidget = armTab.add("ElbowIntegrator", 0.0).getEntry();
+
     // for Main tab
     public GenericEntry mainTabConeModeWidget = mainTab.add("ConeMode", false).withWidget(BuiltInWidgets.kBooleanBox)
             .withSize(2, 2)
@@ -796,6 +807,7 @@ public class Arm extends SubsystemBase {
         ConeModeWidget.setBoolean(ConeMode);
         runningKeyframesAndSequencesWidget.setBoolean(runningKeyframesAndSequences);
         scoreHighWidget.setBoolean(scoreHighTarget);
+        // ElbowIntegratorWidget.setDouble(ElbowFeedBack);
         // main tab widgets
         mainTabConeModeWidget.setBoolean(ConeMode);
         mainTabscoreHighWidget.setBoolean(scoreHighTarget);
@@ -840,6 +852,15 @@ public class Arm extends SubsystemBase {
                 i.subscribeAndSet();
             }
         }
+    }
+
+    public void writePID() {
+        ElbowFeedBack.setP(ElbowPIDPSDs[0].get());
+        ElbowFeedBack.setI(ElbowPIDPSDs[1].get());
+        ElbowFeedBack.setD(ElbowPIDPSDs[2].get());
+        ShoulderFeedBack.setP(ShoulderPIDPSDs[0].get());
+        ShoulderFeedBack.setI(ShoulderPIDPSDs[1].get());
+        ShoulderFeedBack.setD(ShoulderPIDPSDs[2].get());
     }
 
 }

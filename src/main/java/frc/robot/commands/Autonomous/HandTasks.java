@@ -34,6 +34,7 @@ public class HandTasks extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_hand.ChangeMode();
     m_hand.IntakeMotorControl(m_IntakeState);
     if (m_clawClose) {
       m_hand.pcmCompressor.set((Value.kForward));

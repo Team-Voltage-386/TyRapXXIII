@@ -20,6 +20,8 @@ import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.PersistentShufflableDouble;
+
 import static frc.robot.Constants.HandConstants.*;
 import static frc.robot.utils.Flags.*;
 
@@ -27,8 +29,11 @@ import com.ctre.phoenix.motorcontrol.MotorCommutation;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import static frc.robot.Constants.*;
+import static frc.robot.utils.mapping.*;
+
 import static frc.robot.utils.Flags.*;
 
 public class Hand extends SubsystemBase {
@@ -47,6 +52,8 @@ public class Hand extends SubsystemBase {
 
     boolean handTurningClockwise;
     double targHandPos = 0;
+    public double wristTarget;
+    public PIDController wristPIDController;
 
     // Declaration of motors and pnumatics
     public DoubleSolenoid pcmCompressor;
@@ -66,10 +73,16 @@ public class Hand extends SubsystemBase {
 
         RPickup = new CANSparkMax(HandConstants.kRightPickupID, MotorType.kBrushless);
         LPickup = new CANSparkMax(HandConstants.kLeftPickupID, MotorType.kBrushless);
+        wristPIDController = new PIDController(kWristPID[0], kWristPID[1], kWristPID[2]);
+        // temp
+        initializePID();
+        writePID();
     }
 
     @Override
     public void periodic() {
+        initializePID();
+        writePID();
         setHandMotor();
         runIntakeMotorState();
         updateWidgets();
@@ -114,9 +127,10 @@ public class Hand extends SubsystemBase {
             ejectSpeed = -kCubeIntakeSpeed - .2;
             stowSpeed = kCubeStowSpeed;
         }
-        
+
     }
-    private void runIntakeMotorState(){
+
+    private void runIntakeMotorState() {
         switch (intakeCurrentTask) {
             case intake:
                 RPickup.set(intakeSpeed);
@@ -143,12 +157,36 @@ public class Hand extends SubsystemBase {
     }
 
     private void setHandMotor() {
+        // double maxPower = kMaxWristPower;
+        // double minPower = -kMaxWristPower;
+        // wristTarget = 0;
+        // if (handCanRotate && ConeMode) {
+        // if (handPosition == -1)
+        // wristTarget = -kWristSideTargetAngle;
+        // else if (handPosition == 1)
+        // wristTarget = kWristSideTargetAngle;
+        // }
+        // if (getHandLimitSwitch()) {
+        // //upper limit
+        // if (getWristAngle() > 0) {
+        // maxPower = 0;
+        // } else {
+        // minPower = 0;
+        // }
+        // }
+        // HandRotationalMotor.set(ControlMode.PercentOutput,
+        // clamp(wristPIDController.calculate(getWristAngle(),
+        // wristTarget), minPower, maxPower));
+
+        // old
         if (handCanRotate) {
             if (handPosition == 1 && !getHandLimitSwitch() && getWristAngle() < 75) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
-            } else if (handPosition == 0 && getWristAngle() > 0 && !canRetract() && !getHandLimitSwitch()) {
+            } else if (handPosition == 0 && getWristAngle() > 0 && !canRetract() &&
+                    !getHandLimitSwitch()) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
-            } else if (handPosition == 0 && getWristAngle() < 0 && !canRetract() && !getHandLimitSwitch()) {
+            } else if (handPosition == 0 && getWristAngle() < 0 && !canRetract() &&
+                    !getHandLimitSwitch()) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, -kRotationSpeed);
             } else if (handPosition == -1 && !getHandLimitSwitch() && getWristAngle() > -75) {
                 HandRotationalMotor.set(ControlMode.PercentOutput, kRotationSpeed);
@@ -161,8 +199,7 @@ public class Hand extends SubsystemBase {
             } else {
                 HandRotationalMotor.set(ControlMode.PercentOutput, 0);
             }
-        }
-        else {
+        } else {
             HandRotationalMotor.set(ControlMode.PercentOutput, 0);
         }
     }
@@ -185,7 +222,7 @@ public class Hand extends SubsystemBase {
         }
     }
 
-    // Returns true when the limit switch hits its limit
+    /** Returns true when the limit switch hits its limit */
     public boolean getHandLimitSwitch() {
         return !HandLimitSwitch.get();
     }
@@ -228,5 +265,18 @@ public class Hand extends SubsystemBase {
         CurrentR.setDouble(RPickup.getOutputCurrent());
         CurrentL.setDouble(LPickup.getOutputCurrent());
         handIntakeTask.setString(whatIsIntakeDoing());
+    }
+
+    private void initializePID() {
+        for (PersistentShufflableDouble i : WristPIDPSDs) {
+            if (i.detectChanges())
+                i.subscribeAndSet();
+        }
+    }
+
+    private void writePID() {
+        wristPIDController.setP(WristPIDPSDs[0].get());
+        wristPIDController.setI(WristPIDPSDs[1].get());
+        wristPIDController.setD(WristPIDPSDs[2].get());
     }
 }

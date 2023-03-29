@@ -14,7 +14,9 @@ public class Flags {
     public static boolean ConeMode=true;
     public static boolean handCanRotate=false;
     public static boolean scoreHighTarget=true;
-    public static boolean armIsAtTarget=false;
+    public static boolean armIsAtTarget = false;
+    public static boolean doChute = false;
+    public static boolean doPressDown = true;
     public static subsystemsStates manipulatorSetState = subsystemsStates.runStow;
 
     public static enum subsystemsStates {

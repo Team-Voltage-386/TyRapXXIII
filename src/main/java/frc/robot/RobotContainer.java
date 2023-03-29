@@ -77,10 +77,10 @@ public class RobotContainer {
         autoChooser.addOption("test4", autos.test4);
         autoChooser.addOption("Logic Balance FACE FORWARD", autos.logicBalance);
         autoChooser.addOption("Drive Until", autos.driveUntil);
-        autoChooser.addOption("Place and Balance", autos.placeAndBalance);
+        autoChooser.addOption("Place Cube Low and Balance", autos.placeAndBalance);
         autoChooser.addOption("TuningSquare", autos.TuningSquare);
-        autoChooser.addOption("Place and Cross Line", autos.placeAndCrossLine);
-        autoChooser.addOption("Place and Balance No Mobility", autos.placeAndBalanceNoMobility);
+        autoChooser.addOption("Place Cone High and Cross Line", autos.placeAndCrossLine);
+        autoChooser.addOption("Place Cube Low and Balance No Mobility", autos.placeAndBalanceNoMobility);
         // autoChooser.addOption("Middle Auto", autos.test1);
         Shuffleboard.getTab("Main").add("AutoRoutine", autoChooser).withSize(3, 1).withPosition(4, 2);
     }
