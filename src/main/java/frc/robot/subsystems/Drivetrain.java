@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.DriveConstants.*;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
@@ -118,6 +120,8 @@ public class Drivetrain extends SubsystemBase {
         updateWidget();
     }
 
+    private Supplier<Pose2d> poseSupplier = () -> new Pose2d(xPos, yPos, new Rotation2d(xPos, yPos));
+
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
         return new SequentialCommandGroup(
             new InstantCommand(() -> {
@@ -128,7 +132,7 @@ public class Drivetrain extends SubsystemBase {
             }),
             new PPSwerveControllerCommand(
                 traj, 
-                this::getPose, // Pose supplier
+                this::poseSupplier.get(), // Pose supplier
                 this.kinematics, // SwerveDriveKinematics
                 new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
                 new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
@@ -140,8 +144,8 @@ public class Drivetrain extends SubsystemBase {
         );
     }
 
-    private Pose2d getPose() {
-        return new Pose2d(xPos, yPos, new Rotation2d(xPos, yPos));
+    private void setModuleStates() {
+
     }
 
     private void resetOdometry(Pose2d initialHolonomicPose) {
