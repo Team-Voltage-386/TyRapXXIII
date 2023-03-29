@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.AutoConstants.*;
 import frc.robot.commands.DriverCommands;
 import frc.robot.commands.Autonomous.Drive;
 import frc.robot.commands.Autonomous.DriveUntil;
@@ -33,11 +34,18 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
+
+import java.util.ArrayList;
+
 import javax.swing.plaf.TreeUI;
+
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -104,6 +112,20 @@ public class RobotContainer {
 
     public Command getTeleOp() {
         return m_teleop;
+    }
+
+    private void configureAutoCommands() {
+        Constants.AutoConstants.autoEventMap.put("event1", new PrintCommand("passed marker 1"));
+        Constants.AutoConstants.autoEventMap.put("event2", new PrintCommand("passed marker 2"));
+
+        //build auto path cmds
+        ArrayList<PathPlannerTrajectory> auto1paths =
+                (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup(
+                        "testpaths1",
+                        4, 
+                        2
+                );
+        Command autotest =
     }
 
     public final class AutoRoutines {

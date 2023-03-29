@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.utils.ArmKeyframe;
 import frc.robot.utils.PID;
@@ -52,6 +55,8 @@ public final class Constants {
         }
 
         public static final class AutoConstants {
+
+                public static final HashMap<String, Command> autoEventMap = new HashMap<>();
 
                 public static final double driveTolerance = 0.2;
                 public static final double headingTolerance = 90;

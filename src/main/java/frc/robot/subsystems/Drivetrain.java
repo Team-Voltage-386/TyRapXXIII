@@ -3,7 +3,14 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.DriveConstants.*;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,6 +18,11 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -35,6 +47,9 @@ public class Drivetrain extends SubsystemBase {
     public boolean doFieldOrientation = true;
 
     public SwerveModule[] modules = { RightFront, RightRear, LeftRear, LeftFront };
+
+    public Translation2d[] swerveLocations = {new Translation2d(0, 0), new Translation2d(2, 0), new Translation2d(2, 2), new Translation2d(0, 2)};
+    private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(swerveLocations);
 
     public Drivetrain() {
         this.init();
@@ -101,6 +116,36 @@ public class Drivetrain extends SubsystemBase {
         }
 
         updateWidget();
+    }
+
+    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+            // Reset odometry for the first path you run during auto
+            if(isFirstPath){
+                this.resetOdometry(traj.getInitialHolonomicPose());
+            }
+            }),
+            new PPSwerveControllerCommand(
+                traj, 
+                this::getPose, // Pose supplier
+                this.kinematics, // SwerveDriveKinematics
+                new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+                new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                this::setModuleStates, // Module states consumer
+                true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                this // Requires this drive subsystem
+            )
+        );
+    }
+
+    private Pose2d getPose() {
+        return new Pose2d(xPos, yPos, new Rotation2d(xPos, yPos));
+    }
+
+    private void resetOdometry(Pose2d initialHolonomicPose) {
+        feedBotPose(initialHolonomicPose.getX(), initialHolonomicPose.getY(), 180);
     }
 
     public double getRawHeading() {
