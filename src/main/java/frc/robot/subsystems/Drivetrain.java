@@ -137,43 +137,6 @@ public class Drivetrain extends SubsystemBase {
         updateWidget();
     }
 
-    // private Supplier<Pose2d> poseSupplier() {
-    //     return () -> roboPose;
-    // }
-
-    private Pose2d poseSupplier() {
-        return roboPose;
-    }
-
-    public ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotSpeed);
-    
-
-    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-        return new SequentialCommandGroup(
-            new InstantCommand(() -> {
-            // Reset odometry for the first path you run during auto
-            if(isFirstPath){
-                this.resetOdometry(traj.getInitialHolonomicPose());
-            }
-            }),
-            new PPSwerveControllerCommand(
-                traj, 
-                this::poseSupplier, // Pose supplier
-                this.kinematics, // SwerveDriveKinematics
-                new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-                new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
-                new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-                null,
-                true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-                this // Requires this drive subsystem
-            )
-        );
-    }
-
-    private void resetOdometry(Pose2d initialHolonomicPose) {
-        feedBotPose(initialHolonomicPose.getX(), initialHolonomicPose.getY(), 180);
-    }
-
     public double getRawHeading() {
         double y = ypr[0];
         while (y < 0)
