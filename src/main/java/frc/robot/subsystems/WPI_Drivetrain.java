@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -29,10 +30,40 @@ public class WPI_Drivetrain {
 
     public double ypr[] = new double[3];
 
-    public Pigeon2 IMU = new Pigeon2(kIMUid);
+    public Pigeon2 gyro = new Pigeon2(kIMUid);
 
     public boolean doFieldOrientation = true;
 
     public WPI_SwerveModule[] modules = { RightFrontWPI, RightRearWPI, LeftRearWPI, LeftFrontWPI};
+
+
+    public WPI_Drivetrain() {
+        //waits for gyro to calibrate before zeroing it.
+        //does this on a different thread as to no interupt current code.
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                zeroHeading();
+            } catch (Exception e) {
+            }
+        }).start();
+    }
+
+    //*zeros heading */
+    public void zeroHeading() {
+        gyro.setYaw(0);
+    }
     
+    public double getHeading() {
+        return Math.IEEEremainder((gyro.getYaw()), 360);
+    }
+
+    public Rotation2d getHeadingRotation2d() {
+        return Rotation2d.fromDegrees(getHeading());
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Robot Heading", getHeading());
+    }
 }
