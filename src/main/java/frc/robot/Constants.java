@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.WPI_SwerveModule;
 import frc.robot.utils.ArmKeyframe;
 import frc.robot.utils.PID;
 // import frc.robot.utils.PIDShufflable;
@@ -125,12 +126,6 @@ public final class Constants {
                 // public static final SwerveModule RightRear = new SwerveModule(12, 16,
                 // kSwerveDriveEncConv, kSwerveSteerPID,
                 // kSwerveDrivePID, 22, -0.36, 0.26, 292);
-                public static final Translation2d[] SwerveLocations = {
-                        new Translation2d(0, 0), 
-                        new Translation2d(2, 0), 
-                        new Translation2d(2, 2), 
-                        new Translation2d(0, 2)};
-
 
                 public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
@@ -144,6 +139,21 @@ public final class Constants {
                 public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
                                 kSwerveDrivePID, 22, -0.365125, 0.263525, 43.2, "RR");
+
+
+                //WPISwerves
+                public static final WPI_SwerveModule LeftFrontWPI = new WPI_SwerveModule(14, 18, kSwerveDriveEncConv,
+                                kSwerveSteerPID,
+                                kSwerveDrivePID, 24, 84.03, "LF");
+                public static final WPI_SwerveModule RightFrontWPI = new WPI_SwerveModule(11, 15, kSwerveDriveEncConv,
+                                kSwerveSteerPID,
+                                kSwerveDrivePID, 21, 210.05, "RF");
+                public static final WPI_SwerveModule LeftRearWPI = new WPI_SwerveModule(13, 17, kSwerveDriveEncConv,
+                                kSwerveSteerPID,
+                                kSwerveDrivePID, 23, 68.05, "LR");// faulty encoder offset
+                public static final WPI_SwerveModule RightRearWPI = new WPI_SwerveModule(12, 16, kSwerveDriveEncConv,
+                                kSwerveSteerPID,
+                                kSwerveDrivePID, 22, 43.2, "RR");
         }
 
         public static final class SmoothingConstants {

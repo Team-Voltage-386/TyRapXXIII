@@ -66,6 +66,7 @@ public class Drivetrain extends SubsystemBase {
     private Rotation2d roboRotation;
     private Translation2d roboTranslation;
     private Pose2d roboPose;
+    
     public Drivetrain() {
         this.init();
     }
