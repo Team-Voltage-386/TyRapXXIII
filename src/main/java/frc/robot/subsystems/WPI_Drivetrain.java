@@ -43,6 +43,7 @@ public class WPI_Drivetrain extends SubsystemBase{
         gyro.setYaw(0);
     }
     
+    //*get heading of robot in degrees*/
     public double getHeading() {
         return Math.IEEEremainder((gyro.getYaw()), 360);
     }
