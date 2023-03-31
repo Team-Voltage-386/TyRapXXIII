@@ -17,7 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import static frc.robot.Constants.ControllerConstants.*;
+import static frc.robot.Constants.DriveConstants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -35,18 +39,25 @@ public class RobotContainer {
     private final Limelight m_ll = new Limelight();
     private final LEDSubsystem m_LED = new LEDSubsystem();
 
-    private final WPI_Drive m_driverCommand = new WPI_Drive(m_driveTrain, );
-    public final Hand HandControls = new Hand();
-    private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls, m_LED);
-    private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand, m_manipulatorCommand);
-
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        
+        m_driveTrain.setDefaultCommand(new WPI_Drive(
+                m_driveTrain,
+                () -> -kDriver.getRawAxis(kLeftVertical),
+                () -> kDriver.getRawAxis(kLeftHorizontal),
+                () -> kDriver.getRawAxis(kRightHorizontal),
+                () -> !(kDriver.getRawAxis(kRightTrigger) < 0.5))
+        );
+
+        configureButtonBindings();
+    }
+
+    private void configureButtonBindings() {
+        new JoystickButton(kDriver, kB).whenPressed(() -> m_driveTrain.zeroHeading());
     }
 
     /**
