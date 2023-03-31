@@ -35,9 +35,15 @@ import static frc.robot.Constants.DriveConstants.*;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     public final WPI_Drivetrain m_driveTrain = new WPI_Drivetrain();
+    public final Drivetrain m_driveTrainOld = new Drivetrain();
     private final Arm m_Arm = new Arm();
     private final Limelight m_ll = new Limelight();
     private final LEDSubsystem m_LED = new LEDSubsystem();
+
+    private final DriverCommands m_driverCommand = new DriverCommands(m_driveTrainOld);
+    public final Hand HandControls = new Hand();
+    private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls, m_LED);
+    private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand, m_manipulatorCommand);
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
