@@ -6,16 +6,19 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 // import frc.robot.utils.PIDShufflable;
 import static frc.robot.utils.mapping.*;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.PID;
 
-public class WPI_SwerveModule {
+public class WPI_SwerveModule extends SubsystemBase{
 
     public final CANSparkMax turningMotor;
     public final CANSparkMax driveMotor;
@@ -27,6 +30,7 @@ public class WPI_SwerveModule {
     public final double encoderOffs;
     public double angleFromCenter;
     public double distFromCenter;
+    public SwerveModulePosition swerveModulePosition;
 
     public double targetSteer = 0;
     public double targetDrive = 0;
@@ -55,6 +59,7 @@ public class WPI_SwerveModule {
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);
         driveMotor.getEncoder().setVelocityConversionFactor(driveConversion);
         turningEncoder = new CANCoder(encoderID);
+        swerveModulePosition = new SwerveModulePosition();
 
 
         encoderOffs = ENCOFFS;
@@ -95,6 +100,11 @@ public class WPI_SwerveModule {
 
     public SwerveModuleState getState() {
         return new SwerveModuleState(getDriveEncVelocity(), new Rotation2d(getTurnEncPosition()));
+    }
+
+    public SwerveModulePosition getSwerveModulePosition() {
+        swerveModulePosition = new SwerveModulePosition(4*Math.PI*getDriveEncPosition(), new Rotation2d(getTurnEncPosition()));
+        return swerveModulePosition;
     }
 
     public void setDesiredState(SwerveModuleState state) {
