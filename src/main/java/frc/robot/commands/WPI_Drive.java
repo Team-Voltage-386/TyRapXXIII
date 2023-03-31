@@ -6,6 +6,7 @@ import static frc.robot.Constants.DriveConstants.*;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.WPI_Drivetrain;
 
@@ -58,13 +59,20 @@ public class WPI_Drive extends CommandBase{
         if(fieldOrientedFunction.get()) {
             //field oriented
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, dt.getHeadingRotation2d());
+        } else {
+            //robo oriented
+            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         }
+
+        SwerveModuleState[] moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+
+        dt.setModuleStates(moduleStates);
     }
   
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-
+        dt.stopModules();
     }
   
     // Returns true when the command should end.

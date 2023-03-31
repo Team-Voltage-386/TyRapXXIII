@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.HashMap;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -157,6 +158,18 @@ public final class Constants {
                 public static final WPI_SwerveModule RightRearWPI = new WPI_SwerveModule(12, 16, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
                                 kSwerveDrivePID, 22, 43.2, "RR");
+
+                //WPI SwerveDriveKineMatics
+                public static final double kDistBetweenLeftRightWheels = 0.52705;
+                // Distance between right and left wheels
+                public static final double kDistBetweenFrontBackWheels = 0.73025;
+                // Distance between front and back wheels
+                public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+                new Translation2d(kDistBetweenFrontBackWheels / 2, -kDistBetweenLeftRightWheels / 2),
+                new Translation2d(kDistBetweenFrontBackWheels / 2, kDistBetweenLeftRightWheels / 2),
+                new Translation2d(-kDistBetweenFrontBackWheels / 2, -kDistBetweenLeftRightWheels / 2),
+                new Translation2d(-kDistBetweenFrontBackWheels / 2, kDistBetweenLeftRightWheels / 2));
+
         }
 
         public static final class SmoothingConstants {
