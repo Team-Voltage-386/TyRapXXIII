@@ -35,6 +35,7 @@ public final class Constants {
         /** the indexes to address buttons on the controller */
         public static final class ControllerConstants {
                 public static final double kDeadband = .1;
+                public static final double kJoyStickDeadzone = 0.02;
                 public static final Joystick kDriver = new Joystick(0);
                 public static final Joystick kManipulator = new Joystick(1);
 
@@ -107,6 +108,8 @@ public final class Constants {
                                 "maxDriveSpeed");
                 public static final double kMaxRotSpeed = 180;
                 public static final double kMaxDriveSpeed = 4;
+                public static final double kMaxDriveAccel = 3;
+                public static final double kMaxRotAccel = 120;
                 public static final double kSlowRotSpeed = 45;
                 public static final double kSlowDriveSpeed = 1;
                 public static final int kIMUid = 2;

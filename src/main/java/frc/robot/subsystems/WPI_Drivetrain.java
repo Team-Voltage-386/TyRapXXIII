@@ -10,24 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class WPI_Drivetrain extends SubsystemBase{
-    public double xDriveTarget = 0;
-    public double yDriveTarget = 0;
-    public double rotationTarget = 0;
-    public double speed = 0;
-    public double xSpeed = 0;
-    public double ySpeed = 0;
-
-    public double xPos = 0;
-    public double yPos = 0;
-    public double angle = 0;
-
-    public double rotSpeed = 0;
 
     public double ypr[] = new double[3];
 
     public Pigeon2 gyro = new Pigeon2(kIMUid);
-
-    public boolean doFieldOrientation = true;
 
     public WPI_SwerveModule[] modules = { RightFrontWPI, RightRearWPI, LeftRearWPI, LeftFrontWPI};
 
@@ -60,6 +46,7 @@ public class WPI_Drivetrain extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Robot Heading", getHeading());
+        gyro.getYawPitchRoll(ypr);
     }
 
     public void stopModules() {
