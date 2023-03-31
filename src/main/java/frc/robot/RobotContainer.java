@@ -78,6 +78,10 @@ public class RobotContainer {
 
     }
 
+    public Command getTeleOp() {
+        return m_teleop;
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
