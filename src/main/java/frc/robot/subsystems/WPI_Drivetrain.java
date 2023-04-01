@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-import java.util.ArrayList;
-
 import static frc.robot.Constants.AutoConstants.*;
 
 import com.ctre.phoenix.sensors.Pigeon2;
