@@ -1,9 +1,13 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.AutoConstants.*;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -11,7 +15,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class WPI_Drivetrain extends SubsystemBase{
 
@@ -60,7 +67,6 @@ public class WPI_Drivetrain extends SubsystemBase{
         odometer.resetPosition(getHeadingRotation2d(), modulePositions, pose);
     }
 
-    // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
         return new SequentialCommandGroup(
             new InstantCommand(() -> {
@@ -72,10 +78,10 @@ public class WPI_Drivetrain extends SubsystemBase{
             new PPSwerveControllerCommand(
                 traj, 
                 this::getPose, // Pose supplier
-                this.kinematics, // SwerveDriveKinematics
-                new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-                new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
-                new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                kDriveKinematics, // SwerveDriveKinematics
+                new PIDController(kAutoPositionPID[0], kAutoPositionPID[1], kAutoPositionPID[2]), // X controller.
+                new PIDController(kAutoPositionPID[0], kAutoPositionPID[1], kAutoPositionPID[2]), // Y controller.
+                new PIDController(kAutoHeadingPID[0], kAutoHeadingPID[1], kAutoHeadingPID[2]), // Rotation controller.
                 this::setModuleStates, // Module states consumer
                 true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
                 this // Requires this drive subsystem
