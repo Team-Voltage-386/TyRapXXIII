@@ -61,7 +61,7 @@ public final class Constants {
 
         public static final class AutoConstants {
 
-                public static final HashMap<String, Command> autoEventMap = new HashMap<>();
+                public static final HashMap<String, Command> kEventMap = new HashMap<>();
 
                 public static final double driveTolerance = 0.2;
                 public static final double headingTolerance = 90;

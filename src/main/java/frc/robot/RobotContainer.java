@@ -13,15 +13,23 @@ import frc.robot.subsystems.Hand;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.WPI_Drivetrain;
+import frc.robot.utils.PathGroupUtils;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.Constants.AutoConstants.*;
+
+import java.util.HashMap;
+
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -44,6 +52,7 @@ public class RobotContainer {
     public final Hand HandControls = new Hand();
     private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls, m_LED);
     private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand, m_manipulatorCommand);
+    public final PathGroupUtils PGU = new PathGroupUtils();
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
@@ -59,12 +68,31 @@ public class RobotContainer {
                 () -> !(kDriver.getRawAxis(kRightTrigger) < 0.5))
         );
 
-        configureButtonBindings();
+        kEventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        kEventMap.put("intakeDown", new PrintCommand("Intake is down"));
+
+        configureBindings();
     }
 
-    private void configureButtonBindings() {
-        new JoystickButton(kDriver, kB).whenPressed(() -> m_driveTrain.zeroHeading());
-    }
+        
+
+        // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+            m_driveTrain::getPose, // Pose2d supplier
+            m_driveTrain::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+            kDriveKinematics, // SwerveDriveKinematics
+            new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+            new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+            m_driveTrain::setModuleStates, // Module states consumer used to output to the drive subsystem
+            kEventMap,
+            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            m_driveTrain // The drive subsystem. Used to properly set the requirements of path following commands
+        );
+
+        double[] maxVelo = {4, 4, 4, 4};
+        double[] maxAccel = {3, 1, 3, 2};
+        Command fullAuto = autoBuilder.fullAuto(PGU.generatePathGroup("path group 1", maxVelo, maxAccel));
+
 
     /**
      * Use this method to define your trigger->command mappings. Triggers can be
@@ -81,7 +109,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-
+        new JoystickButton(kDriver, kB).whenPressed(() -> m_driveTrain.zeroHeading());
     }
 
     public Command getTeleOp() {
