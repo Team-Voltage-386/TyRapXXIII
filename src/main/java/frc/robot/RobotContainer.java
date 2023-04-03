@@ -56,6 +56,7 @@ public class RobotContainer {
     private final ManipulatorCommands m_manipulatorCommand = new ManipulatorCommands(m_Arm, HandControls, m_LED);
     private final ParallelCommandGroup m_teleop = new ParallelCommandGroup(m_driverCommand, m_manipulatorCommand);
     public final PathGroupUtils PGU = new PathGroupUtils();
+    private final AutoRoutines autos = this.new AutoRoutines();
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
