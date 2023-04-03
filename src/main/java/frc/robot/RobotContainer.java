@@ -101,7 +101,10 @@ public class RobotContainer {
         PathPlannerTrajectory TestPath = PathPlanner.loadPath("Test Path 1", new PathConstraints(4, 3));
 
         public final class AutoRoutines {
-            Command
+            public final Command TestPP(
+                
+            );
+
         }
 
     /**
