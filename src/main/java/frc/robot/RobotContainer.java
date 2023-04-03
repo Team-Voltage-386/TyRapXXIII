@@ -28,6 +28,9 @@ import static frc.robot.Constants.AutoConstants.*;
 
 import java.util.HashMap;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
@@ -91,7 +94,9 @@ public class RobotContainer {
 
         double[] maxVelo = {4, 4, 4, 4};
         double[] maxAccel = {3, 1, 3, 2};
-        Command fullAuto = autoBuilder.fullAuto(PGU.generatePathGroup("path group 1", maxVelo, maxAccel));
+        //Command pg1 = autoBuilder.fullAuto(PGU.generatePathGroup("Path Group 1", maxVelo, maxAccel));
+
+        PathPlannerTrajectory TestPath = PathPlanner.loadPath("Test Path 1", new PathConstraints(4, 3));
 
 
     /**
