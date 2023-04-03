@@ -72,7 +72,7 @@ public class RobotContainer {
                 () -> !(kDriver.getRawAxis(kRightTrigger) < 0.5))
         );
 
-        autoChooser.addOption("Score cone high and backup", autos.ScoreConeSides);
+        autoChooser.addOption("Score cone high and backup", autos.TestPP);
         kEventMap.put("marker1", new PrintCommand("Passed marker 1"));
         kEventMap.put("intakeDown", new PrintCommand("Intake is down"));
 
@@ -100,6 +100,9 @@ public class RobotContainer {
 
         PathPlannerTrajectory TestPath = PathPlanner.loadPath("Test Path 1", new PathConstraints(4, 3));
 
+        public final class AutoRoutines {
+            Command
+        }
 
     /**
      * Use this method to define your trigger->command mappings. Triggers can be
