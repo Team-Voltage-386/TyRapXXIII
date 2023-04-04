@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.AutoConstants.*;
-
 import java.util.HashMap;
 
 import com.pathplanner.lib.PathConstraints;
@@ -103,7 +102,7 @@ public class RobotContainer {
 
         public final class AutoRoutines {
             public final Command TestPP = new SequentialCommandGroup(
-                new FollowTrajectoryCommand(TestPath, true)
+                m_driveTrain.followTrajectoryCommand(TestPath, true)
             );
         }
 
