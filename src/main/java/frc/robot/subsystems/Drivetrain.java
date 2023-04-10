@@ -39,7 +39,7 @@ public class Drivetrain extends SubsystemBase {
     private long odoTimerLast = 0;
     public boolean doFieldOrientation = true;
 
-    public SwerveModule[] modules = { RightFront, RightRear, LeftRear, LeftFront };
+    //public SwerveModule[] modules = { RightFront, RightRear, LeftRear, LeftFront };
 
     //PPposition
     private Rotation2d roboRotation;
@@ -58,63 +58,63 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        updateOdometry();
-        if (Robot.inst.isEnabled()) {
-            for (SwerveModule swerve : modules) {
-                if (Math.abs(xDriveTarget) > 0.05 || Math.abs(yDriveTarget) > 0.05 || Math.abs(rotationTarget) > 1) {
-                    double angleRad = Math.toRadians(angle);
+        // updateOdometry();
+        // if (Robot.inst.isEnabled()) {
+        //     for (SwerveModule swerve : modules) {
+        //         if (Math.abs(xDriveTarget) > 0.05 || Math.abs(yDriveTarget) > 0.05 || Math.abs(rotationTarget) > 1) {
+        //             double angleRad = Math.toRadians(angle);
 
-                    double x = xDriveTarget;
-                    double y = yDriveTarget;
+        //             double x = xDriveTarget;
+        //             double y = yDriveTarget;
 
-                    targetSpeed = Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2));
+        //             targetSpeed = Math.sqrt(Math.pow(x, 2) + Math.pow(x, 2));
 
-                    double r = ((2 * Math.PI * swerve.distFromCenter) / 360) * rotationTarget; // rotation speed
+        //             double r = ((2 * Math.PI * swerve.distFromCenter) / 360) * rotationTarget; // rotation speed
 
-                    double rAngle = swerve.angleFromCenter + 90;
-                    if (doFieldOrientation) rAngle += angle;
+        //             double rAngle = swerve.angleFromCenter + 90;
+        //             if (doFieldOrientation) rAngle += angle;
 
 
-                    x += r * Math.cos(Math.toRadians(rAngle));
-                    y += r * Math.sin(Math.toRadians(rAngle));
+        //             x += r * Math.cos(Math.toRadians(rAngle));
+        //             y += r * Math.sin(Math.toRadians(rAngle));
 
-                    double xFin = x;
-                    double yFin = y;
+        //             double xFin = x;
+        //             double yFin = y;
 
-                    if (doFieldOrientation) {
-                        xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
-                        yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
-                    }
+        //             if (doFieldOrientation) {
+        //                 xFin = (x * Math.cos(angleRad)) + (y * Math.sin(angleRad));
+        //                 yFin = (x * Math.cos(angleRad + (Math.PI / 2))) + (y * Math.sin(angleRad + (Math.PI / 2)));
+        //             }
 
-                    swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
-                    swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
-                } else {
-                    swerve.targetDrive = 0;
-                    swerve.drivePID.reset();
-                    swerve.targetSteer = swerve.angleFromCenter + 90;// circle lock is add 90, x lock is add 0
-                    // swerve.angleFromCenter + 90
-                }
+        //             swerve.targetSteer = Math.toDegrees(Math.atan2(yFin, xFin));
+        //             swerve.targetDrive = Math.sqrt(Math.pow(xFin, 2) + Math.pow(yFin, 2));
+        //         } else {
+        //             swerve.targetDrive = 0;
+        //             swerve.drivePID.reset();
+        //             swerve.targetSteer = swerve.angleFromCenter + 90;// circle lock is add 90, x lock is add 0
+        //             // swerve.angleFromCenter + 90
+        //         }
 
-                swerve.drive();
-                // swerve.updateShufflables();
-            }
+        //         swerve.drive();
+        //         // swerve.updateShufflables();
+        //     }
 
-            wasEnabled = true;
-        } else {
-            if (wasEnabled)
-                for (SwerveModule swerve : modules)
-                    swerve.reset();
+        //     wasEnabled = true;
+        // } else {
+        //     if (wasEnabled)
+        //         for (SwerveModule swerve : modules)
+        //             swerve.reset();
 
-            wasEnabled = false;
-            for (SwerveModule swerve : modules) // diagnosing tool, delete later
-                swerve.updateWidget();// diagnosing tool, delete later
-        }
+        //     wasEnabled = false;
+        //     for (SwerveModule swerve : modules) // diagnosing tool, delete later
+        //         swerve.updateWidget();// diagnosing tool, delete later
+        // }
         
-        roboRotation = new Rotation2d(angle);
-        roboTranslation = new Translation2d(xPos, yPos);
-        roboPose = new Pose2d(roboTranslation, roboRotation);
+        // roboRotation = new Rotation2d(angle);
+        // roboTranslation = new Translation2d(xPos, yPos);
+        // roboPose = new Pose2d(roboTranslation, roboRotation);
 
-        updateWidget();
+        // updateWidget();
     }
 
     public double getRawHeading() {
@@ -127,8 +127,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setOffset(double offX, double offY) {
-        for (SwerveModule swerve : modules)
-            swerve.calcPosition(offX, offY);
+        // for (SwerveModule swerve : modules)
+        //     swerve.calcPosition(offX, offY);
     }
 
     public void resetFO() {
@@ -146,51 +146,51 @@ public class Drivetrain extends SubsystemBase {
     }
 
     private void updateOdometry() {
-        IMU.getYawPitchRoll(ypr);
-        angle = getRawHeading();
+        // IMU.getYawPitchRoll(ypr);
+        // angle = getRawHeading();
 
-        if (Robot.inst.isEnabled()) {
+        // if (Robot.inst.isEnabled()) {
 
-            if (!wasEnabled) {
-                odoTimerLast = System.currentTimeMillis();
-                angleLast = angle;
-            }
+        //     if (!wasEnabled) {
+        //         odoTimerLast = System.currentTimeMillis();
+        //         angleLast = angle;
+        //     }
 
-            long thisTime = System.currentTimeMillis();
-            double thisAngle = angle;
+        //     long thisTime = System.currentTimeMillis();
+        //     double thisAngle = angle;
 
-            double deltaT = (thisTime - odoTimerLast);
-            deltaT /= 1000;
-            odoTimerLast = thisTime;
-            angleLast = thisAngle;
+        //     double deltaT = (thisTime - odoTimerLast);
+        //     deltaT /= 1000;
+        //     odoTimerLast = thisTime;
+        //     angleLast = thisAngle;
 
-            double xAdd = 0;
-            double yAdd = 0;
+        //     double xAdd = 0;
+        //     double yAdd = 0;
 
-            xSpeed = 0;
-            ySpeed = 0;
+        //     xSpeed = 0;
+        //     ySpeed = 0;
 
-            for (SwerveModule swerve : modules) {
-                double aRad = Math.toRadians(angle + swerve.getEncoderPosition());
-                double vel = swerve.driveMotor.getEncoder().getVelocity();
-                xAdd += deltaT * (Math.cos(aRad) * vel);
-                yAdd += deltaT * (Math.sin(aRad) * vel);
-                xSpeed += Math.cos(aRad) * vel;
-                ySpeed += Math.sin(aRad) * vel;
-            }
+        //     for (SwerveModule swerve : modules) {
+        //         double aRad = Math.toRadians(angle + swerve.getEncoderPosition());
+        //         double vel = swerve.driveMotor.getEncoder().getVelocity();
+        //         xAdd += deltaT * (Math.cos(aRad) * vel);
+        //         yAdd += deltaT * (Math.sin(aRad) * vel);
+        //         xSpeed += Math.cos(aRad) * vel;
+        //         ySpeed += Math.sin(aRad) * vel;
+        //     }
 
-            xAdd /= modules.length;
-            yAdd /= modules.length;
-            xSpeed /= modules.length;
-            ySpeed /= modules.length;
+        //     xAdd /= modules.length;
+        //     yAdd /= modules.length;
+        //     xSpeed /= modules.length;
+        //     ySpeed /= modules.length;
 
-            xPos += xAdd;
-            yPos += yAdd;
+        //     xPos += xAdd;
+        //     yPos += yAdd;
 
-            rotSpeed = (thisAngle - angleLast)/deltaT;
-            speed = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+        //     rotSpeed = (thisAngle - angleLast)/deltaT;
+        //     speed = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
-        }
+        // }
     }
 
     public double distanceTo(double x, double y) {
