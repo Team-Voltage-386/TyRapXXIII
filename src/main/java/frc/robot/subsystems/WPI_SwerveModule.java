@@ -108,10 +108,11 @@ public class WPI_SwerveModule extends SubsystemBase{
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        if(Math.abs(state.speedMetersPerSecond) < 0.001) {
-            stop();
-            return;
-        }
+        //if let go of stick, drift for a bit
+        // if(Math.abs(state.speedMetersPerSecond) < 0.001) {
+        //     stop();
+        //     return;
+        // }
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / DriveConstants.kMaxDriveSpeed);
         turningMotor.set(turningPIDController.calculate(getTurnEncPosition(), state.angle.getDegrees()));
