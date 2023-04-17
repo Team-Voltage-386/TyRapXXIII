@@ -72,11 +72,11 @@ public class RobotContainer {
                 () -> !(kDriver.getRawAxis(kRightTrigger) < 0.5))
         );
 
+        configureBindings();
+
         autoChooser.addOption("Score cone high and backup", autos.TestPP);
         kEventMap.put("marker1", new PrintCommand("Passed marker 1"));
         kEventMap.put("intakeDown", new PrintCommand("Intake is down"));
-
-        configureBindings();
     }
 
         
