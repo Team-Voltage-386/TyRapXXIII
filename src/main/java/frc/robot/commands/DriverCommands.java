@@ -12,6 +12,12 @@ import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.mapping.*;
 import static frc.robot.Constants.SmoothingConstants.*;
 
+//vision imports
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 public class DriverCommands extends CommandBase {
 
     private Drivetrain driveTrain;
@@ -43,15 +49,21 @@ public class DriverCommands extends CommandBase {
     public void execute() {
         updateShufflables();
         updateWidget();
-        if (kDriver.getRawAxis(kLeftTrigger) > kDeadband) {
-            m_driveSpeed = kSlowDriveSpeed;
-            m_rotSpeed = kSlowRotSpeed;
-        } else {
-            m_driveSpeed = kMaxDriveSpeed;
-            m_rotSpeed = kMaxRotSpeed;
-        }
 
-        driveTrain.doFieldOrientation = kDriver.getRawAxis(kRightTrigger) < 0.5;        
+        /*
+         * Commenting out slow mode to test vision
+         * if (kDriver.getRawAxis(kLeftTrigger) > kDeadband) {
+         * m_driveSpeed = kSlowDriveSpeed;
+         * m_rotSpeed = kSlowRotSpeed;
+         * } else {
+         * m_driveSpeed = kMaxDriveSpeed;
+         * m_rotSpeed = kMaxRotSpeed;
+         * }
+         */
+        m_driveSpeed = kMaxDriveSpeed;
+        m_rotSpeed = kMaxRotSpeed;
+
+        driveTrain.doFieldOrientation = kDriver.getRawAxis(kRightTrigger) < 0.5;
         // driveJoystickAngle = Math.atan2(
         // orientationMultiplier*kDriver.getRawAxis(kLeftVertical),
         // kDriver.getRawAxis(kLeftHorizontal));// radians, use atan2 to avoid undefined
@@ -71,15 +83,39 @@ public class DriverCommands extends CommandBase {
         } else {
             m_joystickOrientationMultiplier = -1;
         }
-        driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
-                .get(), 0, 1, driveTrain.xDriveTarget,
-                -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
-        driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
-                .get(), 0, 1, driveTrain.yDriveTarget,
-                m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
-        driveTrain.rotationTarget = -1
-                * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
-                * m_rotSpeed;
+
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+        NetworkTableEntry tx = table.getEntry("tx");
+        NetworkTableEntry ty = table.getEntry("ty");
+        NetworkTableEntry ta = table.getEntry("ta");
+        double x = tx.getDouble(0.0);
+        double y = ty.getDouble(0.0);
+        double area = ta.getDouble(0.0);
+
+        SmartDashboard.putNumber("limelightX", x);
+        SmartDashboard.putNumber("LimelightY", y);
+        SmartDashboard.putNumber("LimelightArea", area);
+
+        if (kDriver.getRawAxis(kLeftTrigger) > kDeadband) {
+            driveTrain.rotationTarget = x;
+            m_joystickOrientationMultiplier = -1;
+            driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.yDriveTarget,
+                    m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
+            driveTrain.rotationTarget = -1
+                    * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
+                    * m_rotSpeed;
+        } else {
+            driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.xDriveTarget,
+                    -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
+            driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.yDriveTarget,
+                    m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
+            driveTrain.rotationTarget = -1
+                    * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
+                    * m_rotSpeed;
+        }
 
         // comment out before tryouts
         // if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
@@ -122,22 +158,29 @@ public class DriverCommands extends CommandBase {
         driveTrain.rotationTarget = 0;
     }
 
-    // private static final ShuffleboardTab joystickInfoTab = Shuffleboard.getTab("JSINFO");
-    // private static final GenericEntry leftVerticalWidget = joystickInfoTab.add("left vertical", 0).withPosition(0, 2)
-    //         .withSize(1, 1)
-    //         .getEntry();
-    // private static final GenericEntry leftHorizontalWidget = joystickInfoTab.add("left horizontal", 0).withPosition(1, 2)
-    //         .withSize(1, 1)
-    //         .getEntry();
-    // private static final GenericEntry rightHorizontalWidget = joystickInfoTab.add("right horizontal", 0).withPosition(2, 2)
-    //         .withSize(1, 1)
-    //         .getEntry();
-    // private static final GenericEntry driveVectorOrientWidget = joystickInfoTab.add("driveVectorAngle", 0).withPosition(1, 1)
-    //         .withSize(1, 1).getEntry();
-    // private static final GenericEntry driveVectorMagnitudeWidget = joystickInfoTab.add("dvMagni", 0).withPosition(2, 1)
-    //         .withSize(1, 1).getEntry();
-    // private static final GenericEntry JoystickVectorMagnitudeWidget = joystickInfoTab.add("JSMagni", 0).withPosition(3, 1)
-    //         .withSize(1, 1).getEntry();
+    // private static final ShuffleboardTab joystickInfoTab =
+    // Shuffleboard.getTab("JSINFO");
+    // private static final GenericEntry leftVerticalWidget =
+    // joystickInfoTab.add("left vertical", 0).withPosition(0, 2)
+    // .withSize(1, 1)
+    // .getEntry();
+    // private static final GenericEntry leftHorizontalWidget =
+    // joystickInfoTab.add("left horizontal", 0).withPosition(1, 2)
+    // .withSize(1, 1)
+    // .getEntry();
+    // private static final GenericEntry rightHorizontalWidget =
+    // joystickInfoTab.add("right horizontal", 0).withPosition(2, 2)
+    // .withSize(1, 1)
+    // .getEntry();
+    // private static final GenericEntry driveVectorOrientWidget =
+    // joystickInfoTab.add("driveVectorAngle", 0).withPosition(1, 1)
+    // .withSize(1, 1).getEntry();
+    // private static final GenericEntry driveVectorMagnitudeWidget =
+    // joystickInfoTab.add("dvMagni", 0).withPosition(2, 1)
+    // .withSize(1, 1).getEntry();
+    // private static final GenericEntry JoystickVectorMagnitudeWidget =
+    // joystickInfoTab.add("JSMagni", 0).withPosition(3, 1)
+    // .withSize(1, 1).getEntry();
 
     private void updateWidget() {
         // leftVerticalWidget.setDouble(kDriver.getRawAxis(kLeftVertical));

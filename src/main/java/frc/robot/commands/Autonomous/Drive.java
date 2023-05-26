@@ -16,9 +16,10 @@ public class Drive extends CommandBase {
     private final double y;
     private final double h;
     private final Drivetrain dt;
-    
+
     /**
      * achieve relative x, y, and H (target x, y and heading)
+     * 
      * @param X
      * @param Y
      * @param H
@@ -41,9 +42,9 @@ public class Drive extends CommandBase {
 
     @Override
     public void execute() {
-        dt.xDriveTarget = mapping.clamp(autoPositionX.calc(x - dt.xPos),-kMaxDriveSpeed,kMaxDriveSpeed);
+        dt.xDriveTarget = mapping.clamp(autoPositionX.calc(x - dt.xPos), -kMaxDriveSpeed, kMaxDriveSpeed);
         dt.yDriveTarget = mapping.clamp(autoPositionY.calc(y - dt.yPos), -kMaxDriveSpeed, kMaxDriveSpeed);
-        dt.rotationTarget = mapping.clamp(autoPositionH.calc(dt.getHeadingError(h)), -kMaxRotSpeed,kMaxRotSpeed);
+        dt.rotationTarget = mapping.clamp(autoPositionH.calc(dt.getHeadingError(h)), -kMaxRotSpeed, kMaxRotSpeed);
 
         // System.out.println("x value: " + dt.xDriveTarget + " " + "y value: " +
         // dt.yDriveTarget);
