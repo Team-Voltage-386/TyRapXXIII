@@ -129,7 +129,7 @@ public final class Constants {
                                 kSwerveDrivePID, 23, -0.365125, -0.263525, 68.05, "LR");// faulty encoder offset
                 public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 22, -0.365125, 0.263525, 291.72, "RR");
+                                kSwerveDrivePID, 22, -0.365125, 0.263525, 43.2, "RR");
         }
 
         public static final class SmoothingConstants {

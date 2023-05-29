@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PersistentShufflableDouble;
+import frc.robot.utils.mapping;
 
 import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
@@ -17,6 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
+import static frc.robot.Constants.AutoConstants.*;
 
 public class DriverCommands extends CommandBase {
 
@@ -85,37 +88,39 @@ public class DriverCommands extends CommandBase {
         }
 
         NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+        NetworkTableEntry pipeline = table.getEntry("getpipe");
         NetworkTableEntry tx = table.getEntry("tx");
         NetworkTableEntry ty = table.getEntry("ty");
         NetworkTableEntry ta = table.getEntry("ta");
         double x = tx.getDouble(0.0);
         double y = ty.getDouble(0.0);
         double area = ta.getDouble(0.0);
+        long pipe = pipeline.getInteger(0);
 
-        SmartDashboard.putNumber("limelightX", x);
-        SmartDashboard.putNumber("LimelightY", y);
-        SmartDashboard.putNumber("LimelightArea", area);
+        // SmartDashboard.putNumber("limelightX", x);
+        // SmartDashboard.putNumber("LimelightY", y);
+        // SmartDashboard.putNumber("LimelightArea", area);
+        // System.out.println("Limelight x: " + x);
+        // System.out.println("Limelight y: " + y);
+        // System.out.println("Limelight a: " + area);
+        // System.out.println("Limelight pipeline: " + pipe);
+        System.out.println("Limelight: " + );
 
         if (kDriver.getRawAxis(kLeftTrigger) > kDeadband) {
-            driveTrain.rotationTarget = x;
+            driveTrain.rotationTarget = mapping.clamp(autoPositionH.calc(driveTrain.getHeadingError(x)), -kMaxRotSpeed,
+                    kMaxRotSpeed);
             m_joystickOrientationMultiplier = -1;
-            driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
-                    .get(), 0, 1, driveTrain.yDriveTarget,
-                    m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
-            driveTrain.rotationTarget = -1
-                    * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
-                    * m_rotSpeed;
         } else {
-            driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
-                    .get(), 0, 1, driveTrain.xDriveTarget,
-                    -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
-            driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
-                    .get(), 0, 1, driveTrain.yDriveTarget,
-                    m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
             driveTrain.rotationTarget = -1
                     * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
                     * m_rotSpeed;
         }
+        driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
+                .get(), 0, 1, driveTrain.xDriveTarget,
+                -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
+        driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
+                .get(), 0, 1, driveTrain.yDriveTarget,
+                m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
 
         // comment out before tryouts
         // if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
