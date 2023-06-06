@@ -130,6 +130,11 @@ public final class Constants {
                 public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
                                 kSwerveDrivePID, 22, -0.365125, 0.263525, 43.2, "RR");
+                
+                // degrees
+                public static final double limelightMaxtx = 27.0;
+                // degrees
+                public static final double limelightVisionMaxRotateTarget = 10;
         }
 
         public static final class SmoothingConstants {

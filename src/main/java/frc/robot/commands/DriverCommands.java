@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.mapping;
+import frc.robot.utils.approximator.Approximatable;
+import frc.robot.utils.approximator.LinearApproximator;
 
 import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
@@ -32,11 +34,14 @@ public class DriverCommands extends CommandBase {
     public double m_driveSpeed;
     public double m_rotSpeed;
     public int m_joystickOrientationMultiplier;
+    private Approximatable m_autoVisionRotateApproximate;
 
     public DriverCommands(Drivetrain DT) {
         updateShufflables();
         driveTrain = DT;
         testingBoostSpeed = PSDMaxDriveSpeed.get(); // comment out before tryouts
+        //negative slope to rotate the other way 
+        m_autoVisionRotateApproximate = new LinearApproximator(-1 * limelightVisionMaxRotateTarget/ limelightMaxtx, 0);
     }
 
     @Override
@@ -87,7 +92,8 @@ public class DriverCommands extends CommandBase {
             m_joystickOrientationMultiplier = -1;
         }
 
-        NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        NetworkTable table = inst.getTable("limelight");
         NetworkTableEntry pipeline = table.getEntry("getpipe");
         NetworkTableEntry tx = table.getEntry("tx");
         NetworkTableEntry ty = table.getEntry("ty");
@@ -104,16 +110,19 @@ public class DriverCommands extends CommandBase {
         // System.out.println("Limelight y: " + y);
         // System.out.println("Limelight a: " + area);
         // System.out.println("Limelight pipeline: " + pipe);
-        System.out.println("Limelight: " + );
 
         if (kDriver.getRawAxis(kLeftTrigger) > kDeadband) {
-            driveTrain.rotationTarget = mapping.clamp(autoPositionH.calc(driveTrain.getHeadingError(x)), -kMaxRotSpeed,
-                    kMaxRotSpeed);
+            // driveTrain.rotationTarget = mapping.clamp(driveTrain.getHeadingError(x), -kMaxRotSpeed,
+            //         kMaxRotSpeed);
+            // System.out.printf("X: %f\t Heading error: %f \t Calc: %f\n", x, driveTrain.getHeadingError(x), autoPositionH.calc(driveTrain.getHeadingError(x)));
+            driveTrain.rotationTarget = mapping.clamp(m_autoVisionRotateApproximate.approximate(x), -kMaxRotSpeed, kMaxRotSpeed);
             m_joystickOrientationMultiplier = -1;
+            System.out.println("Rotation Target "+ driveTrain.rotationTarget);
         } else {
             driveTrain.rotationTarget = -1
                     * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
                     * m_rotSpeed;
+            System.out.println("Normal rotationTarget: " + driveTrain.rotationTarget);
         }
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,
