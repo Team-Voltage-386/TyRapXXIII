@@ -9,6 +9,7 @@ import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.mapping;
 import frc.robot.utils.approximator.Approximatable;
 import frc.robot.utils.approximator.LinearApproximator;
+import frc.robot.utils.approximator.PiecewiseApproximator;
 
 import static frc.robot.Constants.ControllerConstants.*;
 import static frc.robot.Constants.DriveConstants.*;
@@ -41,7 +42,9 @@ public class DriverCommands extends CommandBase {
         driveTrain = DT;
         testingBoostSpeed = PSDMaxDriveSpeed.get(); // comment out before tryouts
         //negative slope to rotate the other way 
-        m_autoVisionRotateApproximate = new LinearApproximator(-1 * limelightVisionMaxRotateTarget/ limelightMaxtx, 0);
+       // m_autoVisionRotateApproximate = new LinearApproximator(-1 * limelightVisionMaxRotateTarget/ limelightMaxtx, 0);
+        // alternative piecewise approximator
+         m_autoVisionRotateApproximate = new PiecewiseApproximator(1, 3, -1 * limelightVisionMaxRotateTarget / limelightMaxtx, 0);
     }
 
     @Override
@@ -116,14 +119,21 @@ public class DriverCommands extends CommandBase {
             //         kMaxRotSpeed);
             // System.out.printf("X: %f\t Heading error: %f \t Calc: %f\n", x, driveTrain.getHeadingError(x), autoPositionH.calc(driveTrain.getHeadingError(x)));
             driveTrain.rotationTarget = mapping.clamp(m_autoVisionRotateApproximate.approximate(x), -kMaxRotSpeed, kMaxRotSpeed);
-            m_joystickOrientationMultiplier = -1;
-            System.out.println("Rotation Target "+ driveTrain.rotationTarget);
+            driveTrain.doFieldOrientation = true;
+            System.out.println("Drive Target: "+ driveTrain.rotationTarget);
         } else {
             driveTrain.rotationTarget = -1
                     * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
                     * m_rotSpeed;
-            System.out.println("Normal rotationTarget: " + driveTrain.rotationTarget);
+            // System.out.println("Normal rotationTarget: " + driveTrain.rotationTarget);
         }
+
+        if (driveTrain.doFieldOrientation) {
+            m_joystickOrientationMultiplier = 1;
+        } else {
+            m_joystickOrientationMultiplier = -1;
+        }
+
         driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
                 .get(), 0, 1, driveTrain.xDriveTarget,
                 -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);

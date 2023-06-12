@@ -15,8 +15,15 @@ public class PiecewiseApproximator implements Approximatable{
     }
     @Override
     public double approximate(double x) {
-        if ()
-        return 0;
+        if (Math.abs(x) < epsilon) {
+            return 0;
+        } else if (x > -phi && x < 0) {
+            return 10;
+        } else if (x < phi && x > 0) {
+            return -10;
+        } else {
+            return m * x + b;
+        }
     }
 
 }

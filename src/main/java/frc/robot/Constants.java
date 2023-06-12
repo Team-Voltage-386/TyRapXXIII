@@ -99,7 +99,7 @@ public final class Constants {
                                 "maxDriveSpeed");
                 public static final double kMaxRotSpeed = 90; //was 180
                 public static final double kMaxDriveSpeed = 1.5; //was 4
-                public static final double kSlowRotSpeed = 45;
+                public static final double kSlowRotSpeed = 90;
                 public static final double kSlowDriveSpeed = 1;
                 public static final int kIMUid = 2;
                 public static final double[] kSwerveSteerPID = { 0.006, 0.01, 0.0 }; // 0.01,0.0,0.001
@@ -134,7 +134,7 @@ public final class Constants {
                 // degrees
                 public static final double limelightMaxtx = 27.0;
                 // degrees
-                public static final double limelightVisionMaxRotateTarget = 10;
+                public static final double limelightVisionMaxRotateTarget = 40;
         }
 
         public static final class SmoothingConstants {
