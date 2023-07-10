@@ -279,4 +279,9 @@ public class Hand extends SubsystemBase {
         wristPIDController.setI(WristPIDPSDs[1].get());
         wristPIDController.setD(WristPIDPSDs[2].get());
     }
+
+    public void TestPID(int RotateAngle)
+    {
+        
+    }
 }
