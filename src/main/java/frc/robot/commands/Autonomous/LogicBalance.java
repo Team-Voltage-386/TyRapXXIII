@@ -25,7 +25,7 @@ public class LogicBalance extends CommandBase {
     // This value is used to slow down the drive as the balance progresses
     public double driveMultiplier;
 
-    // variables to display on shuffleboardQ
+    // variables to display on shuffleboard
     private boolean isDrivingForward;
 
     public LogicBalance(Drivetrain DT) {

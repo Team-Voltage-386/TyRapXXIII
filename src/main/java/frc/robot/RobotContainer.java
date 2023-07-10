@@ -196,6 +196,7 @@ public class RobotContainer {
         new LogicBalance(m_driveTrain));
 
     public final Command TuningSquare = new SequentialCommandGroup(
+        new ZeroOdo(0,0,0, m_driveTrain),
         new Drive(2, 0, 0, m_driveTrain),
         new Drive(2, 2, 90, m_driveTrain),
         new Drive(0, 2, 270, m_driveTrain),

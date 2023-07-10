@@ -5,10 +5,9 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
 // import frc.robot.utils.PIDShufflable;
 import frc.robot.utils.mapping;
-
+// import frc.robot.utils.mapping.*;
 import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.AutoConstants.*;
-import frc.robot.utils.mapping.*;
 
 public class Drive extends CommandBase {
 
@@ -45,8 +44,7 @@ public class Drive extends CommandBase {
         dt.yDriveTarget = mapping.clamp(autoPositionY.calc(y - dt.yPos), -kMaxDriveSpeed, kMaxDriveSpeed);
         dt.rotationTarget = mapping.clamp(autoPositionH.calc(dt.getHeadingError(h)), -kMaxRotSpeed,kMaxRotSpeed);
 
-        // System.out.println("x value: " + dt.xDriveTarget + " " + "y value: " +
-        // dt.yDriveTarget);
+        // System.out.println("x value: " + dt.xDriveTarget + " " + "y value: " + dt.yDriveTarget);
     }
 
     @Override
