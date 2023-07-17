@@ -27,6 +27,8 @@ import static frc.robot.utils.Flags.*;
 
 import com.ctre.phoenix.motorcontrol.MotorCommutation;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -63,6 +65,24 @@ public class Hand extends SubsystemBase {
     private DigitalInput HandLimitSwitch; // LIMIT READING TRUE MEANS SWTICH NOT HIT
     public boolean HandHitLimit; // HandHitLimit WILL READ TRUE WHEN IT HITS THE LIMIT
 
+    //PID values
+    private double maxRPM = 5700;
+
+    private double kP; 
+    private double kI;
+    private double kD; 
+    private double kIz; 
+    private double kFF; 
+    private double kMaxOutput; 
+    private double kMinOutput;
+
+    private double setPoint;
+
+
+    private SparkMaxPIDController SparkPIDcontrols;
+    private RelativeEncoder m1_encoder;
+    
+
     public Hand() {
         pcmCompressor = new DoubleSolenoid(kDoubleSolenoidModule, PneumaticsModuleType.CTREPCM, kSolenoidForward,
                 kSolenoidReverse);
@@ -73,19 +93,44 @@ public class Hand extends SubsystemBase {
 
         RPickup = new CANSparkMax(HandConstants.kRightPickupID, MotorType.kBrushless);
         LPickup = new CANSparkMax(HandConstants.kLeftPickupID, MotorType.kBrushless);
-        wristPIDController = new PIDController(kWristPID[0], kWristPID[1], kWristPID[2]);
-        // temp
-        initializePID();
-        writePID();
+        //wristPIDController = new PIDController(kWristPID[0], kWristPID[1], kWristPID[2]);
+
+        //PID Stuff
+        m1_encoder = RPickup.getEncoder();
+
+        kP = 1e-10; 
+        kI = 0.1;
+        kD = 0.0001; 
+        kIz = 1; 
+        kFF = 0.000015; 
+        kMaxOutput = 1; 
+        kMinOutput = -1;
+
+        SmartDashboard.putNumber("P Value", kP);
+        SmartDashboard.putNumber("I Value", kI);
+        SmartDashboard.putNumber("D Value", kD);
+        SmartDashboard.putNumber("I Zone", kIz);
+        SmartDashboard.putNumber("Feed Forward", kFF);
+        SmartDashboard.putNumber("Max Output", kMaxOutput);
+        SmartDashboard.putNumber("Min Output", kMinOutput);
+        SmartDashboard.putNumber("Set Point", setPoint);
+
+        SmartDashboard.putNumber("Velocity", m1_encoder.getVelocity());
+
+        SparkPIDcontrols.setP(kP);
+        SparkPIDcontrols.setI(kI);
+        SparkPIDcontrols.setD(kD);
+        SparkPIDcontrols.setIZone(kIz);
+        SparkPIDcontrols.setFF(kFF);
+        SparkPIDcontrols.setOutputRange(kMinOutput, kMaxOutput);
     }
 
     @Override
     public void periodic() {
-        initializePID();
-        writePID();
-        setHandMotor();
-        runIntakeMotorState();
+        //setHandMotor();
+        //runIntakeMotorState();
         updateWidgets();
+        updatePID();
     }
 
     public double getWristAngle() {
@@ -282,6 +327,45 @@ public class Hand extends SubsystemBase {
 
     public void TestPID(int RotateAngle)
     {
-        
+        SparkPIDcontrols.setReference(RotateAngle, CANSparkMax.ControlType.kSmartMotion);
+    }
+
+    private void updatePID()
+    {
+        SmartDashboard.putNumber("Set Point", setPoint);
+
+        SmartDashboard.putNumber("Velocity", m1_encoder.getVelocity());
+
+        if (kP != SmartDashboard.getNumber("P Value", 0))
+        {
+            kP = SmartDashboard.getNumber("P Value", 0);
+            SparkPIDcontrols.setP(kP);
+        }
+        if (kI != SmartDashboard.getNumber("I Value", 0))
+        {
+            kI = SmartDashboard.getNumber("I Value", 0);
+            SparkPIDcontrols.setI(kI);
+        }
+        if (kD != SmartDashboard.getNumber("D Value", 0))
+        {
+            kD = SmartDashboard.getNumber("D Value", 0);
+            SparkPIDcontrols.setD(kD);
+        }
+        if (kIz != SmartDashboard.getNumber("I Zone", 0))
+        {
+            kIz = SmartDashboard.getNumber("I Zone", 0);
+            SparkPIDcontrols.setIZone(kIz);
+        }
+        if (kFF != SmartDashboard.getNumber("Feed Forward", 0))
+        {
+            kFF = SmartDashboard.getNumber("Feed Forward", 0);
+            SparkPIDcontrols.setFF(kFF);
+        }
+        if (kMaxOutput != SmartDashboard.getNumber("Max Output", 0) || kMinOutput != SmartDashboard.getNumber("Min Output", 0))
+        {
+            kMaxOutput = SmartDashboard.getNumber("Max Output", 0);
+            kMinOutput = SmartDashboard.getNumber("Min Output", 0);
+            SparkPIDcontrols.setOutputRange(kMinOutput, kMaxOutput);
+        }    
     }
 }
