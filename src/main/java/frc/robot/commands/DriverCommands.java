@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utils.PID;
 import frc.robot.utils.PersistentShufflableDouble;
 import frc.robot.utils.mapping;
 import frc.robot.utils.approximator.Approximatable;
@@ -29,22 +31,23 @@ public class DriverCommands extends CommandBase {
     private Drivetrain driveTrain;
     private PersistentShufflableDouble driveCurvingPower = new PersistentShufflableDouble(1, "driveCurvingPower");
     private PersistentShufflableDouble rotationCurvingPower = new PersistentShufflableDouble(3, "rotationCurvingPower");
+    private PID turnPID = new PID(0.06, 0.01, 0.0);
 
     private double testingBoostSpeed; // comment out before tryouts
     private double driveJoystickAngle, driveMagnitude, driveJoystickMagnitude;
     public double m_driveSpeed;
     public double m_rotSpeed;
     public int m_joystickOrientationMultiplier;
-    private Approximatable m_autoVisionRotateApproximate;
+    private final Coral coral;
 
-    public DriverCommands(Drivetrain DT) {
+    public DriverCommands(Drivetrain DT, Coral CORAL) {
         updateShufflables();
         driveTrain = DT;
+        coral = CORAL;
         testingBoostSpeed = PSDMaxDriveSpeed.get(); // comment out before tryouts
-        //negative slope to rotate the other way 
-       // m_autoVisionRotateApproximate = new LinearApproximator(-1 * limelightVisionMaxRotateTarget/ limelightMaxtx, 0);
-        // alternative piecewise approximator
-         m_autoVisionRotateApproximate = new PiecewiseApproximator(1, 3, -1 * limelightVisionMaxRotateTarget / limelightMaxtx, 0);
+        // negative slope to rotate the other way
+        // m_autoVisionRotateApproximate = new LinearApproximator(-1 *
+        // limelightVisionMaxRotateTarget/ limelightMaxtx, 0);
     }
 
     @Override
@@ -95,17 +98,6 @@ public class DriverCommands extends CommandBase {
             m_joystickOrientationMultiplier = -1;
         }
 
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        NetworkTable table = inst.getTable("limelight");
-        NetworkTableEntry pipeline = table.getEntry("getpipe");
-        NetworkTableEntry tx = table.getEntry("tx");
-        NetworkTableEntry ty = table.getEntry("ty");
-        NetworkTableEntry ta = table.getEntry("ta");
-        double x = tx.getDouble(0.0);
-        double y = ty.getDouble(0.0);
-        double area = ta.getDouble(0.0);
-        long pipe = pipeline.getInteger(0);
-
         // SmartDashboard.putNumber("limelightX", x);
         // SmartDashboard.putNumber("LimelightY", y);
         // SmartDashboard.putNumber("LimelightArea", area);
@@ -115,12 +107,19 @@ public class DriverCommands extends CommandBase {
         // System.out.println("Limelight pipeline: " + pipe);
 
         if (kDriver.getRawAxis(kLeftTrigger) > kDeadband) {
-            // driveTrain.rotationTarget = mapping.clamp(driveTrain.getHeadingError(x), -kMaxRotSpeed,
-            //         kMaxRotSpeed);
-            // System.out.printf("X: %f\t Heading error: %f \t Calc: %f\n", x, driveTrain.getHeadingError(x), autoPositionH.calc(driveTrain.getHeadingError(x)));
-            driveTrain.rotationTarget = mapping.clamp(m_autoVisionRotateApproximate.approximate(x), -kMaxRotSpeed, kMaxRotSpeed);
+            // driveTrain.rotationTarget = mapping.clamp(driveTrain.getHeadingError(x),
+            // -kMaxRotSpeed,
+            // kMaxRotSpeed);
+            // System.out.printf("X: %f\t Heading error: %f \t Calc: %f\n", x,
+            // driveTrain.getHeadingError(x),
+            // autoPositionH.calc(driveTrain.getHeadingError(x)));
+            double turn = turnPID.calc(coral.getTx());
+            System.out.println(turn);
+            driveTrain.rotationTarget = mapping.clamp(turn, -kMaxRotSpeed,
+                    kMaxRotSpeed);
             driveTrain.doFieldOrientation = true;
-            System.out.println("Drive Target: "+ driveTrain.rotationTarget);
+            System.out.println("Drive Target: " + driveTrain.rotationTarget);
+
         } else {
             driveTrain.rotationTarget = -1
                     * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
