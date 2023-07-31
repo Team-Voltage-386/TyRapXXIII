@@ -31,7 +31,7 @@ public class DriverCommands extends CommandBase {
     private Drivetrain driveTrain;
     private PersistentShufflableDouble driveCurvingPower = new PersistentShufflableDouble(1, "driveCurvingPower");
     private PersistentShufflableDouble rotationCurvingPower = new PersistentShufflableDouble(3, "rotationCurvingPower");
-    private PID turnPID = new PID(0.06, 0.01, 0.0);
+    private PID turnPID = new PID(0.1, 0.01, 0.0);
 
     private double testingBoostSpeed; // comment out before tryouts
     private double driveJoystickAngle, driveMagnitude, driveJoystickMagnitude;
@@ -114,17 +114,30 @@ public class DriverCommands extends CommandBase {
             // driveTrain.getHeadingError(x),
             // autoPositionH.calc(driveTrain.getHeadingError(x)));
             double turn = turnPID.calc(coral.getTx());
-            System.out.println(turn);
+            System.out.println("Heading error = " + coral.getTx());
+            System.out.println("Turn target = " + turn);
             driveTrain.rotationTarget = mapping.clamp(turn, -kMaxRotSpeed,
                     kMaxRotSpeed);
             driveTrain.doFieldOrientation = true;
             System.out.println("Drive Target: " + driveTrain.rotationTarget);
 
+            driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.xDriveTarget,
+                    Math.cos(Math.toRadians(coral.getTx() + driveTrain.getRawHeading())) * m_driveSpeed);
+            driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.yDriveTarget,
+                    Math.sin(coral.getTy() + driveTrain.getRawHeading()) * m_driveSpeed);
         } else {
             driveTrain.rotationTarget = -1
                     * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
                     * m_rotSpeed;
             // System.out.println("Normal rotationTarget: " + driveTrain.rotationTarget);
+            driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.xDriveTarget,
+                    -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
+            driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.yDriveTarget,
+                    m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
         }
 
         if (driveTrain.doFieldOrientation) {
@@ -132,13 +145,6 @@ public class DriverCommands extends CommandBase {
         } else {
             m_joystickOrientationMultiplier = -1;
         }
-
-        driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
-                .get(), 0, 1, driveTrain.xDriveTarget,
-                -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
-        driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
-                .get(), 0, 1, driveTrain.yDriveTarget,
-                m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
 
         // comment out before tryouts
         // if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {

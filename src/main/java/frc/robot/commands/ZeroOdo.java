@@ -29,5 +29,5 @@ public class ZeroOdo extends CommandBase {
     public boolean isFinished() {
         return done;
     }
-    
+
 }

@@ -10,37 +10,41 @@ import frc.robot.utils.ArmKeyframe;
 import static frc.robot.utils.Flags.*;
 
 public class ArmDo extends CommandBase {
-  private Arm m_arm;
-  private ArmKeyframe[] m_sequence;
-  /**
-   * set arm sequence of arm
-   * @param arm
-   * @param sequence
-   */
-  public ArmDo(Arm arm, ArmKeyframe[] sequence) {
-    m_arm=arm;
-    m_sequence=sequence;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(arm);
-  }
+    private Arm m_arm;
+    private ArmKeyframe[] m_sequence;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+    /**
+     * set arm sequence of arm
+     * 
+     * @param arm
+     * @param sequence
+     */
+    public ArmDo(Arm arm, ArmKeyframe[] sequence) {
+        m_arm = arm;
+        m_sequence = sequence;
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(arm);
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    m_arm.setKeyFrameSequence(m_sequence);
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        m_arm.setKeyFrameSequence(m_sequence);
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return armIsAtTarget;
-  }
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return armIsAtTarget;
+    }
 }

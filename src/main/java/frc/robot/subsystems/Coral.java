@@ -4,6 +4,9 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static frc.robot.Constants.LimelightConstants.*;
+
+import java.lang.Math;
 
 public class Coral extends SubsystemBase {
     private NetworkTableInstance inst;
@@ -39,7 +42,14 @@ public class Coral extends SubsystemBase {
         return pipeline.getInteger(0);
     }
 
+    public double getDistanceMeters() {
+        double angle = (90 - kLimelightDegreesFromVertical) + getTy();
+        double angleToRadians = Math.toRadians(angle);
+        return Math.tan(angleToRadians) * kLimelightHeightMeters;
+    }
+
     @Override
     public void periodic() {
+        System.out.println("LL Distance = " + getDistanceMeters());
     }
 }

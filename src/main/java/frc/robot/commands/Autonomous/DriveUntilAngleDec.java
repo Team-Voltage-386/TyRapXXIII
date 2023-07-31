@@ -9,9 +9,11 @@ import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.AutoConstants.*;
 
 /**
- * Drives until the robot reaches a target angle (A). If the robot doesnt reach the angle within the specified distance (sqrt(X^2 + Y^2), then the command stops.)
+ * Drives until the robot reaches a target angle (A). If the robot doesnt reach
+ * the angle within the specified distance (sqrt(X^2 + Y^2), then the command
+ * stops.)
  */
-    public class DriveUntilAngleDec extends CommandBase {
+public class DriveUntilAngleDec extends CommandBase {
 
     private final double x;
     private final double y;
@@ -42,8 +44,9 @@ import static frc.robot.Constants.AutoConstants.*;
     public void execute() {
         SmartDashboard.putNumber("distance", dt.distanceTo(x, y));
         SmartDashboard.putNumber("angle", dt.ypr[yprAxis]);
-        SmartDashboard.putBoolean("error reached", dt.distanceTo(x, y) < driveTolerance && dt.getHeadingError(h) < headingTolerance);
-        
+        SmartDashboard.putBoolean("error reached",
+                dt.distanceTo(x, y) < driveTolerance && dt.getHeadingError(h) < headingTolerance);
+
         dt.xDriveTarget = autoPositionX.calc(x - dt.xPos);
         dt.yDriveTarget = autoPositionY.calc(y - dt.yPos);
         dt.rotationTarget = -autoPositionH.calc(dt.getHeadingError(h));
@@ -52,11 +55,10 @@ import static frc.robot.Constants.AutoConstants.*;
     @Override
     public boolean isFinished() {
         flag = dt.distanceTo(x, y) < driveTolerance && dt.getHeadingError(h) < headingTolerance;
-        if(Math.abs(dt.ypr[yprAxis]) <= targAngle || flag) {
+        if (Math.abs(dt.ypr[yprAxis]) <= targAngle || flag) {
             return true;
-        }
-        else 
-        return false;
+        } else
+            return false;
     }
 
     @Override

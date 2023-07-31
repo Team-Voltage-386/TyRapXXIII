@@ -11,25 +11,26 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class Flags {
 
     // public static boolean IntakeDirection;// put out or suck
-    public static boolean ConeMode=true;
-    public static boolean handCanRotate=false;
-    public static boolean scoreHighTarget=true;
-    public static boolean armIsAtTarget=false;
+    public static boolean ConeMode = true;
+    public static boolean handCanRotate = false;
+    public static boolean scoreHighTarget = true;
+    public static boolean armIsAtTarget = false;
     public static subsystemsStates manipulatorSetState = subsystemsStates.runStow;
 
     public static enum subsystemsStates {
         runStow, runScore, runPickup
     }
-    public static String statesString(subsystemsStates state){
-        switch(state){
+
+    public static String statesString(subsystemsStates state) {
+        switch (state) {
             case runStow:
-            return "runStow";
+                return "runStow";
             case runScore:
-            return "runScore";
+                return "runScore";
             case runPickup:
-            return "runPickup";
+                return "runPickup";
             default:
-            return "bad";
+                return "bad";
         }
     }
 }

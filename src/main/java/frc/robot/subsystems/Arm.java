@@ -92,8 +92,10 @@ public class Arm extends SubsystemBase {
         ShoulderEncoder.reset();
         ElbowEncoder.reset();
 
-        ShoulderFeedForward = new AFFFinal(kArmShoulderPID[0], kArmShoulderPID[1], kArmShoulderPID[2],kArmShoulderPID[3], kArmShoulderPID[4]);
-        ElbowFeedForward = new AFFFinal(kArmElbowPID[0],kArmElbowPID[1],kArmElbowPID[2],kArmElbowPID[3],kArmElbowPID[4]);
+        ShoulderFeedForward = new AFFFinal(kArmShoulderPID[0], kArmShoulderPID[1], kArmShoulderPID[2],
+                kArmShoulderPID[3], kArmShoulderPID[4]);
+        ElbowFeedForward = new AFFFinal(kArmElbowPID[0], kArmElbowPID[1], kArmElbowPID[2], kArmElbowPID[3],
+                kArmElbowPID[4]);
 
         sequenceIndex = 0;
 
@@ -123,7 +125,7 @@ public class Arm extends SubsystemBase {
         }
 
         // add a filter of target angles here
-        ArmDrive();// the only line that will drive the arm motors is this one
+        // ArmDrive();// the only line that will drive the arm motors is this one
         updateWidgets();
         updateShufflables();
     }

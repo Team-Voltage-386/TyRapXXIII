@@ -62,8 +62,8 @@ public class Drivetrain extends SubsystemBase {
                     double r = ((2 * Math.PI * swerve.distFromCenter) / 360) * rotationTarget; // rotation speed
 
                     double rAngle = swerve.angleFromCenter + 90;
-                    if (doFieldOrientation) rAngle += angle;
-
+                    if (doFieldOrientation)
+                        rAngle += angle;
 
                     x += r * Math.cos(Math.toRadians(rAngle));
                     y += r * Math.sin(Math.toRadians(rAngle));
@@ -181,17 +181,13 @@ public class Drivetrain extends SubsystemBase {
 
     public double getHeadingError(double h) {
         double res = h - getRawHeading() - 180;
-        if (360-Math.abs(res)<10)
-        {
-            if (res<0)
-            {
-                //Robot wants to do negative 360
-                res=360+res;
-            }
-            else 
-            {
-                //Robot wants to do positive 360
-                res=360-res;
+        if (360 - Math.abs(res) < 10) {
+            if (res < 0) {
+                // Robot wants to do negative 360
+                res = 360 + res;
+            } else {
+                // Robot wants to do positive 360
+                res = 360 - res;
             }
         }
         while (angle > 180)

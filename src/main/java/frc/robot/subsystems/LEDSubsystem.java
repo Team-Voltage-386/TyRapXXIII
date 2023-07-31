@@ -9,196 +9,179 @@ import frc.robot.Robot;
 import static frc.robot.Constants.LEDConstants.*;
 import static frc.robot.utils.Flags.*;
 
-public class LEDSubsystem extends SubsystemBase
-{
-    //Intializes led length and port
+public class LEDSubsystem extends SubsystemBase {
+    // Intializes led length and port
     private static final int LEDPort = kLEDPort;
     private static final int LEDLength = kLEDLength;
     private boolean LEDConeMode;
     private double BWCycle = 0.0;
 
-    //LEDs will alternate every LED_Speed milliseconds
-    private static int LED_Speed=50;
+    // LEDs will alternate every LED_Speed milliseconds
+    private static int LED_Speed = 50;
 
-    //Sets up the LEDs so we can write values to them
+    // Sets up the LEDs so we can write values to them
     AddressableLED led = new AddressableLED(LEDPort);
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LEDLength);
 
-    //Sets up all the LED values and starts the LEDs
+    // Sets up all the LED values and starts the LEDs
     public LEDSubsystem() {
         led.setLength(LEDLength);
         led.setData(ledBuffer);
         led.start();
     }
 
-    public void updateLEDS()
-    {
-        if (Robot.inst.isEnabled())
-        {
-            if (LEDConeMode==true)
-            {
+    public void updateLEDS() {
+        if (Robot.inst.isEnabled()) {
+            if (LEDConeMode == true) {
                 allYellow();
             }
-            if (LEDConeMode==false)
-            {
+            if (LEDConeMode == false) {
                 allBlue();
             }
         } else {
-            allOff(); //i added this while ryan was afk
+            allOff(); // i added this while ryan was afk
         }
     }
 
-    //Sets the single LED at index to purple
+    // Sets the single LED at index to purple
     public void setOnePurple(int index) {
         ledBuffer.setRGB(index, 208, 58, 224);
     }
 
-    //Sets the single LED at index to yellow
+    // Sets the single LED at index to yellow
     public void setOneYellow(int index) {
         ledBuffer.setRGB(index, 241, 245, 7);
     }
-    
-    //Sets the single LED at index to blue
+
+    // Sets the single LED at index to blue
     public void setOneBlue(int index) {
         ledBuffer.setRGB(index, 0, 0, 255);
     }
 
-    //Turns the single LED at index off
+    // Turns the single LED at index off
     public void setOneOff(int index) {
         ledBuffer.setRGB(index, 0, 0, 0);
     }
 
     // public void alternateBlueYellow() {
-    //     for(int i = 0; i < ledBuffer.getLength(); i++) {
-    //         if(i%2 ==0) setOneBlue(i);
-    //         else setOneYellow(i);
-    //     }
-    //     led.setData(ledBuffer);
+    // for(int i = 0; i < ledBuffer.getLength(); i++) {
+    // if(i%2 ==0) setOneBlue(i);
+    // else setOneYellow(i);
     // }
-    public void setLEDConeMode(boolean ManipulatorConemode){
-        LEDConeMode=ManipulatorConemode;
+    // led.setData(ledBuffer);
+    // }
+    public void setLEDConeMode(boolean ManipulatorConemode) {
+        LEDConeMode = ManipulatorConemode;
     }
-    //Sets all of the LEDs on the strip to purple
+
+    // Sets all of the LEDs on the strip to purple
     public void allPurple() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-          setOnePurple(i);
+            setOnePurple(i);
         }
     }
-    
-    //Turns off all of the LEDs on the strip
+
+    // Turns off all of the LEDs on the strip
     public void allOff() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-          setOneOff(i);
+            setOneOff(i);
         }
     }
-    
-    //Sets all of the Leds on the strip to Yellow
+
+    // Sets all of the Leds on the strip to Yellow
     public void allYellow() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-          setOneYellow(i);
+            setOneYellow(i);
         }
     }
 
-    //Sets all of the Leds on the strip to blue
+    // Sets all of the Leds on the strip to blue
     public void allBlue() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-          setOneBlue(i);
+            setOneBlue(i);
         }
     }
 
-    //Alternates all of the LEDs between off and blue for when the Robot is in cube mode
+    // Alternates all of the LEDs between off and blue for when the Robot is in cube
+    // mode
     public void AlternatingBlue() {
-        int LED_Mode=0;
-        if ((Timer.getFPGATimestamp()/(LED_Speed*2))>LED_Speed)
-        {
-            LED_Mode=0;
-        }
-        else
-        {
-            LED_Mode=1;
+        int LED_Mode = 0;
+        if ((Timer.getFPGATimestamp() / (LED_Speed * 2)) > LED_Speed) {
+            LED_Mode = 0;
+        } else {
+            LED_Mode = 1;
         }
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-            if (i%2==LED_Mode)
-            {
+            if (i % 2 == LED_Mode) {
                 setOneBlue(i);
-            }
-            else
-            {
+            } else {
                 setOneOff(i);
             }
         }
     }
 
-    //Alternates all of the LEDs between off and purple for when the Robot is in cone mode
+    // Alternates all of the LEDs between off and purple for when the Robot is in
+    // cone mode
     public void AlternatingYellow() {
-        int LED_Mode=0;
-        if ((int)(Timer.getFPGATimestamp()/(LED_Speed*2))>LED_Speed)
-        {
-            LED_Mode=0;
-        }
-        else
-        {
-            LED_Mode=1;
+        int LED_Mode = 0;
+        if ((int) (Timer.getFPGATimestamp() / (LED_Speed * 2)) > LED_Speed) {
+            LED_Mode = 0;
+        } else {
+            LED_Mode = 1;
         }
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-            if (i%2==LED_Mode)
-            {
+            if (i % 2 == LED_Mode) {
                 setOneYellow(i);
-            }
-            else
-            {
+            } else {
                 setOneOff(i);
             }
         }
     }
 
-    public void FadingBlue(){
-        for (int i=0; i < ledBuffer.getLength(); i++)
-        {
-            ledBuffer.setHSV(i, 270, 100, ((int)(Timer.getFPGATimestamp()*100)%100));
+    public void FadingBlue() {
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setHSV(i, 270, 100, ((int) (Timer.getFPGATimestamp() * 100) % 100));
         }
     }
 
-    public void FadingYellow(){
-        for (int i=0; i < ledBuffer.getLength(); i++)
-        {
-            ledBuffer.setHSV(i, 90, 100, ((int)(Timer.getFPGATimestamp()*100)%100));
+    public void FadingYellow() {
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setHSV(i, 90, 100, ((int) (Timer.getFPGATimestamp() * 100) % 100));
         }
     }
-    //Huh? (Ask Lucas idk what he was trying to do)
-    public void BlueYellow()
-    {
-        for(int i = 0; i < ledBuffer.getLength(); i++)
-        {
-            
+
+    // Huh? (Ask Lucas idk what he was trying to do)
+    public void BlueYellow() {
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+
         }
         BWCycle += 0.01;
     }
-   
+
     // public void allWhite() {
-    //     for (int i = 0; i < ledBuffer.getLength(); i++) {
-    //       ledBuffer.setRGB(i, 255, 255, 255);
-    //     }
+    // for (int i = 0; i < ledBuffer.getLength(); i++) {
+    // ledBuffer.setRGB(i, 255, 255, 255);
     // }
-    
-    
-    
-    //   /**
-    //    * inputs angle from gyro and makes the LEDs do pretty colors using a 3phase sin wave
-    //    * @param a
-    //    */
-    //   public void setColorWithAngle(double angle) {
-    //     int a = (int)angle;
-    //     if(a > 360 || a < -360)  a = a%360;
-    //     //logic converting degrees to radians and multiplying by 255
-    //     int r = Math.abs((int)(255*Math.pow(Math.cos(2*((a*Pi)/180)), 3)));
-    //     int g = Math.abs((int)(255*Math.pow(Math.cos(2*(Pi/3) + ((a*Pi)/180)), 3)));
-    //     int b = Math.abs((int)(255*Math.pow(Math.cos(2*(((2*Pi)/3) + ((a*Pi)/180))), 3)));
-    //     //setting RGB values
-    //     for (int i = 0; i < ledBuffer.getLength(); i++) {
-    //       ledBuffer.setRGB(i, r, g, b);
-    //     }
-    //   }
+    // }
+
+    // /**
+    // * inputs angle from gyro and makes the LEDs do pretty colors using a 3phase
+    // sin wave
+    // * @param a
+    // */
+    // public void setColorWithAngle(double angle) {
+    // int a = (int)angle;
+    // if(a > 360 || a < -360) a = a%360;
+    // //logic converting degrees to radians and multiplying by 255
+    // int r = Math.abs((int)(255*Math.pow(Math.cos(2*((a*Pi)/180)), 3)));
+    // int g = Math.abs((int)(255*Math.pow(Math.cos(2*(Pi/3) + ((a*Pi)/180)), 3)));
+    // int b = Math.abs((int)(255*Math.pow(Math.cos(2*(((2*Pi)/3) + ((a*Pi)/180))),
+    // 3)));
+    // //setting RGB values
+    // for (int i = 0; i < ledBuffer.getLength(); i++) {
+    // ledBuffer.setRGB(i, r, g, b);
+    // }
+    // }
 
     @Override
     public void periodic() {
@@ -206,6 +189,4 @@ public class LEDSubsystem extends SubsystemBase
         updateLEDS();
     }
 
-
-    
 }

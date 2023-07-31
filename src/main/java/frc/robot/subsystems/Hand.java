@@ -114,9 +114,10 @@ public class Hand extends SubsystemBase {
             ejectSpeed = -kCubeIntakeSpeed - .2;
             stowSpeed = kCubeStowSpeed;
         }
-        
+
     }
-    private void runIntakeMotorState(){
+
+    private void runIntakeMotorState() {
         switch (intakeCurrentTask) {
             case intake:
                 RPickup.set(intakeSpeed);
@@ -161,8 +162,7 @@ public class Hand extends SubsystemBase {
             } else {
                 HandRotationalMotor.set(ControlMode.PercentOutput, 0);
             }
-        }
-        else {
+        } else {
             HandRotationalMotor.set(ControlMode.PercentOutput, 0);
         }
     }

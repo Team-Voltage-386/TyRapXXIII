@@ -13,33 +13,34 @@ import frc.robot.subsystems.Hand;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class HandTasks extends InstantCommand {
-  private Hand m_hand;
-  private handIntakeStates m_IntakeState;
-  private boolean m_clawClose;
+    private Hand m_hand;
+    private handIntakeStates m_IntakeState;
+    private boolean m_clawClose;
 
-  /**
-   * set hand states of claw and intake wheel speed. Wrist should be set on 0
-   * @param clawClose
-   * @param intakeDo
-   * @param hand
-   */
-  public HandTasks(boolean clawClose, handIntakeStates intakeDo, Hand hand) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_clawClose=clawClose;
-    m_hand = hand;
-    m_IntakeState = intakeDo;
-    addRequirements(hand);
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    m_hand.IntakeMotorControl(m_IntakeState);
-    if (m_clawClose) {
-      m_hand.pcmCompressor.set((Value.kForward));
-    } else {
-      m_hand.pcmCompressor.set((Value.kReverse));
+    /**
+     * set hand states of claw and intake wheel speed. Wrist should be set on 0
+     * 
+     * @param clawClose
+     * @param intakeDo
+     * @param hand
+     */
+    public HandTasks(boolean clawClose, handIntakeStates intakeDo, Hand hand) {
+        // Use addRequirements() here to declare subsystem dependencies.
+        m_clawClose = clawClose;
+        m_hand = hand;
+        m_IntakeState = intakeDo;
+        addRequirements(hand);
     }
 
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        m_hand.IntakeMotorControl(m_IntakeState);
+        if (m_clawClose) {
+            m_hand.pcmCompressor.set((Value.kForward));
+        } else {
+            m_hand.pcmCompressor.set((Value.kReverse));
+        }
+
+    }
 }

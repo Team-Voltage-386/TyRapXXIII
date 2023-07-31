@@ -1,586 +1,586 @@
 [
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/maxRotationSpeed",
-    "type": "double",
-    "value": 180.0,
-    "properties": {
-      "persistent": true
+    {
+        "name": "/Shuffleboard/persistentshufflabledoubles/maxRotationSpeed",
+        "type": "double",
+        "value": 180.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/persistentshufflabledoubles/maxDriveSpeed",
+        "type": "double",
+        "value": 4.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer0_p",
+        "type": "double",
+        "value": 0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer0_i",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer0_d",
+        "type": "double",
+        "value": 0.001,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive0_p",
+        "type": "double",
+        "value": 0.35,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive0_i",
+        "type": "double",
+        "value": 2.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive0_d",
+        "type": "double",
+        "value": 0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer1_p",
+        "type": "double",
+        "value": 0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer1_i",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer1_d",
+        "type": "double",
+        "value": 0.001,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive1_p",
+        "type": "double",
+        "value": 0.35,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive1_i",
+        "type": "double",
+        "value": 2.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive1_d",
+        "type": "double",
+        "value": 0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer2_p",
+        "type": "double",
+        "value": 0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer2_i",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer2_d",
+        "type": "double",
+        "value": 0.001,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive2_p",
+        "type": "double",
+        "value": 0.35,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive2_i",
+        "type": "double",
+        "value": 2.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive2_d",
+        "type": "double",
+        "value": 0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer3_p",
+        "type": "double",
+        "value": 0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer3_i",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTSteer3_d",
+        "type": "double",
+        "value": 0.001,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive3_p",
+        "type": "double",
+        "value": 0.35,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive3_i",
+        "type": "double",
+        "value": 2.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/DTDrive3_d",
+        "type": "double",
+        "value": 0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/persistentshufflabledoubles/driveAccelSmooth",
+        "type": "double",
+        "value": 0.2,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/persistentshufflabledoubles/rotateAccelSmooth",
+        "type": "double",
+        "value": 0.5,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/persistentshufflabledoubles/CurvingPower",
+        "type": "double",
+        "value": 1.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPID_p",
+        "type": "double",
+        "value": 0.1,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPID_i",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPID_d",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPIDf/g",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPIDsf",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPID_p",
+        "type": "double",
+        "value": 0.1,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPID_i",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPID_d",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPIDf/g",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPIDsf",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/persistentshufflabledoubles/armThreshhold",
+        "type": "double",
+        "value": 0.5,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/Arm/shoulderOffset",
+        "type": "double",
+        "value": 96.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/Arm/elbowOffset",
+        "type": "double",
+        "value": -124.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/persistentshufflabledoubles/driveCurvingPower",
+        "type": "double",
+        "value": 1.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/persistentshufflabledoubles/rotationCurvingPower",
+        "type": "double",
+        "value": 3.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ShoulderPIDF_p",
+        "type": "double",
+        "value": 0.0001,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ShoulderPIDF_i",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ShoulderPIDF_d",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ShoulderPIDFfg",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ShoulderPIDFsf",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ElbowPIDF_p",
+        "type": "double",
+        "value": 0.0001,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ElbowPIDF_i",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ElbowPIDF_d",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ElbowPIDFfg",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ElbowPIDFsf",
+        "type": "double",
+        "value": 0.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ShoulderMaxSpeed",
+        "type": "double",
+        "value": 0.1,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ElbowMaxSpeed",
+        "type": "double",
+        "value": 0.1,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/StowVelocity",
+        "type": "double",
+        "value": -0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/armThreshhold",
+        "type": "double",
+        "value": 0.5,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/TrajSteps",
+        "type": "double",
+        "value": 30.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/shoulderOffset",
+        "type": "double",
+        "value": 96.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/elbowOffset",
+        "type": "double",
+        "value": -124.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ShoulderMaxVoltage",
+        "type": "double",
+        "value": 3.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/ElbowMaxVoltage",
+        "type": "double",
+        "value": 3.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/ArmFF/StowVoltage",
+        "type": "double",
+        "value": -0.01,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosX_p",
+        "type": "double",
+        "value": 1.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosX_i",
+        "type": "double",
+        "value": 2.5,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosX_d",
+        "type": "double",
+        "value": 0.2,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosY_p",
+        "type": "double",
+        "value": 1.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosY_i",
+        "type": "double",
+        "value": 2.5,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosY_d",
+        "type": "double",
+        "value": 0.2,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosH_p",
+        "type": "double",
+        "value": 2.0,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosH_i",
+        "type": "double",
+        "value": 0.1,
+        "properties": {
+            "persistent": true
+        }
+    },
+    {
+        "name": "/Shuffleboard/autotab/autoPosH_d",
+        "type": "double",
+        "value": 0.1,
+        "properties": {
+            "persistent": true
+        }
     }
-  },
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/maxDriveSpeed",
-    "type": "double",
-    "value": 4.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer0_p",
-    "type": "double",
-    "value": 0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer0_i",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer0_d",
-    "type": "double",
-    "value": 0.001,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive0_p",
-    "type": "double",
-    "value": 0.35,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive0_i",
-    "type": "double",
-    "value": 2.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive0_d",
-    "type": "double",
-    "value": 0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer1_p",
-    "type": "double",
-    "value": 0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer1_i",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer1_d",
-    "type": "double",
-    "value": 0.001,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive1_p",
-    "type": "double",
-    "value": 0.35,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive1_i",
-    "type": "double",
-    "value": 2.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive1_d",
-    "type": "double",
-    "value": 0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer2_p",
-    "type": "double",
-    "value": 0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer2_i",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer2_d",
-    "type": "double",
-    "value": 0.001,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive2_p",
-    "type": "double",
-    "value": 0.35,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive2_i",
-    "type": "double",
-    "value": 2.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive2_d",
-    "type": "double",
-    "value": 0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer3_p",
-    "type": "double",
-    "value": 0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer3_i",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTSteer3_d",
-    "type": "double",
-    "value": 0.001,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive3_p",
-    "type": "double",
-    "value": 0.35,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive3_i",
-    "type": "double",
-    "value": 2.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/DTDrive3_d",
-    "type": "double",
-    "value": 0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/driveAccelSmooth",
-    "type": "double",
-    "value": 0.2,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/rotateAccelSmooth",
-    "type": "double",
-    "value": 0.5,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/CurvingPower",
-    "type": "double",
-    "value": 1.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPID_p",
-    "type": "double",
-    "value": 0.1,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPID_i",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPID_d",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPIDf/g",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ShoulderFeedForwardPIDsf",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPID_p",
-    "type": "double",
-    "value": 0.1,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPID_i",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPID_d",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPIDf/g",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/PIDTuning/ElbowFeedForwardPIDsf",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/armThreshhold",
-    "type": "double",
-    "value": 0.5,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/Arm/shoulderOffset",
-    "type": "double",
-    "value": 96.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/Arm/elbowOffset",
-    "type": "double",
-    "value": -124.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/driveCurvingPower",
-    "type": "double",
-    "value": 1.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/persistentshufflabledoubles/rotationCurvingPower",
-    "type": "double",
-    "value": 3.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ShoulderPIDF_p",
-    "type": "double",
-    "value": 0.0001,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ShoulderPIDF_i",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ShoulderPIDF_d",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ShoulderPIDFfg",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ShoulderPIDFsf",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ElbowPIDF_p",
-    "type": "double",
-    "value": 0.0001,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ElbowPIDF_i",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ElbowPIDF_d",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ElbowPIDFfg",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ElbowPIDFsf",
-    "type": "double",
-    "value": 0.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ShoulderMaxSpeed",
-    "type": "double",
-    "value": 0.1,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ElbowMaxSpeed",
-    "type": "double",
-    "value": 0.1,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/StowVelocity",
-    "type": "double",
-    "value": -0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/armThreshhold",
-    "type": "double",
-    "value": 0.5,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/TrajSteps",
-    "type": "double",
-    "value": 30.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/shoulderOffset",
-    "type": "double",
-    "value": 96.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/elbowOffset",
-    "type": "double",
-    "value": -124.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ShoulderMaxVoltage",
-    "type": "double",
-    "value": 3.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/ElbowMaxVoltage",
-    "type": "double",
-    "value": 3.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/ArmFF/StowVoltage",
-    "type": "double",
-    "value": -0.01,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosX_p",
-    "type": "double",
-    "value": 1.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosX_i",
-    "type": "double",
-    "value": 2.5,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosX_d",
-    "type": "double",
-    "value": 0.2,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosY_p",
-    "type": "double",
-    "value": 1.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosY_i",
-    "type": "double",
-    "value": 2.5,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosY_d",
-    "type": "double",
-    "value": 0.2,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosH_p",
-    "type": "double",
-    "value": 2.0,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosH_i",
-    "type": "double",
-    "value": 0.1,
-    "properties": {
-      "persistent": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/autotab/autoPosH_d",
-    "type": "double",
-    "value": 0.1,
-    "properties": {
-      "persistent": true
-    }
-  }
 ]

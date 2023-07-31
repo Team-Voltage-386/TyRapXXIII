@@ -13,22 +13,25 @@ import static frc.robot.utils.Flags.*;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetConemode extends InstantCommand {
-  private boolean m_ConeMode;
-  private LEDSubsystem m_LED;
-  public SetConemode(boolean coneMode, LEDSubsystem LED) {
-    m_ConeMode=coneMode;
-    m_LED=LED;
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-  public SetConemode(boolean coneMode){
-    m_ConeMode = coneMode;
-  }
+    private boolean m_ConeMode;
+    private LEDSubsystem m_LED;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    ConeMode=m_ConeMode;
-    if(m_LED!=null){
-    m_LED.setLEDConeMode(ConeMode);}
-  }
+    public SetConemode(boolean coneMode, LEDSubsystem LED) {
+        m_ConeMode = coneMode;
+        m_LED = LED;
+        // Use addRequirements() here to declare subsystem dependencies.
+    }
+
+    public SetConemode(boolean coneMode) {
+        m_ConeMode = coneMode;
+    }
+
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        ConeMode = m_ConeMode;
+        if (m_LED != null) {
+            m_LED.setLEDConeMode(ConeMode);
+        }
+    }
 }

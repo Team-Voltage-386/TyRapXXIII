@@ -1,6 +1,6 @@
 package frc.robot.utils.approximator;
 
-public class PiecewiseApproximator implements Approximatable{
+public class PiecewiseApproximator implements Approximatable {
 
     private double epsilon;
     private double phi;
@@ -13,6 +13,7 @@ public class PiecewiseApproximator implements Approximatable{
         this.m = M;
         this.b = B;
     }
+
     @Override
     public double approximate(double x) {
         if (Math.abs(x) < epsilon) {

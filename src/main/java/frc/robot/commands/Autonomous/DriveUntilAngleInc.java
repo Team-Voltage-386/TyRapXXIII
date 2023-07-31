@@ -10,7 +10,9 @@ import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.Constants.AutoConstants.*;
 
 /**
- * Drives until the robot reaches a target angle (A). If the robot doesnt reach the angle within the specified distance (sqrt(X^2 + Y^2), then the command stops.)
+ * Drives until the robot reaches a target angle (A). If the robot doesnt reach
+ * the angle within the specified distance (sqrt(X^2 + Y^2), then the command
+ * stops.)
  */
 public class DriveUntilAngleInc extends CommandBase {
 
@@ -45,23 +47,24 @@ public class DriveUntilAngleInc extends CommandBase {
     public void execute() {
         SmartDashboard.putNumber("distance", dt.distanceTo(x, y));
         SmartDashboard.putNumber("angle", dt.ypr[yprAxis]);
-        SmartDashboard.putBoolean("error reached", dt.distanceTo(x, y) < driveTolerance && dt.getHeadingError(h) < headingTolerance);
-        
-        dt.xDriveTarget = mapping.clamp(autoPositionX.calc(x - dt.xPos),-kMaxDriveSpeed*speed,kMaxDriveSpeed*speed);
-        dt.yDriveTarget = mapping.clamp(autoPositionY.calc(y - dt.yPos), -kMaxDriveSpeed*speed, kMaxDriveSpeed*speed);
-        dt.rotationTarget = mapping.clamp(-autoPositionH.calc(dt.getHeadingError(h)), -kMaxRotSpeed,kMaxRotSpeed);
+        SmartDashboard.putBoolean("error reached",
+                dt.distanceTo(x, y) < driveTolerance && dt.getHeadingError(h) < headingTolerance);
 
+        dt.xDriveTarget = mapping.clamp(autoPositionX.calc(x - dt.xPos), -kMaxDriveSpeed * speed,
+                kMaxDriveSpeed * speed);
+        dt.yDriveTarget = mapping.clamp(autoPositionY.calc(y - dt.yPos), -kMaxDriveSpeed * speed,
+                kMaxDriveSpeed * speed);
+        dt.rotationTarget = mapping.clamp(-autoPositionH.calc(dt.getHeadingError(h)), -kMaxRotSpeed, kMaxRotSpeed);
 
     }
 
     @Override
     public boolean isFinished() {
         flag = dt.distanceTo(x, y) < driveTolerance && dt.getHeadingError(h) < headingTolerance;
-        if(Math.abs(dt.ypr[yprAxis]) > targAngle || flag) {
+        if (Math.abs(dt.ypr[yprAxis]) > targAngle || flag) {
             return true;
-        }
-        else 
-        return false;
+        } else
+            return false;
     }
 
     @Override

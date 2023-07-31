@@ -5,9 +5,9 @@ public class AFFFinal extends PID {
     public double s;// static force to overcome from feedforward
 
     public AFFFinal(double P, double I, double D, double F, double S) {
-        super(P,I,D);
-        f=F;
-        s=S;
+        super(P, I, D);
+        f = F;
+        s = S;
     }
 
     /**
@@ -20,11 +20,12 @@ public class AFFFinal extends PID {
      *                     because of
      *                     shoulder angle
      */
-    public double calc(double pv,double SpatialAngle, double extraload) {
+    public double calc(double pv, double SpatialAngle, double extraload) {
         double result = super.calc(pv) + f * Math.cos(Math.toRadians(SpatialAngle)) + Math.signum(pv) * s + extraload;
         return result;
     }
-    public double calc(double pv,double SpatialAngle){
-        return calc(pv,SpatialAngle,0);
+
+    public double calc(double pv, double SpatialAngle) {
+        return calc(pv, SpatialAngle, 0);
     }
 }

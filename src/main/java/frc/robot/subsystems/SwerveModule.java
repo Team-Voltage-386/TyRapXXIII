@@ -66,7 +66,8 @@ public class SwerveModule {
         posiitonWidget = swerveTab.add("orientation" + SwerveModuleName, 0).withPosition(7,
                 swerveModuleID).withSize(1, 1)
                 .getEntry();
-        driveMotorSetWidget = swerveTab.add("dmSET" + SwerveModuleName, 0).withPosition(8, swerveModuleID).withSize(1, 1)
+        driveMotorSetWidget = swerveTab.add("dmSET" + SwerveModuleName, 0).withPosition(8, swerveModuleID)
+                .withSize(1, 1)
                 .getEntry();
         swerveModuleCount++;
 
@@ -125,12 +126,12 @@ public class SwerveModule {
     }
 
     // public void updateShufflables() {
-    //     // if (steerPID.detectChange()) {
-    //     //     steerPID.shuffleUpdatePID();
-    //     // }
-    //     // if (drivePID.detectChange()) {
-    //     //     drivePID.shuffleUpdatePID();
-    //     // }
+    // // if (steerPID.detectChange()) {
+    // // steerPID.shuffleUpdatePID();
+    // // }
+    // // if (drivePID.detectChange()) {
+    // // drivePID.shuffleUpdatePID();
+    // // }
     // }
 
 }

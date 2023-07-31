@@ -11,18 +11,21 @@ import frc.robot.subsystems.Drivetrain;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ManualFeedOdometry extends InstantCommand {
-  public Drivetrain m_Drivetrain;
-  private double x,y,h;
-  public ManualFeedOdometry(Drivetrain drivetrain, double X, double Y, double H) {
-    x=X; y=Y; h=H;
-    m_Drivetrain=drivetrain;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drivetrain);
-  }
+    public Drivetrain m_Drivetrain;
+    private double x, y, h;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    m_Drivetrain.feedBotPose(x, y, h);
-  }
+    public ManualFeedOdometry(Drivetrain drivetrain, double X, double Y, double H) {
+        x = X;
+        y = Y;
+        h = H;
+        m_Drivetrain = drivetrain;
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(drivetrain);
+    }
+
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        m_Drivetrain.feedBotPose(x, y, h);
+    }
 }

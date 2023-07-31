@@ -24,7 +24,8 @@ public class PIDShufflable extends PID {
         dUpdater = pidTab.addPersistent(PIDName + "_d", d).withPosition(pidObjectCount, 2).withSize(1, 1).getEntry();
         pidObjectCount++;
     }
-    public PIDShufflable(double P, double I, double D, String PIDName, String TabName){
+
+    public PIDShufflable(double P, double I, double D, String PIDName, String TabName) {
         super(P, I, D);
         lastTime = System.currentTimeMillis();
         pidTab = Shuffleboard.getTab(TabName);
