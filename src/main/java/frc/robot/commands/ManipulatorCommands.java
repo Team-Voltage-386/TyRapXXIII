@@ -51,9 +51,15 @@ public class ManipulatorCommands extends CommandBase {
   @Override
   public void execute() {
     manipulationStateWidget.setString(manipulatorSetState.toString());
-    if (kManipulator.getRawButtonPressed(kRightBumper)) 
+    if (kManipulator.getRawButton(kRightBumper)) 
+    {
+      m_hand.TestPID(0.5);
+      System.out.println("Hello World!");
+    }
+    else
     {
       m_hand.TestPID(0);
+      System.out.println("Goodbye!");
     }
   }
 
