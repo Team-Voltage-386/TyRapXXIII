@@ -331,12 +331,12 @@ public class Hand extends SubsystemBase {
 
     public void TestPID(double RotateAngle)
     {
-        SparkPIDcontrols.setReference(RotateAngle, CANSparkMax.ControlType.kSmartVelocity);
+        SparkPIDcontrols.setReference((RotateAngle/360.0*3), CANSparkMax.ControlType.kPosition);
     }
 
     private void updatePID()
     {
-        //System.out.println("PID UPDATING"+m1_encoder.getVelocity());
+        System.out.println("PID Position"+((int) (m1_encoder.getPosition()/3*360)));
         SmartDashboard.putNumber("SetPoint", setPoint);
         SmartDashboard.putNumber("ProcessVariable", m1_encoder.getVelocity());
         double p = PValue.getEntry().getDouble(0);
@@ -346,8 +346,6 @@ public class Hand extends SubsystemBase {
         double ff = FeedForward.getEntry().getDouble(0);
         double max = MaxOutput.getEntry().getDouble(0);
         double min = MinOutput.getEntry().getDouble(0);
-
-        System.out.println(SparkPIDcontrols.getP());
 
         if (kP != p)
         {

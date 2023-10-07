@@ -53,7 +53,7 @@ public class ManipulatorCommands extends CommandBase {
     manipulationStateWidget.setString(manipulatorSetState.toString());
     if (kManipulator.getRawButton(kRightBumper)) 
     {
-      m_hand.TestPID(0.5);
+      m_hand.TestPID(180);
       System.out.println("Hello World!");
     }
     else
