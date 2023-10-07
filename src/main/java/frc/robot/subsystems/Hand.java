@@ -66,23 +66,26 @@ public class Hand extends SubsystemBase {
     private DigitalInput HandLimitSwitch; // LIMIT READING TRUE MEANS SWTICH NOT HIT
     public boolean HandHitLimit; // HandHitLimit WILL READ TRUE WHEN IT HITS THE LIMIT
 
-    //PID values
-    private double maxRPM = 5700;
+    //Ryan PID motor
+    PID rightMotor;
 
-    private double kP; 
-    private double kI;
-    private double kD; 
-    private double kIz; 
-    private double kFF; 
-    private double kMaxOutput; 
-    private double kMinOutput;
+    // //PID values
+    // private double maxRPM = 5700;
 
-    private double setPoint;
+    // private double kP; 
+    // private double kI;
+    // private double kD; 
+    // private double kIz; 
+    // private double kFF; 
+    // private double kMaxOutput; 
+    // private double kMinOutput;
 
-    private ShuffleboardTab pidTab = Shuffleboard.getTab("Test PID");
-    private SimpleWidget PValue, IValue, DValue, IZone, FeedForward, MaxOutput, MinOutput, SetPoint, VelocityValue;
+    // private double setPoint;
 
-    private SparkMaxPIDController SparkPIDcontrols;
+    // private ShuffleboardTab pidTab = Shuffleboard.getTab("Test PID");
+    // private SimpleWidget PValue, IValue, DValue, IZone, FeedForward, MaxOutput, MinOutput, SetPoint, VelocityValue;
+
+    // private SparkMaxPIDController SparkPIDcontrols;
     private RelativeEncoder m1_encoder;
     
 
@@ -101,32 +104,33 @@ public class Hand extends SubsystemBase {
         //OLD PID Stuff
         m1_encoder = RPickup.getEncoder();
         //NEW PID Stuff
-        SparkPIDcontrols = RPickup.getPIDController();
+        rightMotor = new PID("Test PID", RPickup);
+        // SparkPIDcontrols = RPickup.getPIDController();
 
-        kP = 1e-10; 
-        kI = 0.1;
-        kD = 0.0001; 
-        kIz = 1; 
-        kFF = 0.000015; 
-        kMaxOutput = 1; 
-        kMinOutput = -1;
+        // kP = 1e-10; 
+        // kI = 0.1;
+        // kD = 0.0001; 
+        // kIz = 1; 
+        // kFF = 0.000015; 
+        // kMaxOutput = 1; 
+        // kMinOutput = -1;
 
-        PValue = pidTab.add("P Value", kP);
-        IValue = pidTab.add("I Value", kI);
-        DValue = pidTab.add("D Value", kD);
-        IZone= pidTab.add("I Zone", kIz);
-        FeedForward = pidTab.add("Feed Forward", kFF);
-        MaxOutput = pidTab.add("Max Output", kMaxOutput);
-        MinOutput = pidTab.add("Min Output", kMinOutput);
-        SetPoint = pidTab.add("Set Point", setPoint);
-        VelocityValue = pidTab.add("Velocity", m1_encoder.getVelocity());
+        // PValue = pidTab.add("P Value", kP);
+        // IValue = pidTab.add("I Value", kI);
+        // DValue = pidTab.add("D Value", kD);
+        // IZone= pidTab.add("I Zone", kIz);
+        // FeedForward = pidTab.add("Feed Forward", kFF);
+        // MaxOutput = pidTab.add("Max Output", kMaxOutput);
+        // MinOutput = pidTab.add("Min Output", kMinOutput);
+        // SetPoint = pidTab.add("Set Point", setPoint);
+        // VelocityValue = pidTab.add("Velocity", m1_encoder.getVelocity());
 
-        SparkPIDcontrols.setP(kP);
-        SparkPIDcontrols.setI(kI);
-        SparkPIDcontrols.setD(kD);
-        SparkPIDcontrols.setIZone(kIz);
-        SparkPIDcontrols.setFF(kFF);
-        SparkPIDcontrols.setOutputRange(kMinOutput, kMaxOutput);
+        // SparkPIDcontrols.setP(kP);
+        // SparkPIDcontrols.setI(kI);
+        // SparkPIDcontrols.setD(kD);
+        // SparkPIDcontrols.setIZone(kIz);
+        // SparkPIDcontrols.setFF(kFF);
+        // SparkPIDcontrols.setOutputRange(kMinOutput, kMaxOutput);
     }
 
     @Override
@@ -331,52 +335,52 @@ public class Hand extends SubsystemBase {
 
     public void TestPID(double RotateAngle)
     {
-        SparkPIDcontrols.setReference((RotateAngle/360.0*3), CANSparkMax.ControlType.kPosition);
+        rightMotor.setReference(RotateAngle, CANSparkMax.ControlType.kPosition);
     }
 
     private void updatePID()
     {
-        System.out.println("PID Position"+((int) (m1_encoder.getPosition()/3*360)));
-        SmartDashboard.putNumber("SetPoint", setPoint);
-        SmartDashboard.putNumber("ProcessVariable", m1_encoder.getVelocity());
-        double p = PValue.getEntry().getDouble(0);
-        double i = IValue.getEntry().getDouble(0);
-        double d = DValue.getEntry().getDouble(0);
-        double iz = IZone.getEntry().getDouble(0);
-        double ff = FeedForward.getEntry().getDouble(0);
-        double max = MaxOutput.getEntry().getDouble(0);
-        double min = MinOutput.getEntry().getDouble(0);
+        // System.out.println("PID Position"+((int) (m1_encoder.getPosition()/3*360)));
+        // SmartDashboard.putNumber("SetPoint", setPoint);
+        // SmartDashboard.putNumber("ProcessVariable", m1_encoder.getVelocity());
+        // double p = PValue.getEntry().getDouble(0);
+        // double i = IValue.getEntry().getDouble(0);
+        // double d = DValue.getEntry().getDouble(0);
+        // double iz = IZone.getEntry().getDouble(0);
+        // double ff = FeedForward.getEntry().getDouble(0);
+        // double max = MaxOutput.getEntry().getDouble(0);
+        // double min = MinOutput.getEntry().getDouble(0);
 
-        if (kP != p)
-        {
-            kP = p;
-            SparkPIDcontrols.setP(kP);
-        }
-        if (kI != i)
-        {
-            kI = i;
-            SparkPIDcontrols.setI(kI);
-        }
-        if (kD != d)
-        {
-            kD = d;
-            SparkPIDcontrols.setD(kD);
-        }
-        if (kIz != iz)
-        {
-            kIz = iz;
-            SparkPIDcontrols.setIZone(kIz);
-        }
-        if (kFF != ff)
-        {
-            kFF = ff;
-            SparkPIDcontrols.setFF(kFF);
-        }
-        if (kMaxOutput != max || kMinOutput != min)
-        {
-            kMaxOutput = max;
-            kMinOutput = min;
-            SparkPIDcontrols.setOutputRange(kMinOutput, kMaxOutput);
-        }    
+        // if (kP != p)
+        // {
+        //     kP = p;
+        //     SparkPIDcontrols.setP(kP);
+        // }
+        // if (kI != i)
+        // {
+        //     kI = i;
+        //     SparkPIDcontrols.setI(kI);
+        // }
+        // if (kD != d)
+        // {
+        //     kD = d;
+        //     SparkPIDcontrols.setD(kD);
+        // }
+        // if (kIz != iz)
+        // {
+        //     kIz = iz;
+        //     SparkPIDcontrols.setIZone(kIz);
+        // }
+        // if (kFF != ff)
+        // {
+        //     kFF = ff;
+        //     SparkPIDcontrols.setFF(kFF);
+        // }
+        // if (kMaxOutput != max || kMinOutput != min)
+        // {
+        //     kMaxOutput = max;
+        //     kMinOutput = min;
+        //     SparkPIDcontrols.setOutputRange(kMinOutput, kMaxOutput);
+        // }    
     }
 }
