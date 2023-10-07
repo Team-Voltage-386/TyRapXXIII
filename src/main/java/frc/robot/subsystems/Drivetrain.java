@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -171,7 +172,7 @@ public class Drivetrain extends SubsystemBase {
             yPos += yAdd;
 
             speed = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
-
+            SmartDashboard.putNumberArray("Robot Pos", ypr);
         }
     }
 
