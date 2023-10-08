@@ -119,6 +119,7 @@ public class PID extends SubsystemBase
         }    
     }
 
+    //Controls the motor with PID
     public void setReference(double refrenceValue, ControlType refrenceControlType)
     {
         SparkPIDcontrols.setReference((refrenceValue/360.0*3), refrenceControlType);
