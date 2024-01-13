@@ -2,7 +2,8 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -119,21 +120,23 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.setYaw(180);
+        IMU.getConfigurator().setYaw(180);
     }
 
     public void feedBotPose(double x, double y, double FieldOrientation) {
         xPos = x;
         yPos = y;
-        IMU.setYaw(FieldOrientation);
+        IMU.getConfigurator().setYaw(FieldOrientation);
     }
 
     public void resetFO(double a) {
-        IMU.setYaw(a);
+        IMU.getConfigurator().setYaw(a);
     }
 
     private void updateOdometry() {
-        IMU.getYawPitchRoll(ypr);
+        ypr[0] = IMU.getYaw().getValue();
+        ypr[1] = IMU.getPitch().getValue();
+        ypr[2] = IMU.getRoll().getValue();
         angle = getRawHeading();
 
         if (Robot.inst.isEnabled()) {

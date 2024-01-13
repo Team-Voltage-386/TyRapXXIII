@@ -1,6 +1,7 @@
 package frc.robot.commands.Autonomous;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import static frc.robot.Constants.DriveConstants.*;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -8,12 +9,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Tracer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
 import frc.robot.utils.PIDShufflable;
 
-public class Balance extends CommandBase {
+public class Balance extends Command {
     //init vars and methods
     private double balanceTarget = 2;
     private final Drivetrain dt;

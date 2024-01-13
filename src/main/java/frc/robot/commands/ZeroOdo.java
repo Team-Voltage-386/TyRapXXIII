@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
-public class ZeroOdo extends CommandBase {
+public class ZeroOdo extends Command {
 
     boolean done = false;
     double x;

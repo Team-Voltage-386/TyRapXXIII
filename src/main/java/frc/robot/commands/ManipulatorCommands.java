@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Hand;
 import frc.robot.subsystems.Hand.handIntakeStates;
@@ -22,7 +22,7 @@ import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.Flags.*;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 
-public class ManipulatorCommands extends CommandBase {
+public class ManipulatorCommands extends Command {
   private Arm m_arm;
   private Hand m_hand;
   private LEDSubsystem m_led;

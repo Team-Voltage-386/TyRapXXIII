@@ -29,7 +29,6 @@ import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 import static frc.robot.Constants.HandConstants.*;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import static frc.robot.utils.mapping.*;

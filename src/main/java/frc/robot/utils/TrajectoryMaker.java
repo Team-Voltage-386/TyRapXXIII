@@ -1,6 +1,5 @@
 package frc.robot.utils;
 
-import com.ctre.phoenix.motion.TrajectoryPoint;
 
 public class TrajectoryMaker {
     public static double a3, a2, tstep;

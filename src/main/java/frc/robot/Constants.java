@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.utils.ArmKeyframe;
@@ -129,16 +131,16 @@ public final class Constants {
                 // kSwerveDrivePID, 22, -0.36, 0.26, 292);
                 public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 24, 0.365125, -0.263525, 86.35, "LF", false);
+                                kSwerveDrivePID, 24, 0.365125, -0.263525, 86.35, "LF", SensorDirectionValue.Clockwise_Positive);
                 public static final SwerveModule RightFront = new SwerveModule(11, 15, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 21, 0.365125, 0.263525, 213.2, "RF", false);
+                                kSwerveDrivePID, 21, 0.365125, 0.263525, 213.2, "RF", SensorDirectionValue.Clockwise_Positive);
                 public static final SwerveModule LeftRear = new SwerveModule(13, 17, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 23, -0.365125, -0.263525, 235.45, "LR", false);// faulty encoder offset
+                                kSwerveDrivePID, 23, -0.365125, -0.263525, 235.45, "LR", SensorDirectionValue.Clockwise_Positive);// faulty encoder offset
                 public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 22, -0.365125, 0.263525, 133.33, "RR", true);
+                                kSwerveDrivePID, 22, -0.365125, 0.263525, 133.33, "RR", SensorDirectionValue.CounterClockwise_Positive);
         }
 
         public static final class SmoothingConstants {

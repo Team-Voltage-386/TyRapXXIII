@@ -1,13 +1,14 @@
 package frc.robot.commands.Autonomous;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import static frc.robot.Constants.DriveConstants.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
-public class LogicBalance extends CommandBase {
+public class LogicBalance extends Command {
 
     private final Drivetrain dt;
     // Store gyro values from pigeon
@@ -41,7 +42,9 @@ public class LogicBalance extends CommandBase {
     @Override
     public void execute() {
         // The Pigeon is mounted 90 degrees off, so pitch and roll are reversed
-        pigeon.getYawPitchRoll(ypr);
+        ypr[0] = pigeon.getYaw().getValue();
+        ypr[1] = pigeon.getPitch().getValue();
+        ypr[2] = pigeon.getRoll().getValue();
         // Slows down the robot as the balance progresses
         driveMultiplier = Math.pow(0.4, numTimesDirectionChanged);
 

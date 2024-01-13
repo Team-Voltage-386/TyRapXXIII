@@ -1,8 +1,12 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,7 +20,7 @@ public class SwerveModule {
 
     public final CANSparkMax steerMotor;
     public final CANSparkMax driveMotor;
-    public final CANCoder encoder;
+    public final CANcoder encoder;
     public final PID steerPID;
     public final PID drivePID;
     public final double x;
@@ -39,7 +43,7 @@ public class SwerveModule {
     public final GenericEntry posiitonWidget;
 
     public SwerveModule(int STEERMOTOR, int DRIVEMOTOR, double driveConversion, double[] steerPIDValue,
-            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName, boolean isInverted) {
+            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName, SensorDirectionValue directionOnEncoder) {
         swerveModuleID = swerveModuleCount;
 
         steerPID = new PID(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2]);
@@ -48,10 +52,10 @@ public class SwerveModule {
         driveMotor = new CANSparkMax(DRIVEMOTOR, MotorType.kBrushless);
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);
         driveMotor.getEncoder().setVelocityConversionFactor(driveConversion);
-        encoder = new CANCoder(encoderID);
+        encoder = new CANcoder(encoderID);
         //encoder.configFactoryDefault();
         encoder.clearStickyFaults();
-        encoder.configSensorDirection(isInverted);
+        encoder.getConfigurator().apply(new MagnetSensorConfigs().withSensorDirection(directionOnEncoder));
 
         x = X;
         y = Y;
@@ -77,7 +81,7 @@ public class SwerveModule {
     }
 
     public double getEncoderPosition() {
-        return encoder.getAbsolutePosition() - encoderOffs;
+        return encoder.getAbsolutePosition().getValue() - encoderOffs;
     }
 
     public void calcPosition(double offX, double offY) {
