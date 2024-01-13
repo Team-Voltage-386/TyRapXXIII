@@ -2,7 +2,7 @@ package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.networktables.GenericSubscriber;
+// import edu.wpi.first.networktables.GenericSubscriber;
 import edu.wpi.first.networktables.GenericEntry;
 
 public class PersistentShufflableInteger {

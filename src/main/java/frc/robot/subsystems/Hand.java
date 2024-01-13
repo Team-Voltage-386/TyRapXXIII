@@ -5,16 +5,16 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.util.Enumeration;
+// import java.util.Enumeration;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+// import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -25,16 +25,16 @@ import frc.robot.utils.PersistentShufflableDouble;
 import static frc.robot.Constants.HandConstants.*;
 import static frc.robot.utils.Flags.*;
 
-import com.ctre.phoenix.motorcontrol.MotorCommutation;
+//import com.ctre.phoenix.motorcontrol.MotorCommutation;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import static frc.robot.Constants.*;
-import static frc.robot.utils.mapping.*;
+// import static frc.robot.utils.mapping.*;
 
-import static frc.robot.utils.Flags.*;
+// import static frc.robot.utils.Flags.*;
 
 public class Hand extends SubsystemBase {
     /*
