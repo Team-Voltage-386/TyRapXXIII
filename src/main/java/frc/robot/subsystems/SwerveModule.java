@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import com.ctre.phoenix6.StatusCode;
+//import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 // import frc.robot.utils.PIDShufflable;
 import static frc.robot.utils.mapping.*;
-import frc.robot.Constants.DriveConstants;
+//import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.PID;
 
 public class SwerveModule {

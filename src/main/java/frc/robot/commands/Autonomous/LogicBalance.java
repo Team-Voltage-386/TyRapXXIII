@@ -1,10 +1,10 @@
 package frc.robot.commands.Autonomous;
 
-import com.ctre.phoenix6.StatusCode;
+// import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import static frc.robot.Constants.DriveConstants.*;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
