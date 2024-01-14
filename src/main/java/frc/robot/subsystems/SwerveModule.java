@@ -81,7 +81,7 @@ public class SwerveModule {
     }
 
     public double getEncoderPosition() {
-        return encoder.getAbsolutePosition().getValue() - encoderOffs;
+        return encoder.getAbsolutePosition().getValue()*360 - encoderOffs;
     }
 
     public void calcPosition(double offX, double offY) {
@@ -104,14 +104,16 @@ public class SwerveModule {
         } else {
             driveMult = 1;
         }
-        System.out.println(res);
         return res;
     }
 
     public void drive() {
         updateWidget();
 
-        steerMotor.set(steerPID.calc(getSwerveHeadingError()));
+        double val = steerPID.calc(getSwerveHeadingError());
+        updateWidget2(val);
+
+        steerMotor.set(val);
 
         driveMotor.set(mapValue(getSwerveHeadingError(), 0, 180, 1, 0)
                 * drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity()));
@@ -124,8 +126,14 @@ public class SwerveModule {
         driveMotor.set(0);
     }
 
+    public void updateWidget2(double val)
+    {
+        steerMotorCurrentWidget.setDouble(val);
+    }
+
     public void updateWidget() {
-        steerMotorCurrentWidget.setDouble(steerMotor.getOutputCurrent());
+        //steerMotorCurrentWidget.setDouble(steerMotor.getOutputCurrent());
+        
         driveMotorCurrentWidget.setDouble(driveMotor.getOutputCurrent());
         driveMotorSetWidget.setDouble(mapValue(Math.abs(getSwerveHeadingError()), 0, 180, 1, 0)
                 * (drivePID.calc((driveMult * targetDrive) - driveMotor.getEncoder().getVelocity())));
