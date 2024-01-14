@@ -104,6 +104,7 @@ public class SwerveModule {
         } else {
             driveMult = 1;
         }
+        System.out.println(res);
         return res;
     }
 
