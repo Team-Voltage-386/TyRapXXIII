@@ -4,15 +4,13 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.utils.ArmKeyframe;
 import frc.robot.utils.PID;
 // import frc.robot.utils.PIDShufflable;
 import frc.robot.utils.PersistentShufflableDouble;
-//import frc.robot.utils.PersistentShufflableInteger;
+import frc.robot.utils.PersistentShufflableInteger;
 import frc.robot.utils.ArmKeyframe.armKeyFrameStates;
 
 /**
@@ -109,7 +107,7 @@ public final class Constants {
                 public static PersistentShufflableDouble PSDMaxDriveSpeed = new PersistentShufflableDouble(4,
                                 "maxDriveSpeed");
                 public static final double kMaxRotSpeed = 120;
-                public static final double kMaxDriveSpeed = 3; //SHOULD BE 4
+                public static final double kMaxDriveSpeed = 1; //SHOULD BE 4
                 public static final double kSlowRotSpeed = 45;
                 public static final double kSlowDriveSpeed = 1; //SHOULD BE 1
                 public static final int kIMUid = 2;
@@ -129,22 +127,18 @@ public final class Constants {
                 // public static final SwerveModule RightRear = new SwerveModule(12, 16,
                 // kSwerveDriveEncConv, kSwerveSteerPID,
                 // kSwerveDrivePID, 22, -0.36, 0.26, 292);
-
                 public static final SwerveModule LeftFront = new SwerveModule(14, 18, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 24, 0.365125, -0.263525, 0.271*360, "LF", SensorDirectionValue.Clockwise_Positive);
+                                kSwerveDrivePID, 24, 0.365125, -0.263525, 86.35, "LF", false);
                 public static final SwerveModule RightFront = new SwerveModule(11, 15, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 21, 0.365125, 0.263525, 0.404*360, "RF", SensorDirectionValue.Clockwise_Positive);
+                                kSwerveDrivePID, 21, 0.365125, 0.263525, 213.2, "RF", false);
                 public static final SwerveModule LeftRear = new SwerveModule(13, 17, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 23, -0.365125, -0.263525, -0.159*360, "LR", SensorDirectionValue.Clockwise_Positive);// faulty encoder offset
+                                kSwerveDrivePID, 23, -0.365125, -0.263525, 235.45, "LR", false);// faulty encoder offset
                 public static final SwerveModule RightRear = new SwerveModule(12, 16, kSwerveDriveEncConv,
                                 kSwerveSteerPID,
-                                kSwerveDrivePID, 22, -0.365125, 0.263525, -0.345*360, "RR", SensorDirectionValue.CounterClockwise_Positive);
-
-               
-
+                                kSwerveDrivePID, 22, -0.365125, 0.263525, 133.33, "RR", true);
         }
 
         public static final class SmoothingConstants {

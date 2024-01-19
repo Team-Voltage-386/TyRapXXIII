@@ -1,10 +1,10 @@
 package frc.robot.utils;
 
-// import java.security.KeyStore.Entry;
+import java.security.KeyStore.Entry;
 
 import edu.wpi.first.networktables.GenericSubscriber;
-// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-// import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class AFFShufflable extends PIDShufflable {
     public double f;// f is maximum torque the motor fights

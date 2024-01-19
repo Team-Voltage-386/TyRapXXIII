@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
 import static frc.robot.Constants.LEDConstants.*;
-// import static frc.robot.utils.Flags.*;
+import static frc.robot.utils.Flags.*;
 
 public class LEDSubsystem extends SubsystemBase
 {

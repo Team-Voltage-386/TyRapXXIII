@@ -25,7 +25,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import static frc.robot.utils.Flags.*;
 
 import static frc.robot.Constants.ArmConstants.*;
-// import static frc.robot.Constants.ArmConstants.ArmSequences.*;
+import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 import static frc.robot.Constants.HandConstants.*;
 
 import com.revrobotics.CANSparkMax;

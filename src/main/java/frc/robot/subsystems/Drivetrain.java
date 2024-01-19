@@ -2,19 +2,15 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-import com.ctre.phoenix6.configs.MountPoseConfigs;
-import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import com.ctre.phoenix6.configs.Pigeon2Configurator;
-// import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.networktables.GenericEntry;
-// import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
-// import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-// import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -123,24 +119,21 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetFO() {
-        IMU.getConfigurator().apply(new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPoseYaw(180)));
-        
+        IMU.setYaw(180);
     }
 
     public void feedBotPose(double x, double y, double FieldOrientation) {
         xPos = x;
         yPos = y;
-        IMU.getConfigurator().apply(new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPoseYaw(FieldOrientation)));
+        IMU.setYaw(FieldOrientation);
     }
 
     public void resetFO(double a) {
-        IMU.getConfigurator().apply(new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPoseYaw(a)));
+        IMU.setYaw(a);
     }
 
     private void updateOdometry() {
-        ypr[0] = IMU.getYaw().getValue();
-        ypr[1] = IMU.getPitch().getValue();
-        ypr[2] = IMU.getRoll().getValue();
+        IMU.getYawPitchRoll(ypr);
         angle = getRawHeading();
 
         if (Robot.inst.isEnabled()) {

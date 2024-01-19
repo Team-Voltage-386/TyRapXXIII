@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.PID;
 import static frc.robot.Constants.DriveConstants.*;
-// import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2;
 import static frc.robot.Constants.AutoConstants.*;
 
 public class DriveUntil extends Command {
@@ -43,9 +42,7 @@ public class DriveUntil extends Command {
     @Override
     public void execute() {
 
-        ypr[0] = pigeon.getYaw().getValue();
-        ypr[1] = pigeon.getPitch().getValue();
-        ypr[2] = pigeon.getRoll().getValue();
+        pigeon.getYawPitchRoll(ypr);
         // Pigeon is mounted 90 degrees off, so use roll instead of pitch
 
         if (Math.abs(ypr[2]) > 12 && Math.abs(ypr[2]) <= 30) {
