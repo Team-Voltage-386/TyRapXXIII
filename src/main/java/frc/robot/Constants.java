@@ -107,7 +107,7 @@ public final class Constants {
                 public static PersistentShufflableDouble PSDMaxDriveSpeed = new PersistentShufflableDouble(4,
                                 "maxDriveSpeed");
                 public static final double kMaxRotSpeed = 120;
-                public static final double kMaxDriveSpeed = 4; //SHOULD BE 4
+                public static final double kMaxDriveSpeed = 1; //SHOULD BE 4
                 public static final double kSlowRotSpeed = 45;
                 public static final double kSlowDriveSpeed = 1; //SHOULD BE 1
                 public static final int kIMUid = 2;
