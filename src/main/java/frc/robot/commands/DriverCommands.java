@@ -71,15 +71,35 @@ public class DriverCommands extends Command {
         } else {
             m_joystickOrientationMultiplier = -1;
         }
-        driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
-                .get(), 0, 1, driveTrain.xDriveTarget,
-                -m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftVertical) * m_driveSpeed);
-        driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
-                .get(), 0, 1, driveTrain.yDriveTarget,
-                m_joystickOrientationMultiplier * kDriver.getRawAxis(kLeftHorizontal) * m_driveSpeed);
-        driveTrain.rotationTarget = -1
-                * curveJoystickAxis(kDriver.getRawAxis(kRightHorizontal), rotationCurvingPower.get())
-                * m_rotSpeed;
+
+        double leftVertStickVal = kDriver.getRawAxis(kLeftVertical);
+        double lefHorizStickVal = kDriver.getRawAxis(kLeftHorizontal);
+        double rightHorizStickVal = kDriver.getRawAxis(kRightHorizontal);
+
+        if (Math.abs(leftVertStickVal) > 0.08) 
+        {
+            driveTrain.xDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.xDriveTarget,
+                    -m_joystickOrientationMultiplier * leftVertStickVal * m_driveSpeed);
+        }
+        if (Math.abs(lefHorizStickVal) > 0.08) 
+        {
+            driveTrain.yDriveTarget = mapValue(kAccelerationSmoothFactor
+                    .get(), 0, 1, driveTrain.yDriveTarget,
+                    m_joystickOrientationMultiplier * lefHorizStickVal * m_driveSpeed);
+        }
+        if (Math.abs(rightHorizStickVal) > 0.08)
+        {
+            driveTrain.rotationTarget = -1
+                    * curveJoystickAxis(rightHorizStickVal, rotationCurvingPower.get())
+                    * m_rotSpeed;
+        }
+        if (!(Math.abs(leftVertStickVal) > 0.08 || Math.abs(lefHorizStickVal) > 0.08 || Math.abs(rightHorizStickVal) > 0.08))
+        {
+            driveTrain.xDriveTarget = 0;
+            driveTrain.yDriveTarget = 0;
+            driveTrain.rotationTarget = 0;
+        }
 
         // comment out before tryouts
         // if (kDriver.getRawAxis(kLeftTrigger) > 0.1) {
