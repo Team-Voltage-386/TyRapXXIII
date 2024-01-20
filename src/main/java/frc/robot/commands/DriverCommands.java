@@ -102,7 +102,7 @@ public class DriverCommands extends Command {
         // }
 
         if (kDriver.getRawButtonPressed(kLeftBumper))
-            driveTrain.setOffset(-0.65, 0);
+            driveTrain.setOffset(-0.8, 0);
         else if (kDriver.getRawButtonReleased(kLeftBumper))
             driveTrain.setOffset(0, 0);
 
