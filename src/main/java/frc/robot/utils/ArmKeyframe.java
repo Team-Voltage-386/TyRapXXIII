@@ -2,7 +2,8 @@ package frc.robot.utils;
 
 public class ArmKeyframe {
     public static enum armKeyFrameStates {
-        stowed, score, pickup, intermediary, scoreCubeMid, scoreCubeHigh, scoreConeMid, scoreConeHigh
+        stowed, score, pickupGround, intermediary, scoreCubeMid, scoreCubeHigh, scoreConeMid, scoreConeHigh,
+        hoverConeHigh, hoverConeMid, pickupChute
     }
 
     public double[] keyFrameAngles;
@@ -25,7 +26,7 @@ public class ArmKeyframe {
                 return "stowed";
             case score:
                 return "score";
-            case pickup:
+            case pickupGround:
                 return "pickup";
             case intermediary:
                 return "intermediary";

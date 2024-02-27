@@ -4,12 +4,12 @@
 
 package frc.robot.commands.Autonomous;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.utils.ArmKeyframe;
 import static frc.robot.utils.Flags.*;
 
-public class ArmDo extends CommandBase {
+public class ArmDo extends Command {
   private Arm m_arm;
   private ArmKeyframe[] m_sequence;
   /**

@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
   public static Robot inst;
 
   private RobotContainer m_robotContainer;
+  private final UsbCamera m_camera = CameraServer.startAutomaticCapture(0);
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -53,7 +54,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // CameraServer.startAutomaticCapture(0);
-    UsbCamera m_camera = CameraServer.startAutomaticCapture(0);
+    
     m_camera.setResolution(400, 300);
     m_camera.setFPS(30);
     Shuffleboard.getTab("Main").add(m_camera).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(4, 4).withProperties(Map.of("Rotation","QUARTER_CW"));

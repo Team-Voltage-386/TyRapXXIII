@@ -39,7 +39,7 @@ public class SwerveModule {
     public final GenericEntry posiitonWidget;
 
     public SwerveModule(int STEERMOTOR, int DRIVEMOTOR, double driveConversion, double[] steerPIDValue,
-            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName) {
+            double[] drivePIDValue, int encoderID, double X, double Y, double ENCOFFS, String SwerveModuleName, boolean isInverted) {
         swerveModuleID = swerveModuleCount;
 
         steerPID = new PID(steerPIDValue[0], steerPIDValue[1], steerPIDValue[2]);
@@ -49,6 +49,9 @@ public class SwerveModule {
         driveMotor.getEncoder().setPositionConversionFactor(driveConversion);
         driveMotor.getEncoder().setVelocityConversionFactor(driveConversion);
         encoder = new CANCoder(encoderID);
+        //encoder.configFactoryDefault();
+        encoder.clearStickyFaults();
+        encoder.configSensorDirection(isInverted);
 
         x = X;
         y = Y;

@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Hand;
 import frc.robot.subsystems.Hand.handIntakeStates;
@@ -22,13 +22,13 @@ import static frc.robot.Constants.DriveConstants.*;
 import static frc.robot.utils.Flags.*;
 import static frc.robot.Constants.ArmConstants.ArmSequences.*;
 
-public class ManipulatorCommands extends CommandBase {
+public class ManipulatorCommands extends Command {
   private Arm m_arm;
   private Hand m_hand;
   private LEDSubsystem m_led;
 
   /** Creates a new ManipulatorCommands. */
-  public ManipulatorCommands(Arm arm, Hand Hand,LEDSubsystem LEDSubsystem) {
+  public ManipulatorCommands(Arm arm, Hand Hand, LEDSubsystem LEDSubsystem) {
     m_arm = arm;
     m_hand = Hand;
     m_led = LEDSubsystem;
@@ -40,17 +40,25 @@ public class ManipulatorCommands extends CommandBase {
   public void initialize() {
     scoreHighTarget = true;
     manipulatorSetState = subsystemsStates.runStow;
-    manipulatorConemode=ConeMode;
+    manipulatorConemode = ConeMode;
   }
 
   public GenericEntry manipulationStateWidget = Shuffleboard.getTab("Main").add("manipState", "").getEntry();
-    public boolean manipulatorConemode;
+  public boolean manipulatorConemode;
+  public boolean manipulatorChutemode;
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     manipulationStateWidget.setString(manipulatorSetState.toString());
     // pickup
     if (kManipulator.getRawButtonPressed(kY)) {
+      manipulatorChutemode = false;
+      manipulatorSetState = subsystemsStates.runPickup;
+    }
+    // pickup from chute
+    if (kManipulator.getRawButtonPressed(kX)) {
+      manipulatorChutemode = true;
       manipulatorSetState = subsystemsStates.runPickup;
     }
     // score
@@ -62,15 +70,14 @@ public class ManipulatorCommands extends CommandBase {
     if (kManipulator.getRawButtonPressed(kB)) {
       manipulatorSetState = subsystemsStates.runStow;
     }
-    
+
     if (kManipulator.getRawButtonPressed(kLeftOptions)) {
-      manipulatorConemode= false;
+      manipulatorConemode = false;
     }
     if (kManipulator.getRawButtonPressed(kRightOptions)) {
       manipulatorConemode = true;
     }
     m_led.setLEDConeMode(manipulatorConemode);
-    
 
     // score high, low, left, right, etc
     if (kManipulator.getPOV() == 0) {
@@ -96,14 +103,23 @@ public class ManipulatorCommands extends CommandBase {
           case scoreCubeHigh:
             m_arm.setKeyFrameSequence(kfseqCubehightoCubeStow);
             break;
+          case hoverConeMid:
+            m_arm.setKeyFrameSequence(kfseqConeMidtoCubeStow);
+            break;
           case scoreConeMid:
             m_arm.setKeyFrameSequence(kfseqConeMidtoCubeStow);
+            break;
+          case hoverConeHigh:
+            m_arm.setKeyFrameSequence(kfseqConeHightoCubeStow);
             break;
           case scoreConeHigh:
             m_arm.setKeyFrameSequence(kfseqConeHightoCubeStow);
             break;
-          case pickup:
+          case pickupGround:
             m_arm.setKeyFrameSequence(kfseqCubePickuptoCubeStow);
+            break;
+          case pickupChute:
+            m_arm.setKeyFrameSequence(kfseqChutetoStow);
             break;
           default:
             // do nothing
@@ -111,43 +127,60 @@ public class ManipulatorCommands extends CommandBase {
         }
 
         // arm do
-        // if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed && m_arm.lastKeyframe.keyFrameState!=armKeyFrameStates.stowed) {
-        //   if (!m_hand.canRetract()) {
-        //     m_arm.runningKeyframesAndSequences = false;
-        //     m_arm.ElbowTarget=75;
-        //   } else {
-        //     m_arm.runningKeyframesAndSequences = true;
-        //   }
-        // } 
+        // if (m_arm.nextKeyframe.keyFrameState == armKeyFrameStates.stowed &&
+        // m_arm.lastKeyframe.keyFrameState!=armKeyFrameStates.stowed) {
+        // if (!m_hand.canRetract()) {
+        // m_arm.runningKeyframesAndSequences = false;
+        // m_arm.ElbowTarget=75;
+        // } else {
+        // m_arm.runningKeyframesAndSequences = true;
+        // }
+        // }
         // hand tasks
+        doPressDown = !(kManipulator.getRawAxis(kLeftVertical) < -kDeadband);
         // zero wrist
         m_hand.handPosition = 0;
         // intake tasks
         m_hand.IntakeMotorControl(handIntakeStates.stow);
         if (kManipulator.getRawAxis(kRightTrigger) > kDeadband) {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
-          m_hand.pcmCompressor.set(Value.kReverse);
-
-        }
-
-        if(ConeMode){
-          if (kManipulator.getRawAxis(kLeftTrigger) > kDeadband) {
+          if (!ConeMode) {
+            m_hand.pcmCompressor.set(Value.kForward);
+          } else {
             m_hand.pcmCompressor.set(Value.kReverse);
           }
-          if(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed && kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
+        } else {
+          if (!ConeMode) {
+            m_hand.pcmCompressor.set(Value.kReverse);
+          } else {
             m_hand.pcmCompressor.set(Value.kForward);
           }
         }
 
-        if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
+        if (ConeMode) {
+          if (kManipulator.getRawAxis(kLeftTrigger) > kDeadband) {
+            m_hand.pcmCompressor.set(Value.kReverse);
+          }
+          if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed
+              && kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
+            m_hand.pcmCompressor.set(Value.kForward);
+          }
+        }
+
+        if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickupGround) {
           m_arm.dontProtectArm();
         }
 
         break;
       case runPickup:
+        doChute = manipulatorChutemode;
         // arm sequence
         if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.stowed) {
-          m_arm.setKeyFrameSequence(kfseqCubeStowToCubePickup);
+          if (doChute) {
+            m_arm.setKeyFrameSequence(kfseqStowtoChute);
+          } else {
+            m_arm.setKeyFrameSequence(kfseqCubeStowToCubePickup);
+          }
         }
         // hand tasks
         // wrist position setter
@@ -158,11 +191,13 @@ public class ManipulatorCommands extends CommandBase {
           m_hand.setRotateHand(false);
         }
         // change elbow angle if wrist is rotated
-        if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
+        if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickupGround) {
           if (m_hand.handPosition != 0) {
-            m_arm.ElbowTarget = kElbowWristedPickup;
+            m_arm.ElbowFeedForwardTarget = kElbowWristedPickup;
+            m_arm.ElbowFeedBackTarget = kElbowWristedPickup;
           } else {
-            m_arm.ElbowTarget = kElbowPickupNormal;
+            m_arm.ElbowFeedForwardTarget = kElbowPickupNormal;
+            m_arm.ElbowFeedBackTarget = kElbowPickupNormal;
           }
         }
         // intake motors
@@ -170,29 +205,30 @@ public class ManipulatorCommands extends CommandBase {
           m_hand.IntakeMotorControl(handIntakeStates.letitgo);
           m_hand.pcmCompressor.set(Value.kReverse);
 
-        } else if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup) {
+        } else if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickupGround
+            || m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickupChute) {
           m_hand.IntakeMotorControl(handIntakeStates.intake);
         } else {
           m_hand.IntakeMotorControl(handIntakeStates.stow);
         }
         // mode switcher
         if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.stowed) {
-          ConeMode=manipulatorConemode;
+          ConeMode = manipulatorConemode;
 
           m_hand.ChangeMode();
 
         }
 
-        if(ConeMode){
-          if (kManipulator.getRawAxis(kLeftTrigger)>kDeadband) {
+        if (ConeMode) {
+          if (kManipulator.getRawAxis(kLeftTrigger) > kDeadband) {
             m_hand.pcmCompressor.set(Value.kReverse);
           }
-          if(kManipulator.getRawAxis(kLeftTrigger)<=kDeadband) {
+          if (kManipulator.getRawAxis(kLeftTrigger) <= kDeadband) {
             m_hand.pcmCompressor.set(Value.kForward);
           }
         }
 
-        if(m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickup && !m_arm.runningKeyframesAndSequences) {
+        if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.pickupGround && !m_arm.runningKeyframesAndSequences) {
           m_arm.protectArm();
         }
 
@@ -212,10 +248,24 @@ public class ManipulatorCommands extends CommandBase {
 
           } else {
             if (!scoreHighTarget) {
-              m_arm.setKeyFrameSequence(kfseqConeStowToConeMid);
+              m_arm.setKeyFrameSequence(kfseqConeStowToConeMidHover);
             } else {
-              m_arm.setKeyFrameSequence(kfseqConeStowToConeHigh);
+              m_arm.setKeyFrameSequence(kfseqConeStowToConeHighHover);
             }
+          }
+        }
+        // lower hand
+        if (kManipulator.getRawAxis(kLeftTrigger) > kDeadband) {
+          if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.hoverConeHigh) {
+            m_arm.setKeyFrameSequence(kfseqConeHighHoverToConeHighScore);
+          } else if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.hoverConeMid) {
+            m_arm.setKeyFrameSequence(kfseqConeMidHoverToConeMidScore);
+          }
+        } else {
+          if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.scoreConeHigh) {
+            m_arm.setKeyFrameSequence(kfseqConeHighScoreToConeHighHover);
+          } else if (m_arm.lastKeyframe.keyFrameState == armKeyFrameStates.scoreConeMid) {
+            m_arm.setKeyFrameSequence(kfseqConeMidScoreToConeMidHover);
           }
         }
         // hand tasks
@@ -234,7 +284,7 @@ public class ManipulatorCommands extends CommandBase {
         m_hand.handPosition = 0;
         // arm tasks
 
-        if(m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickup) {
+        if (m_arm.lastKeyframe.keyFrameState != armKeyFrameStates.pickupGround) {
           m_arm.dontProtectArm();
         }
 
